@@ -95,7 +95,7 @@ function UserManager({ currentUserRole, onToast }) {
       <div className="um-controls">
         <div>
           <h2 className="um-title">Equipo ({users.length})</h2>
-          <p className="um-subtitle">Gestiona los miembros de tu organizaci�n</p>
+          <p className="um-subtitle">Gestiona los miembros de tu organización</p>
         </div>
         <button className="um-btn-add" onClick={() => setShowForm(!showForm)}>
           {showForm ? 'Cancelar' : '+ Nuevo Usuario'}
@@ -121,15 +121,15 @@ function UserManager({ currentUserRole, onToast }) {
                 <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="correo@empresa.com" required />
               </div>
               <div className="um-field">
-                <label>Contrase�a *</label>
-                <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Contrase�a inicial" required />
+                <label>Contraseña *</label>
+                <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Contraseña inicial" required />
               </div>
               <div className="um-field">
                 <label>Cargo *</label>
                 <input name="cargo" value={formData.cargo} onChange={handleChange} placeholder="Ej: Agente Inmobiliario" required />
               </div>
               <div className="um-field">
-                <label>Ubicaci�n / Oficina *</label>
+                <label>Ubicación / Oficina *</label>
                 <input name="ubicacion_oficina" value={formData.ubicacion_oficina} onChange={handleChange} placeholder="Ej: Oficina Madrid Centro" required />
               </div>
               <div className="um-field">
@@ -144,7 +144,7 @@ function UserManager({ currentUserRole, onToast }) {
             <div className="um-form-footer">
               <button type="button" className="um-btn-cancel" onClick={() => setShowForm(false)}>Cancelar</button>
               <button type="submit" className="um-btn-save" disabled={saving}>
-                {saving ? 'Creando�' : 'Crear Usuario'}
+                {saving ? 'Creando…' : 'Crear Usuario'}
               </button>
             </div>
           </form>

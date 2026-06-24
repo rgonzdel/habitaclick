@@ -212,7 +212,7 @@ function App() {
   );
 
   const exportToCSV = () => {
-    const headers = ['Referencia', 'T�tulo', 'Tipo', 'Operaci�n', 'Precio (�)', 'Direcci�n', 'Ciudad', 'Provincia', 'Habitaciones', 'Ba�os', 'm�', 'Descripci�n', 'Asesor', 'Fotos', 'Fecha'];
+    const headers = ['Referencia', 'Título', 'Tipo', 'Operación', 'Precio (€)', 'Dirección', 'Ciudad', 'Provincia', 'Habitaciones', 'Baños', 'm²', 'Descripción', 'Asesor', 'Fotos', 'Fecha'];
     const rows = filteredProperties.map(p => {
       const asesor = p.assigned_user
         ? (p.assigned_user.nombre && p.assigned_user.apellidos
@@ -280,7 +280,7 @@ function App() {
                 <span className="role-badge" style={{ background: ROLE_COLORS[userRole] }}>
                   {ROLE_LABELS[userRole]}
                 </span>
-                <button className="btn-logout" onClick={handleLogout}>Cerrar sesi�n</button>
+                <button className="btn-logout" onClick={handleLogout}>Cerrar sesión</button>
               </div>
             </div>
           </header>

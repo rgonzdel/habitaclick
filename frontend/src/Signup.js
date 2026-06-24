@@ -54,7 +54,7 @@ function Signup({ onSignupSuccess, onBackToLanding }) {
           />
           <input 
             type="password" 
-            placeholder="Contrase��a" 
+            placeholder="Contraseña" 
             value={password} 
             onChange={(e) => setPassword(e.target.value)} 
             required 
