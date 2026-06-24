@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef, useEffect } from 'react';
+﻿?import React, { useState, useRef, useEffect } from 'react';
 import './PropertyEditor.css';
 import UserSearchInput from './UserSearchInput';
 
@@ -46,11 +46,11 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
     };
   }, []);
 
-  // â”€â”€ Subida con preview local inmediata â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Subida con preview local inmediata ────────────────────────
   const uploadFiles = async (files) => {
     if (!files.length) return;
 
-    // AÃ±adir previews locales inmediatamente
+    // Añadir previews locales inmediatamente
     const localItems = files.map(f => ({
       _localId: Math.random().toString(36).slice(2),
       _blobUrl: f.type.startsWith('image/') ? URL.createObjectURL(f) : null,
@@ -85,7 +85,7 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
       } else {
         let errorMsg = `HTTP ${res.status}`;
         try { const d = await res.json(); errorMsg = d.error || errorMsg; } catch {}
-        console.error('âŒ Upload error:', errorMsg);
+        console.error('❌ Upload error:', errorMsg);
         setMedia(prev => prev.map(m =>
           localItems.find(l => l._localId === m._localId)
             ? { ...m, _uploading: false, _error: true, _errorMsg: errorMsg }
@@ -94,7 +94,7 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
       }
     } catch (err) {
       const errorMsg = err.message || 'Error de red';
-      console.error('âŒ Upload catch:', errorMsg);
+      console.error('❌ Upload catch:', errorMsg);
       setMedia(prev => prev.map(m =>
         localItems.find(l => l._localId === m._localId)
           ? { ...m, _uploading: false, _error: true, _errorMsg: errorMsg }
@@ -119,7 +119,7 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
     ));
   };
 
-  // â”€â”€ Drag para reordenar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Drag para reordenar ───────────────────────────────────────
   const handleDragStart = (e, index) => {
     dragIndexRef.current = index;
     setDragIndex(index);
@@ -155,7 +155,7 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
     setHoverIndex(null);
   };
 
-  // â”€â”€ Drop zone (aÃ±adir archivos) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Drop zone (añadir archivos) ───────────────────────────────
   const handleZoneDragOver = e => {
     e.preventDefault();
     if (dragIndexRef.current === null) setDropZoneActive(true);
@@ -175,7 +175,7 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
     if (files.length) uploadFiles(files);
   };
 
-  // â”€â”€ Guardar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Guardar ───────────────────────────────────────────────────
   const handleSave = async () => {
     setSaving(true);
     try {
@@ -198,7 +198,7 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
         })
       });
 
-      // Solo reordenar los que ya estÃ¡n confirmados en el servidor
+      // Solo reordenar los que ya están confirmados en el servidor
       const savedMedia = media.filter(m => m.id);
       if (savedMedia.length > 0) {
         const order = savedMedia.map((m, i) => ({
@@ -219,14 +219,14 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
     }
   };
 
-  // â”€â”€ Render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Render ────────────────────────────────────────────────────
   return (
     <div className="pe-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="pe-panel">
 
         <div className="pe-header">
           <h2>Editar propiedad</h2>
-          <button className="pe-close" onClick={onClose}>âœ•</button>
+          <button className="pe-close" onClick={onClose}>✕</button>
         </div>
 
         <div className="pe-body">
@@ -243,15 +243,15 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
             )}
 
             <div className="pe-field">
-              <label>TÃ­tulo</label>
+              <label>Título</label>
               <input name="title" value={formData.title} onChange={handleChange} />
             </div>
             <div className="pe-field">
-              <label>Precio (â‚¬)</label>
+              <label>Precio (€)</label>
               <input type="number" name="price" value={formData.price} onChange={handleChange} />
             </div>
             <div className="pe-field">
-              <label>DirecciÃ³n</label>
+              <label>Dirección</label>
               <input name="address" value={formData.address} onChange={handleChange} />
             </div>
             <div className="pe-row">
@@ -275,7 +275,7 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
                 </select>
               </div>
               <div className="pe-field">
-                <label>OperaciÃ³n</label>
+                <label>Operación</label>
                 <select name="transaction_type" value={formData.transaction_type} onChange={handleChange}>
                   <option value="sale">Venta</option>
                   <option value="rent">Alquiler</option>
@@ -288,16 +288,16 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
                 <input type="number" name="bedrooms" value={formData.bedrooms} onChange={handleChange} />
               </div>
               <div className="pe-field">
-                <label>BaÃ±os</label>
+                <label>Baños</label>
                 <input type="number" name="bathrooms" value={formData.bathrooms} onChange={handleChange} />
               </div>
               <div className="pe-field">
-                <label>mÂ²</label>
+                <label>m²</label>
                 <input type="number" name="square_meters" value={formData.square_meters} onChange={handleChange} />
               </div>
             </div>
             <div className="pe-field">
-              <label>DescripciÃ³n</label>
+              <label>Descripción</label>
               <textarea
                 name="description"
                 value={formData.description}
@@ -307,7 +307,7 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
               />
             </div>
 
-            {/* AsignaciÃ³n */}
+            {/* Asignación */}
             <div className="pe-field">
               <label>Asesor responsable</label>
               <div className="pe-assign-wrap">
@@ -319,13 +319,13 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
                     assigned_to: prev.assigned_to === currentUserId ? '' : currentUserId
                   }))}
                 >
-                  {formData.assigned_to === currentUserId ? 'âœ“ Yo' : 'ðŸ‘¤ Asignarme'}
+                  {formData.assigned_to === currentUserId ? '✓ Yo' : '👤 Asignarme'}
                 </button>
                 <UserSearchInput
                   users={teamUsers.filter(u => u.id !== currentUserId)}
                   value={formData.assigned_to !== currentUserId ? formData.assigned_to : ''}
                   onChange={id => setFormData(prev => ({ ...prev, assigned_to: id }))}
-                  placeholder="Buscar compaÃ±eroâ€¦"
+                  placeholder="Buscar compañero…"
                 />
               </div>
             </div>
@@ -335,8 +335,8 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
           {/* Media derecha */}
           <div className="pe-media">
             <p className="pe-section-title">
-              Fotos y vÃ­deos
-              <span className="pe-hint"> â€” arrastra para reordenar Â· la primera es la portada</span>
+              Fotos y vídeos
+              <span className="pe-hint"> — arrastra para reordenar · la primera es la portada</span>
             </p>
 
             {/* Drop zone */}
@@ -347,11 +347,11 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
               onDrop={handleZoneDrop}
             >
               {uploading ? (
-                <span className="pe-dropzone-text">Subiendo archivosâ€¦</span>
+                <span className="pe-dropzone-text">Subiendo archivos…</span>
               ) : (
                 <>
                   <span className="pe-dropzone-text">
-                    {dropZoneActive ? 'Â¡Suelta aquÃ­!' : 'Arrastra fotos o vÃ­deos aquÃ­ para aÃ±adir'}
+                    {dropZoneActive ? '¡Suelta aquí!' : 'Arrastra fotos o vídeos aquí para añadir'}
                   </span>
                   <label className="pe-pick-btn">
                     Seleccionar archivos
@@ -372,10 +372,10 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
               )}
             </div>
 
-            {/* GalerÃ­a */}
+            {/* Galería */}
             <div className="pe-gallery">
               {media.length === 0 && (
-                <p className="pe-empty-media">Sin fotos. AÃ±ade arrastrando o usando el selector.</p>
+                <p className="pe-empty-media">Sin fotos. Añade arrastrando o usando el selector.</p>
               )}
               {media.map((item, index) => (
                 <div
@@ -397,8 +397,8 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
                   {/* Contenido del tile */}
                   {item.media_type === 'video' ? (
                     <div className="pe-item-video">
-                      <span className="pe-item-video-icon">ðŸŽ¬</span>
-                      <span className="pe-item-video-name">{item.filename || 'vÃ­deo'}</span>
+                      <span className="pe-item-video-icon">🎬</span>
+                      <span className="pe-item-video-name">{item.filename || 'vídeo'}</span>
                     </div>
                   ) : item._blobUrl ? (
                     <img src={item._blobUrl} alt={item.filename} draggable={false} />
@@ -417,7 +417,7 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
                   {/* Overlay error */}
                   {item._error && (
                     <div className="pe-item-status-overlay pe-item-status-error" title={item._errorMsg}>
-                      <span>âš </span>
+                      <span>⚠</span>
                       <span className="pe-item-error-msg">{item._errorMsg || 'Error'}</span>
                     </div>
                   )}
@@ -430,7 +430,7 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
                     className="pe-item-delete"
                     onClick={() => handleDeleteMedia(item)}
                     title="Eliminar"
-                  >âœ•</button>
+                  >✕</button>
                 </div>
               ))}
             </div>
@@ -444,7 +444,7 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
             onClick={handleSave}
             disabled={saving || uploading}
           >
-            {saving ? 'Guardandoâ€¦' : uploading ? 'Esperando subidaâ€¦' : 'Guardar cambios'}
+            {saving ? 'Guardando…' : uploading ? 'Esperando subida…' : 'Guardar cambios'}
           </button>
         </div>
 

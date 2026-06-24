@@ -1,4 +1,4 @@
-﻿﻿import React, { useState } from 'react';
+﻿??import React, { useState } from 'react';
 import './Auth.css';
 
 function Signup({ onSignupSuccess, onBackToLanding }) {
@@ -22,7 +22,7 @@ function Signup({ onSignupSuccess, onBackToLanding }) {
 
       if (res.ok) {
         localStorage.setItem('token', data.token);
-        alert('Cuenta creada. Â¡Bienvenido!');
+        alert('Cuenta creada. ¡Bienvenido!');
         onSignupSuccess();
       } else {
         alert('Error: ' + data.error);
@@ -43,7 +43,7 @@ function Signup({ onSignupSuccess, onBackToLanding }) {
 
       <div className="auth-card">
         <h2>Crear Cuenta</h2>
-        <button className="back-btn" onClick={onBackToLanding}>â† Volver a inicio</button>
+        <button className="back-btn" onClick={onBackToLanding}>← Volver a inicio</button>
         <form onSubmit={handleSubmit}>
           <input 
             type="email" 
@@ -54,7 +54,7 @@ function Signup({ onSignupSuccess, onBackToLanding }) {
           />
           <input 
             type="password" 
-            placeholder="ContraseÁ±a" 
+            placeholder="Contrase��a" 
             value={password} 
             onChange={(e) => setPassword(e.target.value)} 
             required 

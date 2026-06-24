@@ -1,4 +1,4 @@
-﻿﻿import React, { useState, useEffect } from 'react';
+﻿??import React, { useState, useEffect } from 'react';
 import './UserManager.css';
 
 const API = process.env.REACT_APP_API_URL || 'http://localhost:3001';
@@ -95,7 +95,7 @@ function UserManager({ currentUserRole, onToast }) {
       <div className="um-controls">
         <div>
           <h2 className="um-title">Equipo ({users.length})</h2>
-          <p className="um-subtitle">Gestiona los miembros de tu organización</p>
+          <p className="um-subtitle">Gestiona los miembros de tu organizaci�n</p>
         </div>
         <button className="um-btn-add" onClick={() => setShowForm(!showForm)}>
           {showForm ? 'Cancelar' : '+ Nuevo Usuario'}
@@ -121,15 +121,15 @@ function UserManager({ currentUserRole, onToast }) {
                 <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="correo@empresa.com" required />
               </div>
               <div className="um-field">
-                <label>Contraseña *</label>
-                <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Contraseña inicial" required />
+                <label>Contrase�a *</label>
+                <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Contrase�a inicial" required />
               </div>
               <div className="um-field">
                 <label>Cargo *</label>
                 <input name="cargo" value={formData.cargo} onChange={handleChange} placeholder="Ej: Agente Inmobiliario" required />
               </div>
               <div className="um-field">
-                <label>Ubicación / Oficina *</label>
+                <label>Ubicaci�n / Oficina *</label>
                 <input name="ubicacion_oficina" value={formData.ubicacion_oficina} onChange={handleChange} placeholder="Ej: Oficina Madrid Centro" required />
               </div>
               <div className="um-field">
@@ -144,7 +144,7 @@ function UserManager({ currentUserRole, onToast }) {
             <div className="um-form-footer">
               <button type="button" className="um-btn-cancel" onClick={() => setShowForm(false)}>Cancelar</button>
               <button type="submit" className="um-btn-save" disabled={saving}>
-                {saving ? 'Creando…' : 'Crear Usuario'}
+                {saving ? 'Creando�' : 'Crear Usuario'}
               </button>
             </div>
           </form>
@@ -156,7 +156,7 @@ function UserManager({ currentUserRole, onToast }) {
         {loading ? (
           [...Array(3)].map((_, i) => <div key={i} className="um-row-skeleton" />)
         ) : users.length === 0 ? (
-          <div className="um-empty">No hay usuarios en el equipo todavÃ­a.</div>
+          <div className="um-empty">No hay usuarios en el equipo todavía.</div>
         ) : (
           users.map(u => (
             <div key={u.id} className="um-row">
@@ -168,8 +168,8 @@ function UserManager({ currentUserRole, onToast }) {
                 <div className="um-name">{u.nombre} {u.apellidos}</div>
                 <div className="um-meta">
                   <span className="um-cargo">{u.cargo}</span>
-                  <span className="um-sep">Â·</span>
-                  <span className="um-oficina">ðŸ“ {u.ubicacion_oficina}</span>
+                  <span className="um-sep">·</span>
+                  <span className="um-oficina">📍 {u.ubicacion_oficina}</span>
                 </div>
                 <div className="um-email">{u.email}</div>
               </div>
@@ -186,7 +186,7 @@ function UserManager({ currentUserRole, onToast }) {
                       <option value="director">Director</option>
                       <option value="administrador">Administrador</option>
                     </select>
-                    <button className="um-role-cancel" onClick={() => setChangingRoleId(null)}>âœ•</button>
+                    <button className="um-role-cancel" onClick={() => setChangingRoleId(null)}>✕</button>
                   </div>
                 ) : (
                   <div className="um-role-display">
@@ -195,7 +195,7 @@ function UserManager({ currentUserRole, onToast }) {
                     </span>
                     {isAdmin && (
                       <button className="um-btn-role" onClick={() => setChangingRoleId(u.id)} title="Cambiar rol">
-                        âœ
+                        ✏
                       </button>
                     )}
                   </div>

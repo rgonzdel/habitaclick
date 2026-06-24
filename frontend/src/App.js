@@ -1,4 +1,4 @@
-﻿﻿import React, { useState, useEffect } from 'react';
+﻿??import React, { useState, useEffect } from 'react';
 import CookieConsent from './components/CookieConsent';
 import PropertyEditor from './components/PropertyEditor';
 import UserManager from './components/UserManager';
@@ -212,7 +212,7 @@ function App() {
   );
 
   const exportToCSV = () => {
-    const headers = ['Referencia', 'Título', 'Tipo', 'Operación', 'Precio (€)', 'Dirección', 'Ciudad', 'Provincia', 'Habitaciones', 'Baños', 'm²', 'Descripción', 'Asesor', 'Fotos', 'Fecha'];
+    const headers = ['Referencia', 'T�tulo', 'Tipo', 'Operaci�n', 'Precio (�)', 'Direcci�n', 'Ciudad', 'Provincia', 'Habitaciones', 'Ba�os', 'm�', 'Descripci�n', 'Asesor', 'Fotos', 'Fecha'];
     const rows = filteredProperties.map(p => {
       const asesor = p.assigned_user
         ? (p.assigned_user.nombre && p.assigned_user.apellidos
@@ -240,7 +240,7 @@ function App() {
     const csv = [headers, ...rows]
       .map(row => row.map(cell => `"${cell}"`).join(';'))
       .join('\n');
-    const blob = new Blob(['ï»¿' + csv], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -261,7 +261,7 @@ function App() {
         {/* Toast */}
         {toast && (
           <div className={`toast toast--${toast.type}`}>
-            <span className="toast-icon">{toast.type === 'success' ? 'âœ“' : 'âœ•'}</span>
+            <span className="toast-icon">{toast.type === 'success' ? '✓' : '✕'}</span>
             {toast.msg}
           </div>
         )}
@@ -280,7 +280,7 @@ function App() {
                 <span className="role-badge" style={{ background: ROLE_COLORS[userRole] }}>
                   {ROLE_LABELS[userRole]}
                 </span>
-                <button className="btn-logout" onClick={handleLogout}>Cerrar sesión</button>
+                <button className="btn-logout" onClick={handleLogout}>Cerrar sesi�n</button>
               </div>
             </div>
           </header>
@@ -291,13 +291,13 @@ function App() {
                 className={`dash-tab${dashView === 'properties' ? ' active' : ''}`}
                 onClick={() => setDashView('properties')}
               >
-                ðŸ  Propiedades
+                🏠 Propiedades
               </button>
               <button
                 className={`dash-tab${dashView === 'users' ? ' active' : ''}`}
                 onClick={() => setDashView('users')}
               >
-                ðŸ‘¥ Equipo
+                👥 Equipo
               </button>
             </nav>
           )}
@@ -309,23 +309,23 @@ function App() {
                 <h2>Propiedades ({filteredProperties.length}{search ? ` de ${properties.length}` : ''})</h2>
                 {properties.length > 0 && (
                   <div className="search-wrap">
-                    <span className="search-icon">ðŸ”</span>
+                    <span className="search-icon">🔍</span>
                     <input
                       className="search-input"
                       type="text"
-                      placeholder="Buscar por tÃ­tulo, ciudadâ€¦"
+                      placeholder="Buscar por título, ciudad…"
                       value={search}
                       onChange={e => setSearch(e.target.value)}
                     />
                     {search && (
-                      <button className="search-clear" onClick={() => setSearch('')}>âœ•</button>
+                      <button className="search-clear" onClick={() => setSearch('')}>✕</button>
                     )}
                   </div>
                 )}
               </div>
               <div style={{ display: 'flex', gap: '10px' }}>
                 {properties.length > 0 && (
-                  <button className="btn-export" onClick={exportToCSV}>â¬‡ CSV</button>
+                  <button className="btn-export" onClick={exportToCSV}>⬇ CSV</button>
                 )}
                 <button className="btn-primary" onClick={() => setShowForm(!showForm)}>
                   {showForm ? 'Cancelar' : '+ Nueva Propiedad'}
@@ -337,11 +337,11 @@ function App() {
               <div className="form-container">
                 <h3>Crear Nueva Propiedad</h3>
                 <div className="form-row">
-                  <input type="text" name="title" placeholder="TÃ­tulo *" value={formData.title} onChange={handleChange} required />
-                  <input type="number" name="price" placeholder="Precio (â‚¬) *" value={formData.price} onChange={handleChange} required />
+                  <input type="text" name="title" placeholder="Título *" value={formData.title} onChange={handleChange} required />
+                  <input type="number" name="price" placeholder="Precio (€) *" value={formData.price} onChange={handleChange} required />
                 </div>
                 <div className="form-row">
-                  <input type="text" name="address" placeholder="DirecciÃ³n *" value={formData.address} onChange={handleChange} required />
+                  <input type="text" name="address" placeholder="Dirección *" value={formData.address} onChange={handleChange} required />
                 </div>
                 <div className="form-row">
                   <input type="text" name="city" placeholder="Ciudad *" value={formData.city} onChange={handleChange} required />
@@ -361,13 +361,13 @@ function App() {
                 </div>
                 <div className="form-row">
                   <input type="number" name="bedrooms" placeholder="Habitaciones" value={formData.bedrooms} onChange={handleChange} />
-                  <input type="number" name="bathrooms" placeholder="BaÃ±os" value={formData.bathrooms} onChange={handleChange} />
-                  <input type="number" name="square_meters" placeholder="mÂ²" value={formData.square_meters} onChange={handleChange} />
+                  <input type="number" name="bathrooms" placeholder="Baños" value={formData.bathrooms} onChange={handleChange} />
+                  <input type="number" name="square_meters" placeholder="m²" value={formData.square_meters} onChange={handleChange} />
                 </div>
                 <div className="form-row">
                   <textarea
                     name="description"
-                    placeholder="DescripciÃ³n del inmueble..."
+                    placeholder="Descripción del inmueble..."
                     value={formData.description}
                     onChange={handleChange}
                     className="form-textarea"
@@ -375,7 +375,7 @@ function App() {
                   />
                 </div>
 
-                {/* AsignaciÃ³n de asesor */}
+                {/* Asignación de asesor */}
                 <div className="assign-row">
                   <div className="assign-label">Asesor responsable</div>
                   <div className="assign-controls">
@@ -387,13 +387,13 @@ function App() {
                         assigned_to: prev.assigned_to === getCurrentUserId() ? '' : getCurrentUserId()
                       }))}
                     >
-                      {formData.assigned_to === getCurrentUserId() ? 'âœ“ Asignado a mÃ­' : 'ðŸ‘¤ Asignarme'}
+                      {formData.assigned_to === getCurrentUserId() ? '✓ Asignado a mí' : '👤 Asignarme'}
                     </button>
                     <UserSearchInput
                       users={teamUsers.filter(u => u.id !== getCurrentUserId())}
                       value={formData.assigned_to !== getCurrentUserId() ? formData.assigned_to : ''}
                       onChange={id => setFormData(prev => ({ ...prev, assigned_to: id }))}
-                      placeholder="Buscar compaÃ±eroâ€¦"
+                      placeholder="Buscar compañero…"
                     />
                   </div>
                 </div>
@@ -401,7 +401,7 @@ function App() {
                 <div className="form-row upload-row">
                   <div className="upload-field">
                     <label className="upload-label" htmlFor="upload-photos">
-                      ðŸ“· {selectedPhotos.length > 0 ? `${selectedPhotos.length} foto(s) seleccionada(s)` : 'AÃ±adir fotografÃ­as'}
+                      📷 {selectedPhotos.length > 0 ? `${selectedPhotos.length} foto(s) seleccionada(s)` : 'Añadir fotografías'}
                     </label>
                     <input
                       id="upload-photos"
@@ -421,7 +421,7 @@ function App() {
                   </div>
                   <div className="upload-field">
                     <label className="upload-label" htmlFor="upload-videos">
-                      ðŸŽ¬ {selectedVideos.length > 0 ? `${selectedVideos.length} vÃ­deo(s) seleccionado(s)` : 'AÃ±adir vÃ­deos (opcional)'}
+                      🎬 {selectedVideos.length > 0 ? `${selectedVideos.length} vídeo(s) seleccionado(s)` : 'Añadir vídeos (opcional)'}
                     </label>
                     <input
                       id="upload-videos"
@@ -433,7 +433,7 @@ function App() {
                     />
                     {selectedVideos.length > 0 && (
                       <ul className="upload-file-list">
-                        {selectedVideos.map((f, i) => <li key={i}>ðŸŽ¬ {f.name}</li>)}
+                        {selectedVideos.map((f, i) => <li key={i}>🎬 {f.name}</li>)}
                       </ul>
                     )}
                   </div>
@@ -465,7 +465,7 @@ function App() {
                         {primaryPhoto ? (
                           <img src={`http://localhost:3001${primaryPhoto.url}`} alt={p.title} />
                         ) : (
-                          <div className="property-row-photo-placeholder">ðŸ“·</div>
+                          <div className="property-row-photo-placeholder">📷</div>
                         )}
                       </div>
 
@@ -474,10 +474,10 @@ function App() {
                           {p.reference && <span className="ref-badge">{p.reference}</span>}
                           {p.title}
                         </div>
-                        <div className="property-row-location">ðŸ“ {p.address}, {p.city} ({p.province})</div>
+                        <div className="property-row-location">📍 {p.address}, {p.city} ({p.province})</div>
                         {p.description && (
                           <div className="property-row-desc">
-                            {p.description.length > 80 ? p.description.slice(0, 80) + 'â€¦' : p.description}
+                            {p.description.length > 80 ? p.description.slice(0, 80) + '…' : p.description}
                           </div>
                         )}
                         {p.assigned_user && (
@@ -489,36 +489,36 @@ function App() {
                             {p.assigned_user.nombre && p.assigned_user.apellidos
                               ? `${p.assigned_user.nombre} ${p.assigned_user.apellidos}`
                               : p.assigned_user.email}
-                            {p.assigned_user.cargo && <span className="asesor-cargo"> Â· {p.assigned_user.cargo}</span>}
+                            {p.assigned_user.cargo && <span className="asesor-cargo"> · {p.assigned_user.cargo}</span>}
                           </div>
                         )}
                         <div className="property-row-meta">
                           <span className="tag-light tag-type">{typeLabels[p.property_type] || p.property_type}</span>
                           <span className={`tag-light tag-tx ${p.transaction_type}`}>{p.transaction_type === 'sale' ? 'Venta' : 'Alquiler'}</span>
-                          {p.bedrooms && <span className="tag-light">ðŸ› {p.bedrooms}</span>}
-                          {p.bathrooms && <span className="tag-light">ðŸš¿ {p.bathrooms}</span>}
-                          {p.square_meters && <span className="tag-light">ðŸ“ {p.square_meters} mÂ²</span>}
+                          {p.bedrooms && <span className="tag-light">🛏 {p.bedrooms}</span>}
+                          {p.bathrooms && <span className="tag-light">🚿 {p.bathrooms}</span>}
+                          {p.square_meters && <span className="tag-light">📐 {p.square_meters} m²</span>}
                         </div>
                       </div>
 
                       <div className="property-row-price">
-                        <span>{p.price?.toLocaleString('es-ES')} â‚¬</span>
+                        <span>{p.price?.toLocaleString('es-ES')} €</span>
                         {p.photos?.length > 0 && (
-                          <span className="property-row-photos-count">ðŸ“· {p.photos.length}</span>
+                          <span className="property-row-photos-count">📷 {p.photos.length}</span>
                         )}
                       </div>
 
                       <div className="property-row-actions">
                         {isConfirming ? (
                           <div className="confirm-inline">
-                            <span className="confirm-inline-text">Â¿Eliminar?</span>
-                            <button className="confirm-yes" onClick={() => deleteProperty(p.id)}>SÃ­</button>
+                            <span className="confirm-inline-text">¿Eliminar?</span>
+                            <button className="confirm-yes" onClick={() => deleteProperty(p.id)}>Sí</button>
                             <button className="confirm-no" onClick={() => setConfirmDeleteId(null)}>No</button>
                           </div>
                         ) : (
                           <>
-                            <button className="btn-edit" onClick={() => setEditingProperty(p)}>âœï¸ Editar</button>
-                            <button className="btn-delete" onClick={() => setConfirmDeleteId(p.id)}>âœ• Eliminar</button>
+                            <button className="btn-edit" onClick={() => setEditingProperty(p)}>✏️ Editar</button>
+                            <button className="btn-delete" onClick={() => setConfirmDeleteId(p.id)}>✕ Eliminar</button>
                           </>
                         )}
                       </div>
@@ -583,7 +583,7 @@ function App() {
       <div style={contentStyle}>
         <PoliticaCookies />
         <button onClick={() => navigateWithAnimation('landing')} style={{ position: 'fixed', top: '20px', left: '20px', zIndex: 10000, padding: '10px 20px', backgroundColor: '#003366', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}>
-          â† Volver
+          ← Volver
         </button>
       </div>
     );
@@ -594,7 +594,7 @@ function App() {
       <div style={contentStyle}>
         <PoliticaPrivacidad />
         <button onClick={() => navigateWithAnimation('landing')} style={{ position: 'fixed', top: '20px', left: '20px', zIndex: 10000, padding: '10px 20px', backgroundColor: '#003366', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}>
-          â† Volver
+          ← Volver
         </button>
       </div>
     );
