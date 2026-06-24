@@ -1,4 +1,4 @@
-﻿??import React, { useState, useEffect } from 'react';
+??import React, { useState, useEffect } from 'react';
 import CookieConsent from './components/CookieConsent';
 import PropertyEditor from './components/PropertyEditor';
 import UserManager from './components/UserManager';

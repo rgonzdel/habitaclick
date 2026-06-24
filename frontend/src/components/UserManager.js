@@ -1,4 +1,4 @@
-﻿??import React, { useState, useEffect } from 'react';
+??import React, { useState, useEffect } from 'react';
 import './UserManager.css';
 
 const API = process.env.REACT_APP_API_URL || 'http://localhost:3001';
