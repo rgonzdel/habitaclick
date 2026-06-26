@@ -67,6 +67,8 @@ function App() {
       setIsLoggedIn(true);
       setUserRole(getRoleFromToken(token));
     }
+    // Wake up Render backend silently so login is fast when user clicks
+    fetch((process.env.REACT_APP_API_URL || 'http://localhost:3001') + '/ping').catch(() => {});
   }, []);
 
   useEffect(() => {

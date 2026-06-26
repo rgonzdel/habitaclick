@@ -33,6 +33,9 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 app.use(cors());
 app.use(express.json());
 
+// Health check / wake-up ping
+app.get('/ping', (req, res) => res.json({ ok: true }));
+
 const JWT_SECRET = process.env.JWT_SECRET || 'tu_secret_key_aqui';
 
 // Configuración de multer

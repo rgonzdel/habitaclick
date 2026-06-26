@@ -12,6 +12,7 @@ function Login({ onLoginSuccess, onBackToLanding }) {
   const [newPass, setNewPass] = useState('');
   const [newPass2, setNewPass2] = useState('');
   const [loading, setLoading] = useState(false);
+  const [slowLoad, setSlowLoad] = useState(false);
   const [error, setError] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [devCode, setDevCode] = useState('');
@@ -22,7 +23,9 @@ function Login({ onLoginSuccess, onBackToLanding }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setSlowLoad(false);
     setError('');
+    const slowTimer = setTimeout(() => setSlowLoad(true), 3000);
     try {
       const res = await fetch(`${API}/api/v1/auth/login`, {
         method: 'POST',
@@ -37,8 +40,10 @@ function Login({ onLoginSuccess, onBackToLanding }) {
         setError(data.error || 'Email o contraseña incorrectos');
       }
     } catch {
-      setError('Error de conexión. Comprueba que el servidor está activo.');
+      setError('Error de conexión. Comprueba tu internet e inténtalo de nuevo.');
     }
+    clearTimeout(slowTimer);
+    setSlowLoad(false);
     setLoading(false);
   };
 
@@ -152,6 +157,11 @@ function Login({ onLoginSuccess, onBackToLanding }) {
             </button>
           </div>
           <button type="submit" disabled={loading}>{loading ? 'Entrando…' : 'Entrar'}</button>
+          {slowLoad && (
+            <p style={{ textAlign: 'center', color: '#888', fontSize: '0.85rem', marginTop: '0.75rem' }}>
+              ⏳ Iniciando servidor, un momento...
+            </p>
+          )}
         </form>
         <button className="auth-forgot-link" onClick={() => { setForgotEmail(email); setStep('forgot'); }}>
           ¿Olvidaste tu contraseña?
