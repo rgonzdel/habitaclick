@@ -58,7 +58,10 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
           <div className="logo">
             <img src="/logos/logo.png" alt="HABITACLICK" style={{ height: '80px', width: 'auto', objectFit: 'contain' }} />
           </div>
-          <button className="btn-text header-login-mobile" onClick={onLoginClick}>Iniciar sesión</button>
+          <div className="header-mobile-buttons">
+            <button className="btn-primary" onClick={onSignupClick}>Registrarse</button>
+            <button className="btn-text" onClick={onLoginClick}>Iniciar sesión</button>
+          </div>
           <div className="header-buttons">
             <button className="btn-text" onClick={onLoginClick}>Iniciar sesión</button>
             <button className="btn-primary" onClick={onSignupClick}>Comenzar gratis</button>
