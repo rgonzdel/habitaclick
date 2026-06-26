@@ -523,6 +523,10 @@ body {
 
   .hero-content {
     max-width: 100%;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
   }
 
   .hero-content h1 {
