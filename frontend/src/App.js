@@ -10,6 +10,8 @@ import PoliticaCookies from './components/PoliticaCookies';
 import PoliticaPrivacidad from './components/PoliticaPrivacidad';
 import SobreNosotros from './components/SobreNosotros';
 import Contacto from './components/Contacto';
+import WebsiteBuilder from './components/WebsiteBuilder';
+import WebsitePublic from './components/WebsitePublic';
 import './App.css';
 
 function App() {
@@ -67,9 +69,14 @@ function App() {
       setIsLoggedIn(true);
       setUserRole(getRoleFromToken(token));
     }
-    // Wake up Render backend silently so login is fast when user clicks
     fetch((process.env.REACT_APP_API_URL || 'http://localhost:3001') + '/ping').catch(() => {});
   }, []);
+
+  // Route /sitio/:slug → public website
+  const sitioMatch = window.location.pathname.match(/^\/sitio\/([^/]+)/);
+  if (sitioMatch) {
+    return <WebsitePublic slug={sitioMatch[1]} />;
+  }
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -313,6 +320,12 @@ function App() {
                 onClick={() => setDashView('users')}
               >
                 👥 Equipo
+              </button>
+              <button
+                className={`dash-tab${dashView === 'website' ? ' active' : ''}`}
+                onClick={() => setDashView('website')}
+              >
+                🌐 Página Web
               </button>
             </nav>
           )}
@@ -574,6 +587,10 @@ function App() {
 
             {dashView === 'users' && can('director') && (
               <UserManager currentUserRole={userRole} onToast={showToast} />
+            )}
+
+            {dashView === 'website' && can('director') && (
+              <WebsiteBuilder currentUserRole={userRole} onToast={showToast} properties={properties} />
             )}
           </main>
         </div>

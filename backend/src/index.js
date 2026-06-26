@@ -592,6 +592,98 @@ app.put('/api/v1/users/:id/role', verifyToken, requireRole('administrador'), asy
   }
 });
 
+// ── Website Builder ──────────────────────────────────────
+// GET configuración propia
+app.get('/api/v1/website/settings', verifyToken, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('website_settings')
+      .select('*')
+      .eq('user_id', req.user.id)
+      .single();
+    if (error && error.code !== 'PGRST116') return res.status(500).json({ error: error.message });
+    res.json({ settings: data || null });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// PUT guardar configuración
+app.put('/api/v1/website/settings', verifyToken, async (req, res) => {
+  const { template, primaryColor, accentColor, companyName, tagline, description,
+    phone, whatsapp, email, address, slug, showPrices, published, instagram, facebook } = req.body;
+
+  if (slug) {
+    // Verificar que el slug no esté ocupado por otro usuario
+    const { data: existing } = await supabase
+      .from('website_settings')
+      .select('user_id')
+      .eq('slug', slug)
+      .neq('user_id', req.user.id)
+      .single();
+    if (existing) return res.status(400).json({ error: 'Esa URL ya está en uso, elige otra' });
+  }
+
+  try {
+    const payload = {
+      user_id: req.user.id, template, primary_color: primaryColor, accent_color: accentColor,
+      company_name: companyName, tagline, description, phone, whatsapp, email, address,
+      slug, show_prices: showPrices, published: published || false,
+      instagram, facebook, updated_at: new Date().toISOString()
+    };
+    const { data, error } = await supabase
+      .from('website_settings')
+      .upsert(payload, { onConflict: 'user_id' })
+      .select()
+      .single();
+    if (error) return res.status(500).json({ error: error.message });
+    // Devolver en camelCase
+    const s = data;
+    res.json({ success: true, settings: {
+      template: s.template, primaryColor: s.primary_color, accentColor: s.accent_color,
+      companyName: s.company_name, tagline: s.tagline, description: s.description,
+      phone: s.phone, whatsapp: s.whatsapp, email: s.email, address: s.address,
+      slug: s.slug, showPrices: s.show_prices, published: s.published,
+      instagram: s.instagram, facebook: s.facebook
+    }});
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET página pública por slug (sin auth)
+app.get('/api/public/website/:slug', async (req, res) => {
+  try {
+    const { data: ws, error } = await supabase
+      .from('website_settings')
+      .select('*')
+      .eq('slug', req.params.slug)
+      .eq('published', true)
+      .single();
+    if (error || !ws) return res.status(404).json({ error: 'Página no encontrada' });
+
+    const { data: props } = await supabase
+      .from('properties')
+      .select('id,title,price,city,province,property_type,transaction_type,bedrooms,bathrooms,square_meters,estado')
+      .eq('company_name', ws.company_name)
+      .in('estado', ['disponible', 'reservado'])
+      .order('created_at', { ascending: false })
+      .limit(24);
+
+    res.json({
+      settings: {
+        template: ws.template, primaryColor: ws.primary_color, accentColor: ws.accent_color,
+        companyName: ws.company_name, tagline: ws.tagline, description: ws.description,
+        phone: ws.phone, whatsapp: ws.whatsapp, email: ws.email, address: ws.address,
+        showPrices: ws.show_prices, instagram: ws.instagram, facebook: ws.facebook
+      },
+      properties: props || []
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Captura errores de multer y otros no controlados
 app.use((err, req, res, next) => {
   console.error('❌ Error no controlado:', err.message);
