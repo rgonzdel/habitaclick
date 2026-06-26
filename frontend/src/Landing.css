@@ -497,19 +497,33 @@ body {
     padding: 0 1rem;
   }
 
+  .logo {
+    flex: 0 1 auto;
+    max-width: 45%;
+    min-width: 0;
+    overflow: hidden;
+  }
+
   .logo img {
-    height: 50px !important;
+    height: 44px !important;
+    width: auto;
+    max-width: 100%;
+    display: block;
   }
 
   .header-buttons {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: row;
     gap: 0.5rem;
   }
 
   .header-buttons .btn-text,
   .header-buttons .btn-primary,
   .header-buttons .btn-secondary {
-    font-size: 0.85rem;
-    padding: 0.5rem 0.9rem;
+    font-size: 0.8rem;
+    padding: 0.45rem 0.85rem;
+    white-space: nowrap;
   }
 
   .hero {
@@ -630,20 +644,12 @@ body {
 }
 
 @media (max-width: 480px) {
-  .logo {
-    flex-shrink: 1;
-    min-width: 0;
-    overflow: hidden;
-  }
-
   .logo img {
     height: 36px !important;
-    max-width: 100%;
   }
 
   .header-buttons {
-    flex-shrink: 0;
-    gap: 0.35rem;
+    gap: 0.3rem;
   }
 
   .header-buttons .btn-text,
@@ -651,7 +657,6 @@ body {
   .header-buttons .btn-secondary {
     font-size: 0.72rem;
     padding: 0.4rem 0.6rem;
-    white-space: nowrap;
   }
 
   .hero {
