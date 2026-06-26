@@ -15,6 +15,15 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
   const videoRef1 = useRef(null);
 
   useEffect(() => {
+    document.documentElement.style.background = '#0d1b2a';
+    document.body.style.background = '#0d1b2a';
+    return () => {
+      document.documentElement.style.background = '';
+      document.body.style.background = '';
+    };
+  }, []);
+
+  useEffect(() => {
     const interval = setInterval(() => {
       setActiveSlot(prev => {
         const inactive = prev;
@@ -76,7 +85,7 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
 
         <div className="hero-content">
           <h1>Una sola plataforma para publicar en TODOS los portales</h1>
-          <p>Sincroniza tus propiedades automáticamente en Tecnocasa, Idealista, Fotocasa y más. Ahorra tiempo y dinero.</p>
+          <p>Sincroniza tus propiedades automáticamente en Idealista, Fotocasa y más. Ahorra tiempo y dinero.</p>
           <button className="btn-primary btn-large" onClick={onSignupClick}>Comienza tu prueba gratuita</button>
           <p className="hero-subtext">✅ 14 días gratis • Sin tarjeta de crédito • Cancela en cualquier momento</p>
         </div>
@@ -140,7 +149,6 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
       <section className="portals">
         <h2>Sincroniza con los principales portales</h2>
         <div className="portals-grid">
-          <div className="portal-logo">Tecnocasa</div>
           <div className="portal-logo">Idealista</div>
           <div className="portal-logo">Fotocasa</div>
           <div className="portal-logo">Oportuna</div>
