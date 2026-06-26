@@ -506,29 +506,17 @@ body {
     width: auto;
   }
 
-  /* Mostrar botón login junto al logo, ocultar el del grupo */
+  /* En móvil: solo el botón de login, ocultar el grupo de botones */
   .header-login-mobile {
     display: block;
     font-size: 0.82rem;
     padding: 0.45rem 0.85rem;
     white-space: nowrap;
-    margin-right: auto;
-  }
-
-  .header-buttons .btn-text {
-    display: none;
+    margin-left: auto;
   }
 
   .header-buttons {
-    flex: 0 0 auto;
-    gap: 0.5rem;
-  }
-
-  .header-buttons .btn-primary,
-  .header-buttons .btn-secondary {
-    font-size: 0.82rem;
-    padding: 0.45rem 0.85rem;
-    white-space: nowrap;
+    display: none;
   }
 
   .hero {
