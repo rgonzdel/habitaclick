@@ -630,15 +630,28 @@ body {
 }
 
 @media (max-width: 480px) {
+  .logo {
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+  }
+
   .logo img {
-    height: 42px !important;
+    height: 36px !important;
+    max-width: 100%;
+  }
+
+  .header-buttons {
+    flex-shrink: 0;
+    gap: 0.35rem;
   }
 
   .header-buttons .btn-text,
   .header-buttons .btn-primary,
   .header-buttons .btn-secondary {
-    font-size: 0.78rem;
-    padding: 0.45rem 0.7rem;
+    font-size: 0.72rem;
+    padding: 0.4rem 0.6rem;
+    white-space: nowrap;
   }
 
   .hero {
