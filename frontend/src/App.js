@@ -38,8 +38,10 @@ function App() {
     bathrooms: '',
     square_meters: '',
     description: '',
-    assigned_to: ''
+    assigned_to: '',
+    estado: 'disponible'
   });
+  const [filterEstado, setFilterEstado] = useState('');
 
   const showToast = (type, msg) => {
     setToast({ type, msg });
@@ -123,7 +125,8 @@ function App() {
           bathrooms: formData.bathrooms ? parseFloat(formData.bathrooms) : null,
           square_meters: formData.square_meters ? parseFloat(formData.square_meters) : null,
           description: formData.description || null,
-          assigned_to: formData.assigned_to || null
+          assigned_to: formData.assigned_to || null,
+          estado: formData.estado || 'disponible'
         })
       });
 
@@ -145,7 +148,7 @@ function App() {
         setFormData({
           title: '', price: '', address: '', city: '', province: '',
           property_type: 'apartment', transaction_type: 'sale',
-          bedrooms: '', bathrooms: '', square_meters: '', description: '', assigned_to: ''
+          bedrooms: '', bathrooms: '', square_meters: '', description: '', assigned_to: '', estado: 'disponible'
         });
         setSelectedPhotos([]);
         setSelectedVideos([]);
@@ -203,13 +206,21 @@ function App() {
   const ROLE_LABELS = { asesor: 'Asesor', director: 'Director', administrador: 'Administrador' };
   const ROLE_COLORS = { asesor: '#6b7280', director: '#2563eb', administrador: '#7c3aed' };
 
-  const filteredProperties = properties.filter(p =>
-    !search ||
-    p.title?.toLowerCase().includes(search.toLowerCase()) ||
-    p.city?.toLowerCase().includes(search.toLowerCase()) ||
-    p.address?.toLowerCase().includes(search.toLowerCase()) ||
-    p.reference?.toLowerCase().includes(search.toLowerCase())
-  );
+  const ESTADO_LABELS = { disponible: 'Disponible', reservado: 'Reservado', vendido: 'Vendido', alquilado: 'Alquilado' };
+  const ESTADO_COLORS = { disponible: '#22c55e', reservado: '#f59e0b', vendido: '#3b82f6', alquilado: '#8b5cf6' };
+
+  const filteredProperties = properties.filter(p => {
+    const matchSearch = !search ||
+      p.title?.toLowerCase().includes(search.toLowerCase()) ||
+      p.city?.toLowerCase().includes(search.toLowerCase()) ||
+      p.address?.toLowerCase().includes(search.toLowerCase()) ||
+      p.reference?.toLowerCase().includes(search.toLowerCase());
+    const matchEstado = !filterEstado || p.estado === filterEstado;
+    return matchSearch && matchEstado;
+  });
+
+  const statsEstado = { disponible: 0, reservado: 0, vendido: 0, alquilado: 0 };
+  properties.forEach(p => { if (statsEstado[p.estado] !== undefined) statsEstado[p.estado]++; });
 
   const exportToCSV = () => {
     const headers = ['Referencia', 'Título', 'Tipo', 'Operación', 'Precio (€)', 'Dirección', 'Ciudad', 'Provincia', 'Habitaciones', 'Baños', 'm²', 'Descripción', 'Asesor', 'Fotos', 'Fecha'];
@@ -304,9 +315,26 @@ function App() {
 
           <main className="container">
             {dashView === 'properties' && (<>
+            {properties.length > 0 && (
+              <div className="stats-bar">
+                {Object.entries(ESTADO_LABELS).map(([key, label]) => (
+                  <button
+                    key={key}
+                    className={`stat-pill${filterEstado === key ? ' active' : ''}`}
+                    style={{ '--pill-color': ESTADO_COLORS[key] }}
+                    onClick={() => setFilterEstado(filterEstado === key ? '' : key)}
+                  >
+                    <span className="stat-pill-dot" style={{ background: ESTADO_COLORS[key] }} />
+                    {label}
+                    <span className="stat-pill-count">{statsEstado[key]}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+
             <div className="controls">
               <div className="controls-left">
-                <h2>Propiedades ({filteredProperties.length}{search ? ` de ${properties.length}` : ''})</h2>
+                <h2>Propiedades ({filteredProperties.length}{search || filterEstado ? ` de ${properties.length}` : ''})</h2>
                 {properties.length > 0 && (
                   <div className="search-wrap">
                     <span className="search-icon">🔍</span>
@@ -357,6 +385,12 @@ function App() {
                   <select name="transaction_type" value={formData.transaction_type} onChange={handleChange}>
                     <option value="sale">Venta</option>
                     <option value="rent">Alquiler</option>
+                  </select>
+                  <select name="estado" value={formData.estado} onChange={handleChange}>
+                    <option value="disponible">Disponible</option>
+                    <option value="reservado">Reservado</option>
+                    <option value="vendido">Vendido</option>
+                    <option value="alquilado">Alquilado</option>
                   </select>
                 </div>
                 <div className="form-row">
@@ -463,7 +497,7 @@ function App() {
                     <div key={p.id} className={`property-row${isConfirming ? ' property-row--confirming' : ''}`}>
                       <div className="property-row-photo">
                         {primaryPhoto ? (
-                          <img src={`http://localhost:3001${primaryPhoto.url}`} alt={p.title} />
+                          <img src={`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}${primaryPhoto.url}`} alt={p.title} />
                         ) : (
                           <div className="property-row-photo-placeholder">📷</div>
                         )}
@@ -502,6 +536,11 @@ function App() {
                       </div>
 
                       <div className="property-row-price">
+                        {p.estado && (
+                          <span className="estado-badge" style={{ background: ESTADO_COLORS[p.estado] || '#6b7280' }}>
+                            {ESTADO_LABELS[p.estado] || p.estado}
+                          </span>
+                        )}
                         <span>{p.price?.toLocaleString('es-ES')} €</span>
                         {p.photos?.length > 0 && (
                           <span className="property-row-photos-count">📷 {p.photos.length}</span>

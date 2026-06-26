@@ -280,7 +280,7 @@ app.get('/api/v1/properties', verifyToken, async (req, res) => {
 
 // PUT PROPIEDAD (editar)
 app.put('/api/v1/properties/:id', verifyToken, async (req, res) => {
-  const { title, price, address, city, province, property_type, transaction_type, bedrooms, bathrooms, square_meters, description, assigned_to } = req.body;
+  const { title, price, address, city, province, property_type, transaction_type, bedrooms, bathrooms, square_meters, description, assigned_to, estado } = req.body;
   if (!title || !price || !address || !city || !province) {
     return res.status(400).json({ error: 'Faltan campos obligatorios' });
   }
@@ -294,7 +294,7 @@ app.put('/api/v1/properties/:id', verifyToken, async (req, res) => {
 
     const { data, error } = await supabase
       .from('properties')
-      .update({ title, price, address, city, province, property_type, transaction_type, bedrooms, bathrooms, square_meters, description, assigned_to: assigned_to || null })
+      .update({ title, price, address, city, province, property_type, transaction_type, bedrooms, bathrooms, square_meters, description, assigned_to: assigned_to || null, estado: estado || 'disponible' })
       .eq('id', req.params.id)
       .eq('user_email', req.user.email)
       .select();
@@ -321,7 +321,7 @@ app.put('/api/v1/properties/:id', verifyToken, async (req, res) => {
 
 // POST PROPIEDAD
 app.post('/api/v1/properties', verifyToken, async (req, res) => {
-  const { title, price, address, city, province, property_type, transaction_type, bedrooms, bathrooms, square_meters, description, assigned_to } = req.body;
+  const { title, price, address, city, province, property_type, transaction_type, bedrooms, bathrooms, square_meters, description, assigned_to, estado } = req.body;
   if (!title || !price || !address || !city || !province) {
     return res.status(400).json({ error: 'Faltan campos obligatorios' });
   }
@@ -347,6 +347,7 @@ app.post('/api/v1/properties', verifyToken, async (req, res) => {
         property_type, transaction_type, bedrooms, bathrooms, square_meters,
         description, reference,
         assigned_to: assigned_to || null,
+        estado: estado || 'disponible',
         user_email: req.user.email,
         publication_status: 'draft'
       }])
