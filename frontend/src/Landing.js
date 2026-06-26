@@ -89,8 +89,8 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
         <div className="hero-overlay"></div>
 
         <div className="hero-content">
-          <h1>Una sola plataforma para publicar en TODOS los portales</h1>
-          <p>Sincroniza tus propiedades automáticamente en Idealista, Fotocasa y más. Ahorra tiempo y dinero.</p>
+          <h1>Software inmobiliario para publicar en TODOS los portales a la vez</h1>
+          <p>Sincroniza tus propiedades automáticamente en Idealista, Fotocasa y más portales inmobiliarios. Gestiona toda tu cartera desde una sola plataforma y ahorra horas cada semana.</p>
           <button className="btn-primary btn-large" onClick={onSignupClick}>Comienza tu prueba gratuita</button>
           <p className="hero-subtext">✅ 14 días gratis • Sin tarjeta de crédito • Cancela en cualquier momento</p>
         </div>
@@ -98,53 +98,53 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
 
       {/* Problema/Solución */}
       <section className="problem-solution">
-        <h2>El problema de las inmobiliarias hoy</h2>
+        <h2>El problema de las agencias inmobiliarias hoy</h2>
         <div className="cards-grid">
           <div className="card-problem">
             <div className="icon">⏱️</div>
-            <h3>Perder horas publicando</h3>
-            <p>Publicar en 5+ portales manualmente toma horas cada semana</p>
+            <h3>Horas perdidas publicando manualmente</h3>
+            <p>Subir cada propiedad a Idealista, Fotocasa y otros portales por separado consume horas cada semana</p>
           </div>
           <div className="card-problem">
             <div className="icon">💰</div>
-            <h3>Comisiones altas</h3>
-            <p>Gastar €50-200 por propiedad en comisiones de portales</p>
+            <h3>Costes elevados por portal</h3>
+            <p>Pagar suscripciones independientes a cada portal inmobiliario dispara los gastos fijos de tu agencia</p>
           </div>
           <div className="card-problem">
             <div className="icon">😰</div>
-            <h3>Errores y desincronización</h3>
-            <p>Datos inconsistentes entre portales causan confusión</p>
+            <h3>Datos desincronizados entre portales</h3>
+            <p>Precios y disponibilidad diferentes en cada portal generan confusión y pérdida de clientes</p>
           </div>
         </div>
 
-        <h2 style={{ marginTop: '60px' }}>Nuestra solución</h2>
+        <h2 style={{ marginTop: '60px' }}>La solución: HabitaClick</h2>
         <div className="solution-list">
           <div className="solution-item">
             <div className="check">✅</div>
             <div>
-              <h4>Publica una sola vez</h4>
-              <p>Sube tu propiedad y se sincroniza automáticamente a todos los portales</p>
+              <h4>Publica en todos los portales con un solo clic</h4>
+              <p>Sube tu propiedad una vez y HabitaClick la sincroniza automáticamente en todos los portales inmobiliarios</p>
             </div>
           </div>
           <div className="solution-item">
             <div className="check">✅</div>
             <div>
-              <h4>Ahorra hasta 90% en comisiones</h4>
-              <p>Un único pago mensual en lugar de múltiples comisiones</p>
+              <h4>Reduce costes hasta un 90%</h4>
+              <p>Un único pago mensual desde 18,99€ en lugar de múltiples suscripciones a portales</p>
             </div>
           </div>
           <div className="solution-item">
             <div className="check">✅</div>
             <div>
-              <h4>Datos siempre sincronizados</h4>
-              <p>Todos tus portales actualizados en tiempo real</p>
+              <h4>Propiedades siempre actualizadas en tiempo real</h4>
+              <p>Cualquier cambio de precio o estado se actualiza al instante en todos los portales</p>
             </div>
           </div>
           <div className="solution-item">
             <div className="check">✅</div>
             <div>
-              <h4>Gestiona todo desde un lugar</h4>
-              <p>Dashboard único para todas tus propiedades y portales</p>
+              <h4>CRM inmobiliario integrado</h4>
+              <p>Gestiona toda tu cartera de propiedades y agentes desde un único dashboard</p>
             </div>
           </div>
         </div>
@@ -152,7 +152,7 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
 
       {/* Portales soportados */}
       <section className="portals">
-        <h2>Sincroniza con los principales portales</h2>
+        <h2>Integrado con los principales portales inmobiliarios</h2>
         <div className="portals-grid">
           <div className="portal-logo">Idealista</div>
           <div className="portal-logo">Fotocasa</div>
@@ -160,7 +160,7 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
           <div className="portal-logo">Inmuebles24</div>
           <div className="portal-logo">Vivanuncios</div>
         </div>
-        <p className="portals-note">Y muchos más. Nos integramos continuamente con nuevos portales.</p>
+        <p className="portals-note">Y muchos más. Nos integramos continuamente con nuevos portales inmobiliarios en España.</p>
       </section>
 
       {/* Planes */}
@@ -213,9 +213,9 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
 
       {/* CTA Final */}
       <section className="final-cta">
-        <h2>¿Listo para revolucionar tu negocio inmobiliario?</h2>
-        <p>Únete a cientos de agencias que ya ahorran tiempo y dinero con HABITACLICK</p>
-        <button className="btn-primary btn-large" onClick={onSignupClick}>Comienza gratis hoy</button>
+        <h2>¿Listo para transformar tu agencia inmobiliaria?</h2>
+        <p>Únete a las agencias inmobiliarias que ya publican en todos los portales automáticamente con HabitaClick. Sin complicaciones, sin costes extra.</p>
+        <button className="btn-primary btn-large" onClick={onSignupClick}>Empieza gratis 14 días</button>
       </section>
 
       {/* Footer */}
