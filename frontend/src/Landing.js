@@ -169,7 +169,7 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
         <div className="pricing-grid">
           <div className="pricing-card">
             <h3>Starter</h3>
-            <div className="price">€99<span>/mes</span></div>
+            <div className="price">€18,99<span>/mes</span></div>
             <p className="description">Para agencias pequeñas</p>
             <ul>
               <li>✅ Hasta 50 propiedades</li>
@@ -183,7 +183,7 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
           <div className="pricing-card featured">
             <div className="badge">MÁS POPULAR</div>
             <h3>Professional</h3>
-            <div className="price">€299<span>/mes</span></div>
+            <div className="price">€39,99<span>/mes</span></div>
             <p className="description">Para agencias medianas</p>
             <ul>
               <li>✅ Hasta 500 propiedades</li>
