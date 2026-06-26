@@ -7,6 +7,9 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   color: #333;
+}
+
+.landing {
   background: #f9f9f9;
 }
 
@@ -125,6 +128,7 @@ body {
   justify-content: space-between;
   padding: 120px 2rem 2rem;
   overflow: hidden;
+  background: #0d1b2a;
 }
 
 .hero-video {
@@ -489,14 +493,36 @@ body {
 }
 
 @media (max-width: 768px) {
+  .header-content {
+    padding: 0 1rem;
+  }
+
+  .logo img {
+    height: 56px !important;
+  }
+
+  .logo {
+    padding: 4px 8px;
+  }
+
   .header-buttons {
-    flex-direction: column;
     gap: 0.5rem;
   }
 
+  .header-buttons .btn-text,
+  .header-buttons .btn-primary,
+  .header-buttons .btn-secondary {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.9rem;
+  }
+
   .hero {
-    margin-top: 100px;
-    padding: 80px 1rem 1rem;
+    flex-direction: column;
+    padding: 90px 1rem 2rem;
+  }
+
+  .hero-content {
+    max-width: 100%;
   }
 
   .hero-content h1 {
@@ -523,23 +549,42 @@ body {
   .solution-item {
     flex-direction: column;
   }
+
+  .pricing-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 480px) {
   .logo {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    padding: 4px 8px;
   }
 
-  .header-content {
-    padding: 0 1rem;
+  .logo img {
+    height: 44px !important;
+  }
+
+  .header-buttons .btn-text {
+    display: none;
+  }
+
+  .header-buttons .btn-primary,
+  .header-buttons .btn-secondary {
+    font-size: 0.8rem;
+    padding: 0.45rem 0.8rem;
   }
 
   .hero {
-    padding: 80px 1rem 1rem;
+    padding: 76px 1rem 1.5rem;
   }
 
   .hero-content h1 {
     font-size: 1.5rem;
+  }
+
+  .hero-content p {
+    font-size: 0.95rem;
   }
 
   .cards-grid {
@@ -548,5 +593,23 @@ body {
 
   .pricing-grid {
     gap: 1rem;
+  }
+
+  .problem-solution,
+  .portals,
+  .pricing {
+    padding: 2.5rem 1rem;
+  }
+
+  .final-cta {
+    padding: 2.5rem 1rem;
+  }
+
+  .final-cta h2 {
+    font-size: 1.5rem;
+  }
+
+  .footer {
+    padding: 2rem 1rem 1rem;
   }
 }
