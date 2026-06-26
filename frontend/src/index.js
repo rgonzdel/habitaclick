@@ -1,7 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';  // ← AGREGAR ESTA LÍNEA
+import { SpeedInsights } from '@vercel/speed-insights/react';
+import './index.css';
 import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
+root.render(
+  <>
+    <App />
+    <SpeedInsights />
+  </>
+);
