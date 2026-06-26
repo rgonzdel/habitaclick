@@ -313,6 +313,51 @@
   animation: um-shimmer 1.4s infinite linear;
 }
 
+/* Edit button */
+.um-btn-edit {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.um-btn-edit:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+/* Row in edit mode */
+.um-row-editing {
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.um-edit-form {
+  width: 100%;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.um-edit-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.um-edit-label {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
 /* Empty */
 .um-empty {
   background: rgba(255,255,255,0.1);

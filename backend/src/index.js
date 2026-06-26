@@ -552,6 +552,27 @@ app.post('/api/v1/users', verifyToken, requireRole('director', 'administrador'),
   }
 });
 
+// PUT editar usuario completo (solo administrador)
+app.put('/api/v1/users/:id', verifyToken, requireRole('administrador'), async (req, res) => {
+  const { nombre, apellidos, email, cargo, ubicacion_oficina, role, password } = req.body;
+  if (!nombre || !apellidos || !email || !cargo || !ubicacion_oficina || !role) {
+    return res.status(400).json({ error: 'Faltan campos obligatorios' });
+  }
+  try {
+    const updateData = { nombre, apellidos, email, cargo, ubicacion_oficina, role };
+    if (password && password.trim()) updateData.password = password;
+    const { data, error } = await supabase
+      .from('users')
+      .update(updateData)
+      .eq('id', req.params.id)
+      .select('id, email, nombre, apellidos, cargo, ubicacion_oficina, role, created_at');
+    if (error) return res.status(500).json({ error: error.message });
+    res.json({ success: true, user: data[0] });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // PUT rol de usuario (solo administrador)
 app.put('/api/v1/users/:id/role', verifyToken, requireRole('administrador'), async (req, res) => {
   const { role } = req.body;
