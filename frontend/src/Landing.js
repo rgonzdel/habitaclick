@@ -3,6 +3,7 @@ import './Landing.css';
 
 const videos = [
   '/videos/VideoLandingMadrid.mp4',
+  '/videos/VideoLandingMadrid2.mp4',
   '/videos/VideoLandingMadrid3.mp4'
 ];
 
