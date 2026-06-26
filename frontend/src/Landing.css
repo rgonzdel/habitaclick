@@ -518,15 +518,13 @@ body {
 
   .hero {
     flex-direction: column;
-    padding: 90px 1rem 2rem;
+    justify-content: center;
+    padding: 90px 1.5rem;
+    min-height: 100vh;
   }
 
   .hero-content {
     max-width: 100%;
-    text-align: center;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
   }
 
   .hero-content h1 {
