@@ -4,7 +4,8 @@ import './Landing.css';
 const videos = [
   '/videos/VideoLandingMadrid.mp4',
   '/videos/VideoLandingMadrid2.mp4',
-  '/videos/VideoLandingMadrid3.mp4'
+  '/videos/VideoLandingMadrid3.mp4',
+  '/videos/VideoLandingBarcelona4.mp4'
 ];
 
 function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPrivacyClick }) {
