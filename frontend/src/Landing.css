@@ -63,6 +63,10 @@ body {
   gap: 1rem;
 }
 
+.header-login-mobile {
+  display: none;
+}
+
 .btn-text {
   background: none;
   border: none;
@@ -497,31 +501,32 @@ body {
     padding: 0 1rem;
   }
 
-  .logo {
-    flex: 0 1 auto;
-    max-width: 45%;
-    min-width: 0;
-    overflow: hidden;
-  }
-
   .logo img {
     height: 44px !important;
     width: auto;
-    max-width: 100%;
+  }
+
+  /* Mostrar botón login junto al logo, ocultar el del grupo */
+  .header-login-mobile {
     display: block;
+    font-size: 0.82rem;
+    padding: 0.45rem 0.85rem;
+    white-space: nowrap;
+    margin-right: auto;
+  }
+
+  .header-buttons .btn-text {
+    display: none;
   }
 
   .header-buttons {
     flex: 0 0 auto;
-    display: flex;
-    flex-direction: row;
     gap: 0.5rem;
   }
 
-  .header-buttons .btn-text,
   .header-buttons .btn-primary,
   .header-buttons .btn-secondary {
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     padding: 0.45rem 0.85rem;
     white-space: nowrap;
   }
