@@ -480,6 +480,29 @@ body {
   color: #9ca3af;
 }
 
+/* Scroll animations */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease var(--delay, 0s), transform 0.6s ease var(--delay, 0s);
+}
+
+.animate-on-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hero content starts visible */
+.hero .animate-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: heroFadeIn 0.9s ease 0.3s forwards;
+}
+
+@keyframes heroFadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .hero {

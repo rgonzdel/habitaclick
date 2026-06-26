@@ -8,6 +8,8 @@ import Signup from './Signup';
 import Login from './Login';
 import PoliticaCookies from './components/PoliticaCookies';
 import PoliticaPrivacidad from './components/PoliticaPrivacidad';
+import SobreNosotros from './components/SobreNosotros';
+import Contacto from './components/Contacto';
 import './App.css';
 
 function App() {
@@ -617,6 +619,22 @@ function App() {
     );
   }
 
+  if (view === 'sobre') {
+    return (
+      <div style={contentStyle}>
+        <SobreNosotros onBack={() => navigateWithAnimation('landing')} />
+      </div>
+    );
+  }
+
+  if (view === 'contacto') {
+    return (
+      <div style={contentStyle}>
+        <Contacto onBack={() => navigateWithAnimation('landing')} />
+      </div>
+    );
+  }
+
   if (view === 'politica-cookies') {
     return (
       <div style={contentStyle}>
@@ -650,6 +668,8 @@ function App() {
         onLoginClick={() => navigateWithAnimation('login')}
         onPolicyCookiesClick={() => navigateWithAnimation('politica-cookies')}
         onPolicyPrivacyClick={() => navigateWithAnimation('politica-privacidad')}
+        onSobreClick={() => navigateWithAnimation('sobre')}
+        onContactoClick={() => navigateWithAnimation('contacto')}
       />
     </div>
   );
