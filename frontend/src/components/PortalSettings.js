@@ -129,7 +129,7 @@ export default function PortalSettings({ showToast }) {
           return (
             <div key={key} className="ps-card">
               <div className="ps-card-head" onClick={() => setExpanded(p => ({ ...p, [key]: !p[key] }))}>
-                <div className="ps-portal-badge" style={{ background: meta.color }}>
+                <div className="ps-portal-badge" style={{ border: `2px solid ${meta.color}` }}>
                   <img src={meta.logo} alt={meta.name} className="ps-portal-logo" />
                 </div>
                 <div className="ps-portal-info">

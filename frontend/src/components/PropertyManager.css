@@ -704,7 +704,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
   padding: 3px;
   overflow: hidden;
 }
@@ -715,7 +715,8 @@
 }
 
 .pm-portal-icon.active {
-  box-shadow: 0 2px 6px rgba(0,0,0,0.22);
+  background: #fff;
+  box-shadow: 0 0 0 2px currentColor, 0 2px 6px rgba(0,0,0,0.12);
 }
 
 .pm-portal-icon:disabled { opacity: 0.45; cursor: not-allowed; }
@@ -724,16 +725,16 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
-  filter: grayscale(1) opacity(0.55);
+  filter: grayscale(1) opacity(0.45);
   transition: filter 0.15s;
 }
 
 .pm-portal-icon:hover:not(:disabled) .pm-portal-logo {
-  filter: grayscale(0.2) opacity(0.85);
+  filter: grayscale(0) opacity(0.9);
 }
 
 .pm-portal-logo-active {
-  filter: brightness(0) invert(1) !important;
+  filter: none !important;
 }
 
 /* ─── AI button ─────────────────────────────────── */

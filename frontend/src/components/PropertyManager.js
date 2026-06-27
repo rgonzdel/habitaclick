@@ -676,7 +676,7 @@ export default function PropertyManager({ properties, loadProperties, showToast,
                           <button
                             key={key}
                             className={`pm-portal-icon${active ? ' active' : ''}`}
-                            style={active ? { background: meta.color, borderColor: meta.color } : {}}
+                            style={active ? { color: meta.color, borderColor: meta.color } : {}}
                             onClick={() => togglePortal(p.id, key)}
                             disabled={togglingPortal === togKey}
                             title={`${meta.name}: ${active ? 'publicado — clic para retirar' : 'clic para publicar'}`}
