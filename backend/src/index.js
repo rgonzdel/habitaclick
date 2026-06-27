@@ -283,12 +283,22 @@ app.get('/api/v1/properties', verifyToken, async (req, res) => {
 
 // PUT PROPIEDAD (editar)
 app.put('/api/v1/properties/:id', verifyToken, async (req, res) => {
-  const { title, price, address, city, province, property_type, transaction_type, bedrooms, bathrooms, square_meters, description, assigned_to, estado } = req.body;
-  if (!title || !price || !address || !city || !province) {
-    return res.status(400).json({ error: 'Faltan campos obligatorios' });
+  const {
+    title, price, address, city, province, property_type, transaction_type,
+    bedrooms, bathrooms, square_meters, description, assigned_to, estado,
+    postal_code, street_number, floor, door, block_num, portal_door,
+    district, zone, urbanization, useful_area, year_built, community_fees,
+    show_price, features, energy_consumption_cert, energy_emission_cert,
+    energy_consumption_value, co2_emission_value, video_url, virtual_tour_url,
+    cadastral_reference, owner, second_owner, has_keys, key_reference,
+    sign_on_property, ibi, agreement_type, agreement_from, agreement_to,
+    commission_percentage, commission_value, shared_commission_pct,
+    terrace_area, garage_area, garage_price,
+  } = req.body;
+  if (!title || !price) {
+    return res.status(400).json({ error: 'Título y precio son obligatorios' });
   }
   try {
-    // Leer el estado anterior para detectar cambio de asignación
     const { data: prev } = await supabase
       .from('properties')
       .select('assigned_to, title, reference, address, city, province, price, property_type, transaction_type, description')
@@ -297,7 +307,36 @@ app.put('/api/v1/properties/:id', verifyToken, async (req, res) => {
 
     const { data, error } = await supabase
       .from('properties')
-      .update({ title, price, address, city, province, property_type, transaction_type, bedrooms, bathrooms, square_meters, description, assigned_to: assigned_to || null, estado: estado || 'disponible' })
+      .update({
+        title, price, address, city, province, property_type, transaction_type,
+        bedrooms, bathrooms, square_meters, description,
+        assigned_to: assigned_to || null, estado: estado || 'disponible',
+        postal_code: postal_code || null, street_number: street_number || null,
+        floor: floor || null, door: door || null, block_num: block_num || null,
+        portal_door: portal_door || null, district: district || null,
+        zone: zone || null, urbanization: urbanization || null,
+        useful_area: useful_area ? parseFloat(useful_area) : null,
+        year_built: year_built ? parseInt(year_built) : null,
+        community_fees: community_fees ? parseFloat(community_fees) : null,
+        show_price: show_price !== undefined ? show_price : true,
+        features: features || [],
+        energy_consumption_cert: energy_consumption_cert || 'en_tramite',
+        energy_emission_cert: energy_emission_cert || 'en_tramite',
+        energy_consumption_value: energy_consumption_value ? parseFloat(energy_consumption_value) : null,
+        co2_emission_value: co2_emission_value ? parseFloat(co2_emission_value) : null,
+        video_url: video_url || null, virtual_tour_url: virtual_tour_url || null,
+        cadastral_reference: cadastral_reference || null, owner: owner || null,
+        second_owner: second_owner || null, has_keys: has_keys || false,
+        key_reference: key_reference || null, sign_on_property: sign_on_property || false,
+        ibi: ibi ? parseFloat(ibi) : null, agreement_type: agreement_type || null,
+        agreement_from: agreement_from || null, agreement_to: agreement_to || null,
+        commission_percentage: commission_percentage ? parseFloat(commission_percentage) : null,
+        commission_value: commission_value ? parseFloat(commission_value) : null,
+        shared_commission_pct: shared_commission_pct ? parseFloat(shared_commission_pct) : null,
+        terrace_area: terrace_area ? parseFloat(terrace_area) : null,
+        garage_area: garage_area ? parseFloat(garage_area) : null,
+        garage_price: garage_price ? parseFloat(garage_price) : null,
+      })
       .eq('id', req.params.id)
       .eq('user_email', req.user.email)
       .select();
@@ -324,9 +363,20 @@ app.put('/api/v1/properties/:id', verifyToken, async (req, res) => {
 
 // POST PROPIEDAD
 app.post('/api/v1/properties', verifyToken, async (req, res) => {
-  const { title, price, address, city, province, property_type, transaction_type, bedrooms, bathrooms, square_meters, description, assigned_to, estado } = req.body;
-  if (!title || !price || !address || !city || !province) {
-    return res.status(400).json({ error: 'Faltan campos obligatorios' });
+  const {
+    title, price, address, city, province, property_type, transaction_type,
+    bedrooms, bathrooms, square_meters, description, assigned_to, estado,
+    postal_code, street_number, floor, door, block_num, portal_door,
+    district, zone, urbanization, useful_area, year_built, community_fees,
+    show_price, features, energy_consumption_cert, energy_emission_cert,
+    energy_consumption_value, co2_emission_value, video_url, virtual_tour_url,
+    cadastral_reference, owner, second_owner, has_keys, key_reference,
+    sign_on_property, ibi, agreement_type, agreement_from, agreement_to,
+    commission_percentage, commission_value, shared_commission_pct,
+    terrace_area, garage_area, garage_price,
+  } = req.body;
+  if (!title || !price) {
+    return res.status(400).json({ error: 'Título y precio son obligatorios' });
   }
   try {
     // Generar referencia única HAB-XXXXX
@@ -346,13 +396,20 @@ app.post('/api/v1/properties', verifyToken, async (req, res) => {
     const { data, error } = await supabase
       .from('properties')
       .insert([{
-        title, price, address, city, province,
-        property_type, transaction_type, bedrooms, bathrooms, square_meters,
-        description, reference,
-        assigned_to: assigned_to || null,
-        estado: estado || 'disponible',
-        user_email: req.user.email,
-        publication_status: 'draft'
+        title, price, address: address || null, city: city || null,
+        province: province || null, property_type, transaction_type,
+        bedrooms, bathrooms, square_meters, description, reference,
+        assigned_to: assigned_to || null, estado: estado || 'disponible',
+        user_email: req.user.email, publication_status: 'draft',
+        postal_code: postal_code || null, street_number: street_number || null,
+        floor: floor || null, door: door || null, block_num: block_num || null,
+        portal_door: portal_door || null, district: district || null,
+        zone: zone || null, urbanization: urbanization || null,
+        useful_area: useful_area ? parseFloat(useful_area) : null,
+        year_built: year_built ? parseInt(year_built) : null,
+        community_fees: community_fees ? parseFloat(community_fees) : null,
+        show_price: show_price !== undefined ? show_price : true,
+        features: features || [],
       }])
       .select();
     if (error) return res.status(500).json({ error: error.message });
