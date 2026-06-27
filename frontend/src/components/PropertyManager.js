@@ -5,7 +5,7 @@ import {
   Circle, Search, Download, Edit2, Trash2, Link2, Save,
   User, Video, Camera, SlidersHorizontal, Plus, X, ChevronLeft,
   ChevronRight, ListFilter, CheckSquare, ArrowUpDown, FileText,
-  MapPin, LayoutList, Sparkles
+  MapPin, LayoutList, Sparkles, ChevronDown
 } from 'lucide-react';
 import { generateDescription } from '../utils/descriptionGenerator';
 
@@ -88,50 +88,112 @@ function PhotoCarousel({ photos }) {
   );
 }
 
+const ADD_FEATURES = [
+  { key: 'ascensor', label: 'Ascensor' }, { key: 'exterior', label: 'Exterior' },
+  { key: 'terraza', label: 'Terraza' }, { key: 'armarios_empotrados', label: 'Armarios empotrados' },
+  { key: 'aire_acondicionado', label: 'Aire acondicionado' }, { key: 'cocina_amueblada', label: 'Cocina amueblada' },
+  { key: 'cocina_equipada', label: 'Cocina equipada' }, { key: 'luminoso', label: 'Luminoso' },
+  { key: 'amueblado', label: 'Amueblado' }, { key: 'garaje', label: 'Garaje' },
+  { key: 'piscina', label: 'Piscina' }, { key: 'jardin', label: 'Jardín' },
+  { key: 'trastero', label: 'Trastero' }, { key: 'calefaccion', label: 'Calefacción' },
+  { key: 'portero', label: 'Portero' }, { key: 'patio', label: 'Patio' },
+];
+
+function AddSection({ title, sectionKey, open, onToggle, children }) {
+  return (
+    <div className="pm-add-section">
+      <button type="button" className="pm-add-section-hdr" onClick={() => onToggle(sectionKey)}>
+        <span>{title}</span>
+        <ChevronDown size={15} className={`pm-add-chevron${open ? ' open' : ''}`} />
+      </button>
+      {open && <div className="pm-add-section-body">{children}</div>}
+    </div>
+  );
+}
+
 // ── Add property modal ───────────────────────────────────────────────
 function AddPropertyModal({ teamUsers, getCurrentUserId, showToast, loadProperties, onClose }) {
   const [form, setForm] = useState({
     title: '', price: '', address: '', city: '', province: '',
     property_type: 'apartment', transaction_type: 'sale', estado: 'disponible',
-    bedrooms: '', bathrooms: '', square_meters: '', description: '', assigned_to: '',
+    bedrooms: '', bathrooms: '', square_meters: '', useful_area: '',
+    description: '', assigned_to: '',
+    postal_code: '', street_number: '', floor: '', door: '', block_num: '', portal_door: '',
+    district: '', zone: '', urbanization: '',
+    year_built: '', community_fees: '', show_price: true, features: [],
+    energy_consumption_cert: 'en_tramite', energy_emission_cert: 'en_tramite',
+    energy_consumption_value: '', co2_emission_value: '',
+    video_url: '', virtual_tour_url: '',
+    owner: '', second_owner: '', cadastral_reference: '', has_keys: false,
+    key_reference: '', sign_on_property: false, ibi: '',
+    agreement_type: '', agreement_from: '', agreement_to: '',
+    commission_percentage: '', commission_value: '',
+    terrace_area: '', garage_area: '', garage_price: '',
+  });
+  const [openSections, setOpenSections] = useState({
+    localizacion: true, caracteristicas: true, descripcion: true,
+    precios: false, privado: false, acuerdo: false,
   });
   const [photos, setPhotos] = useState([]);
   const [videos, setVideos] = useState([]);
   const [saving, setSaving] = useState(false);
 
-  const handleGenerateDescription = () => {
-    const desc = generateDescription(form);
-    set('description', desc);
-  };
-
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
+  const setChk = (k) => (e) => set(k, e.target.checked);
+  const toggleSec = (k) => setOpenSections(p => ({ ...p, [k]: !p[k] }));
+  const toggleFeature = (key) => set('features', form.features.includes(key)
+    ? form.features.filter(f => f !== key) : [...form.features, key]);
+
+  const handleGenerateDescription = () => { set('description', generateDescription(form)); };
 
   const handleSubmit = async () => {
-    if (!form.title || !form.price || !form.city) {
-      showToast('error', 'Título, precio y ciudad son obligatorios');
+    if (!form.title || !form.price) {
+      showToast('error', 'Título y precio son obligatorios');
       return;
     }
     setSaving(true);
     const token = localStorage.getItem('token');
     try {
+      const body = {
+        title: form.title, price: parseFloat(form.price),
+        address: form.address || null, city: form.city || null, province: form.province || null,
+        property_type: form.property_type, transaction_type: form.transaction_type,
+        bedrooms: form.bedrooms !== '' ? parseInt(form.bedrooms) : null,
+        bathrooms: form.bathrooms !== '' ? parseFloat(form.bathrooms) : null,
+        square_meters: form.square_meters !== '' ? parseFloat(form.square_meters) : null,
+        useful_area: form.useful_area !== '' ? parseFloat(form.useful_area) : null,
+        description: form.description || null, assigned_to: form.assigned_to || null,
+        estado: form.estado,
+        postal_code: form.postal_code || null, street_number: form.street_number || null,
+        floor: form.floor || null, door: form.door || null,
+        block_num: form.block_num || null, portal_door: form.portal_door || null,
+        district: form.district || null, zone: form.zone || null,
+        urbanization: form.urbanization || null,
+        year_built: form.year_built !== '' ? parseInt(form.year_built) : null,
+        community_fees: form.community_fees !== '' ? parseFloat(form.community_fees) : null,
+        show_price: form.show_price, features: form.features,
+        energy_consumption_cert: form.energy_consumption_cert,
+        energy_emission_cert: form.energy_emission_cert,
+        energy_consumption_value: form.energy_consumption_value !== '' ? parseFloat(form.energy_consumption_value) : null,
+        co2_emission_value: form.co2_emission_value !== '' ? parseFloat(form.co2_emission_value) : null,
+        video_url: form.video_url || null, virtual_tour_url: form.virtual_tour_url || null,
+        owner: form.owner || null, second_owner: form.second_owner || null,
+        cadastral_reference: form.cadastral_reference || null,
+        has_keys: form.has_keys, key_reference: form.key_reference || null,
+        sign_on_property: form.sign_on_property,
+        ibi: form.ibi !== '' ? parseFloat(form.ibi) : null,
+        agreement_type: form.agreement_type || null,
+        agreement_from: form.agreement_from || null, agreement_to: form.agreement_to || null,
+        commission_percentage: form.commission_percentage !== '' ? parseFloat(form.commission_percentage) : null,
+        commission_value: form.commission_value !== '' ? parseFloat(form.commission_value) : null,
+        terrace_area: form.terrace_area !== '' ? parseFloat(form.terrace_area) : null,
+        garage_area: form.garage_area !== '' ? parseFloat(form.garage_area) : null,
+        garage_price: form.garage_price !== '' ? parseFloat(form.garage_price) : null,
+      };
       const res = await fetch(`${API}/api/v1/properties`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-        body: JSON.stringify({
-          title: form.title,
-          price: parseFloat(form.price),
-          address: form.address,
-          city: form.city,
-          province: form.province,
-          property_type: form.property_type,
-          transaction_type: form.transaction_type,
-          bedrooms: form.bedrooms ? parseInt(form.bedrooms) : null,
-          bathrooms: form.bathrooms ? parseFloat(form.bathrooms) : null,
-          square_meters: form.square_meters ? parseFloat(form.square_meters) : null,
-          description: form.description || null,
-          assigned_to: form.assigned_to || null,
-          estado: form.estado,
-        }),
+        body: JSON.stringify(body),
       });
       if (res.ok) {
         const data = await res.json();
@@ -158,118 +220,293 @@ function AddPropertyModal({ teamUsers, getCurrentUserId, showToast, loadProperti
   };
 
   const myId = getCurrentUserId();
+  const ENERGY_OPTS = ['en_tramite', 'A', 'B', 'C', 'D', 'E', 'F', 'G'];
 
   return (
     <div className="pm-overlay" onClick={onClose}>
-      <div className="pm-modal" onClick={e => e.stopPropagation()}>
+      <div className="pm-modal pm-modal-wide" onClick={e => e.stopPropagation()}>
         <div className="pm-modal-head">
           <h3>Añadir inmueble</h3>
           <button className="pm-modal-x" onClick={onClose}><X size={18} /></button>
         </div>
         <div className="pm-modal-body">
-          <div className="pm-form-row">
+
+          {/* LOCALIZACIÓN */}
+          <AddSection title="Localización" sectionKey="localizacion" open={openSections.localizacion} onToggle={toggleSec}>
+            <div className="pm-form-row">
+              <div className="pm-field" style={{ flex: 3 }}>
+                <label>Calle / Dirección</label>
+                <input value={form.address} onChange={e => set('address', e.target.value)} placeholder="Calle Mayor" />
+              </div>
+              <div className="pm-field pm-field-xs">
+                <label>Número</label>
+                <input value={form.street_number} onChange={e => set('street_number', e.target.value)} placeholder="5" />
+              </div>
+              <div className="pm-field pm-field-xs">
+                <label>Planta</label>
+                <input value={form.floor} onChange={e => set('floor', e.target.value)} placeholder="2" />
+              </div>
+              <div className="pm-field pm-field-xs">
+                <label>Puerta</label>
+                <input value={form.door} onChange={e => set('door', e.target.value)} placeholder="A" />
+              </div>
+            </div>
+            <div className="pm-form-row">
+              <div className="pm-field">
+                <label>Ciudad</label>
+                <input value={form.city} onChange={e => set('city', e.target.value)} placeholder="Madrid" />
+              </div>
+              <div className="pm-field">
+                <label>Provincia</label>
+                <input value={form.province} onChange={e => set('province', e.target.value)} placeholder="Madrid" />
+              </div>
+              <div className="pm-field pm-field-xs">
+                <label>C.P.</label>
+                <input value={form.postal_code} onChange={e => set('postal_code', e.target.value)} placeholder="28001" />
+              </div>
+            </div>
+            <div className="pm-form-row">
+              <div className="pm-field">
+                <label>Distrito</label>
+                <input value={form.district} onChange={e => set('district', e.target.value)} />
+              </div>
+              <div className="pm-field">
+                <label>Zona</label>
+                <input value={form.zone} onChange={e => set('zone', e.target.value)} />
+              </div>
+              <div className="pm-field">
+                <label>Urbanización</label>
+                <input value={form.urbanization} onChange={e => set('urbanization', e.target.value)} />
+              </div>
+            </div>
+          </AddSection>
+
+          {/* CARACTERÍSTICAS */}
+          <AddSection title="Características" sectionKey="caracteristicas" open={openSections.caracteristicas} onToggle={toggleSec}>
+            <div className="pm-form-row">
+              <div className="pm-field">
+                <label>Tipo</label>
+                <select value={form.property_type} onChange={e => set('property_type', e.target.value)}>
+                  <option value="apartment">Apartamento / Piso</option>
+                  <option value="house">Casa / Chalet</option>
+                  <option value="land">Terreno / Solar</option>
+                  <option value="commercial">Local / Comercial</option>
+                  <option value="garage">Garaje</option>
+                  <option value="office">Oficina</option>
+                  <option value="storage">Trastero</option>
+                </select>
+              </div>
+              <div className="pm-field">
+                <label>Operación</label>
+                <select value={form.transaction_type} onChange={e => set('transaction_type', e.target.value)}>
+                  <option value="sale">Venta</option>
+                  <option value="rent">Alquiler</option>
+                  <option value="both">Venta y Alquiler</option>
+                </select>
+              </div>
+              <div className="pm-field">
+                <label>Estado</label>
+                <select value={form.estado} onChange={e => set('estado', e.target.value)}>
+                  <option value="disponible">Disponible</option>
+                  <option value="reservado">Reservado</option>
+                  <option value="vendido">Vendido</option>
+                  <option value="alquilado">Alquilado</option>
+                </select>
+              </div>
+            </div>
+            <div className="pm-form-row">
+              <div className="pm-field pm-field-xs">
+                <label>Habitaciones</label>
+                <input type="number" value={form.bedrooms} onChange={e => set('bedrooms', e.target.value)} placeholder="3" min="0" />
+              </div>
+              <div className="pm-field pm-field-xs">
+                <label>Baños</label>
+                <input type="number" value={form.bathrooms} onChange={e => set('bathrooms', e.target.value)} placeholder="1" min="0" step="0.5" />
+              </div>
+              <div className="pm-field">
+                <label>Superficie m²</label>
+                <input type="number" value={form.square_meters} onChange={e => set('square_meters', e.target.value)} placeholder="75" min="0" />
+              </div>
+              <div className="pm-field">
+                <label>Sup. útil m²</label>
+                <input type="number" value={form.useful_area} onChange={e => set('useful_area', e.target.value)} placeholder="" min="0" />
+              </div>
+              <div className="pm-field pm-field-xs">
+                <label>Año const.</label>
+                <input type="number" value={form.year_built} onChange={e => set('year_built', e.target.value)} placeholder="2000" min="1800" max="2099" />
+              </div>
+            </div>
             <div className="pm-field">
-              <label>Título *</label>
+              <label>Etiquetas</label>
+              <div className="pm-features">
+                {ADD_FEATURES.map(f => (
+                  <button key={f.key} type="button"
+                    className={`pm-feature-chip${form.features.includes(f.key) ? ' active' : ''}`}
+                    onClick={() => toggleFeature(f.key)}
+                  >{f.label}</button>
+                ))}
+              </div>
+            </div>
+          </AddSection>
+
+          {/* DESCRIPCIÓN */}
+          <AddSection title="Descripción" sectionKey="descripcion" open={openSections.descripcion} onToggle={toggleSec}>
+            <div className="pm-field">
+              <label>Título del inmueble *</label>
               <input value={form.title} onChange={e => set('title', e.target.value)} placeholder="Piso en Calle Mayor, 5" />
             </div>
-            <div className="pm-field pm-field-sm">
-              <label>Precio (€) *</label>
-              <input type="number" value={form.price} onChange={e => set('price', e.target.value)} placeholder="195000" />
-            </div>
-          </div>
-          <div className="pm-form-row">
             <div className="pm-field">
-              <label>Dirección</label>
-              <input value={form.address} onChange={e => set('address', e.target.value)} placeholder="Calle Mayor, 5, 2º A" />
-            </div>
-          </div>
-          <div className="pm-form-row">
-            <div className="pm-field">
-              <label>Ciudad *</label>
-              <input value={form.city} onChange={e => set('city', e.target.value)} placeholder="Madrid" />
+              <div className="pm-label-row">
+                <label>Descripción</label>
+                <button type="button" className="pm-ai-btn" onClick={handleGenerateDescription}>
+                  <Sparkles size={13} /> Generar con IA
+                </button>
+              </div>
+              <textarea rows={4} value={form.description} onChange={e => set('description', e.target.value)}
+                placeholder="Rellena los campos de arriba y pulsa «Generar con IA»..." />
             </div>
             <div className="pm-field">
-              <label>Provincia</label>
-              <input value={form.province} onChange={e => set('province', e.target.value)} placeholder="Madrid" />
+              <label>Asesor responsable</label>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+                <button type="button"
+                  className={`pm-assign-me${form.assigned_to === myId ? ' active' : ''}`}
+                  onClick={() => set('assigned_to', form.assigned_to === myId ? '' : myId)}
+                >
+                  <User size={14} />
+                  {form.assigned_to === myId ? 'Asignado a mí' : 'Asignarme'}
+                </button>
+                <UserSearchInput
+                  users={teamUsers.filter(u => u.id !== myId)}
+                  value={form.assigned_to !== myId ? form.assigned_to : ''}
+                  onChange={id => set('assigned_to', id)}
+                  placeholder="Buscar compañero…"
+                />
+              </div>
             </div>
-          </div>
-          <div className="pm-form-row">
-            <div className="pm-field">
-              <label>Tipo</label>
-              <select value={form.property_type} onChange={e => set('property_type', e.target.value)}>
-                <option value="apartment">Apartamento</option>
-                <option value="house">Casa</option>
-                <option value="land">Terreno</option>
-                <option value="commercial">Comercial</option>
-              </select>
-            </div>
-            <div className="pm-field">
-              <label>Operación</label>
-              <select value={form.transaction_type} onChange={e => set('transaction_type', e.target.value)}>
-                <option value="sale">Venta</option>
-                <option value="rent">Alquiler</option>
-              </select>
-            </div>
-            <div className="pm-field">
-              <label>Estado</label>
-              <select value={form.estado} onChange={e => set('estado', e.target.value)}>
-                <option value="disponible">Disponible</option>
-                <option value="reservado">Reservado</option>
-                <option value="vendido">Vendido</option>
-                <option value="alquilado">Alquilado</option>
-              </select>
-            </div>
-          </div>
-          <div className="pm-form-row">
-            <div className="pm-field pm-field-sm">
-              <label>Habitaciones</label>
-              <input type="number" value={form.bedrooms} onChange={e => set('bedrooms', e.target.value)} placeholder="3" />
-            </div>
-            <div className="pm-field pm-field-sm">
-              <label>Baños</label>
-              <input type="number" value={form.bathrooms} onChange={e => set('bathrooms', e.target.value)} placeholder="1" />
-            </div>
-            <div className="pm-field pm-field-sm">
-              <label>m²</label>
-              <input type="number" value={form.square_meters} onChange={e => set('square_meters', e.target.value)} placeholder="75" />
-            </div>
-          </div>
-          <div className="pm-field">
-            <div className="pm-label-row">
-              <label>Descripción</label>
-              <button type="button" className="pm-ai-btn" onClick={handleGenerateDescription}>
-                <Sparkles size={13} /> Generar con IA
-              </button>
-            </div>
-            <textarea rows={4} value={form.description} onChange={e => set('description', e.target.value)} placeholder="Rellena los campos de arriba y pulsa «Generar con IA»..." />
-          </div>
+          </AddSection>
 
-          <div className="pm-field">
-            <label>Asesor responsable</label>
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-              <button
-                type="button"
-                className={`pm-assign-me${form.assigned_to === myId ? ' active' : ''}`}
-                onClick={() => set('assigned_to', form.assigned_to === myId ? '' : myId)}
-              >
-                <User size={14} />
-                {form.assigned_to === myId ? 'Asignado a mí' : 'Asignarme'}
-              </button>
-              <UserSearchInput
-                users={teamUsers.filter(u => u.id !== myId)}
-                value={form.assigned_to !== myId ? form.assigned_to : ''}
-                onChange={id => set('assigned_to', id)}
-                placeholder="Buscar compañero…"
-              />
+          {/* PRECIOS Y ENERGÍA */}
+          <AddSection title="Precios, energía y media" sectionKey="precios" open={openSections.precios} onToggle={toggleSec}>
+            <div className="pm-form-row">
+              <div className="pm-field">
+                <label>Precio (€) *</label>
+                <input type="number" value={form.price} onChange={e => set('price', e.target.value)} placeholder="195000" />
+              </div>
+              <div className="pm-field">
+                <label>Gastos com. €/mes</label>
+                <input type="number" value={form.community_fees} onChange={e => set('community_fees', e.target.value)} min="0" />
+              </div>
+              <div className="pm-field">
+                <label>Precio garaje (€)</label>
+                <input type="number" value={form.garage_price} onChange={e => set('garage_price', e.target.value)} min="0" />
+              </div>
             </div>
-          </div>
+            <div className="pm-form-row pm-row-check">
+              <label className="pm-check-label">
+                <input type="checkbox" checked={form.show_price} onChange={setChk('show_price')} />
+                Mostrar precio públicamente
+              </label>
+            </div>
+            <div className="pm-form-row">
+              <div className="pm-field">
+                <label>Cert. consumo energético</label>
+                <select value={form.energy_consumption_cert} onChange={e => set('energy_consumption_cert', e.target.value)}>
+                  {ENERGY_OPTS.map(o => <option key={o} value={o}>{o === 'en_tramite' ? 'En trámite' : o}</option>)}
+                </select>
+              </div>
+              <div className="pm-field">
+                <label>Cert. emisión energética</label>
+                <select value={form.energy_emission_cert} onChange={e => set('energy_emission_cert', e.target.value)}>
+                  {ENERGY_OPTS.map(o => <option key={o} value={o}>{o === 'en_tramite' ? 'En trámite' : o}</option>)}
+                </select>
+              </div>
+            </div>
+            <div className="pm-form-row">
+              <div className="pm-field">
+                <label>Link al vídeo</label>
+                <input value={form.video_url} onChange={e => set('video_url', e.target.value)} placeholder="https://youtube.com/..." />
+              </div>
+              <div className="pm-field">
+                <label>Link visita virtual</label>
+                <input value={form.virtual_tour_url} onChange={e => set('virtual_tour_url', e.target.value)} placeholder="https://..." />
+              </div>
+            </div>
+          </AddSection>
 
-          <div className="pm-form-row">
+          {/* DATOS PRIVADOS */}
+          <AddSection title="Datos privados (opcional)" sectionKey="privado" open={openSections.privado} onToggle={toggleSec}>
+            <div className="pm-form-row">
+              <div className="pm-field">
+                <label>Propietario</label>
+                <input value={form.owner} onChange={e => set('owner', e.target.value)} />
+              </div>
+              <div className="pm-field">
+                <label>Segundo propietario</label>
+                <input value={form.second_owner} onChange={e => set('second_owner', e.target.value)} />
+              </div>
+            </div>
+            <div className="pm-form-row">
+              <div className="pm-field">
+                <label>Ref. catastral</label>
+                <input value={form.cadastral_reference} onChange={e => set('cadastral_reference', e.target.value)} />
+              </div>
+              <div className="pm-field pm-field-xs">
+                <label>IBI (€/año)</label>
+                <input type="number" value={form.ibi} onChange={e => set('ibi', e.target.value)} min="0" />
+              </div>
+            </div>
+            <div className="pm-form-row pm-row-check">
+              <label className="pm-check-label">
+                <input type="checkbox" checked={form.has_keys} onChange={setChk('has_keys')} />
+                Tenemos las llaves
+              </label>
+              <label className="pm-check-label">
+                <input type="checkbox" checked={form.sign_on_property} onChange={setChk('sign_on_property')} />
+                Cartel en inmueble
+              </label>
+            </div>
+          </AddSection>
+
+          {/* ACUERDO */}
+          <AddSection title="Acuerdo y comisión (opcional)" sectionKey="acuerdo" open={openSections.acuerdo} onToggle={toggleSec}>
+            <div className="pm-form-row">
+              <div className="pm-field">
+                <label>Tipo de acuerdo</label>
+                <select value={form.agreement_type} onChange={e => set('agreement_type', e.target.value)}>
+                  <option value="">— Sin acuerdo —</option>
+                  <option value="exclusiva">Exclusiva</option>
+                  <option value="compartida">Compartida</option>
+                  <option value="abierta">Abierta</option>
+                </select>
+              </div>
+              <div className="pm-field">
+                <label>Válido desde</label>
+                <input type="date" value={form.agreement_from} onChange={e => set('agreement_from', e.target.value)} />
+              </div>
+              <div className="pm-field">
+                <label>Válido hasta</label>
+                <input type="date" value={form.agreement_to} onChange={e => set('agreement_to', e.target.value)} />
+              </div>
+            </div>
+            <div className="pm-form-row">
+              <div className="pm-field">
+                <label>Comisión %</label>
+                <input type="number" value={form.commission_percentage} onChange={e => set('commission_percentage', e.target.value)} min="0" max="100" step="0.1" />
+              </div>
+              <div className="pm-field">
+                <label>Comisión valor (€)</label>
+                <input type="number" value={form.commission_value} onChange={e => set('commission_value', e.target.value)} min="0" />
+              </div>
+            </div>
+          </AddSection>
+
+          {/* FOTOS */}
+          <div className="pm-form-row" style={{ marginTop: 4 }}>
             <div className="pm-field">
               <label>Fotografías</label>
               <label className="pm-upload-lbl" htmlFor="new-photos">
                 <Camera size={15} />
-                {photos.length > 0 ? `${photos.length} foto(s) seleccionada(s)` : 'Seleccionar fotos'}
+                {photos.length > 0 ? `${photos.length} foto(s)` : 'Seleccionar fotos'}
               </label>
               <input id="new-photos" type="file" multiple accept="image/*" style={{ display: 'none' }}
                 onChange={e => setPhotos(Array.from(e.target.files))} />
@@ -287,13 +524,9 @@ function AddPropertyModal({ teamUsers, getCurrentUserId, showToast, loadProperti
               </label>
               <input id="new-videos" type="file" multiple accept="video/*" style={{ display: 'none' }}
                 onChange={e => setVideos(Array.from(e.target.files))} />
-              {videos.length > 0 && (
-                <ul style={{ margin: '4px 0 0', paddingLeft: 18, fontSize: '0.82rem', color: '#6b7280' }}>
-                  {videos.map((f, i) => <li key={i}>{f.name}</li>)}
-                </ul>
-              )}
             </div>
           </div>
+
         </div>
         <div className="pm-modal-foot">
           <button className="pm-btn-cancel" onClick={onClose}>Cancelar</button>

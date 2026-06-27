@@ -853,6 +853,101 @@
 .pm-ai-btn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
 .pm-ai-btn:active { transform: scale(0.97); }
 
+/* ─── Add modal wide ────────────────────────────── */
+.pm-modal-wide { width: 820px !important; }
+
+/* ─── Add modal sections (accordion) ────────────── */
+.pm-add-section {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.pm-add-section-hdr {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #f9fafb;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #374151;
+  text-align: left;
+  transition: background 0.1s;
+}
+
+.pm-add-section-hdr:hover { background: #f3f4f6; }
+
+.pm-add-chevron {
+  color: #9ca3af;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.pm-add-chevron.open { transform: rotate(180deg); }
+
+.pm-add-section-body {
+  padding: 14px;
+  border-top: 1px solid #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ─── Field size helpers (add modal) ─────────────── */
+.pm-field-xs { flex: 0 0 72px !important; }
+
+/* ─── Feature chips (add modal) ─────────────────── */
+.pm-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.pm-feature-chip {
+  padding: 4px 11px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 20px;
+  background: #fff;
+  color: #6b7280;
+  font-size: 0.77rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+
+.pm-feature-chip:hover { border-color: #003366; color: #003366; }
+.pm-feature-chip.active { background: #003366; color: #fff; border-color: #003366; }
+
+/* ─── Checkbox row (add modal) ───────────────────── */
+.pm-row-check {
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
+.pm-check-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  user-select: none;
+}
+
+.pm-check-label input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: #003366;
+  cursor: pointer;
+}
+
 /* ─── RESPONSIVE ────────────────────────────────── */
 @media (max-width: 1100px) {
   .pm-layout { grid-template-columns: 210px 1fr; }
