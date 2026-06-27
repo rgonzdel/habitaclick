@@ -684,6 +684,227 @@ app.get('/api/public/website/:slug', async (req, res) => {
   }
 });
 
+// ── PORTALES ────────────────────────────────────────────────────────────
+
+const PORTALS = ['idealista', 'fotocasa', 'pisos', 'habitaclia'];
+const crypto = require('crypto');
+
+// GET credenciales de todos los portales del usuario
+app.get('/api/v1/portals/credentials', verifyToken, async (req, res) => {
+  try {
+    const { data } = await supabase
+      .from('portal_credentials')
+      .select('portal, enabled, feed_token, api_key, api_secret')
+      .eq('user_email', req.user.email);
+    const masked = (data || []).map(c => ({
+      ...c,
+      api_key: c.api_key ? '••••' + c.api_key.slice(-4) : '',
+      api_secret: c.api_secret ? '••••' : '',
+    }));
+    res.json({ credentials: masked });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// PUT credenciales de un portal
+app.put('/api/v1/portals/credentials/:portal', verifyToken, async (req, res) => {
+  const { portal } = req.params;
+  if (!PORTALS.includes(portal)) return res.status(400).json({ error: 'Portal no válido' });
+  const { api_key, api_secret, enabled } = req.body;
+  try {
+    const { data: existing } = await supabase
+      .from('portal_credentials').select('feed_token').eq('user_email', req.user.email).eq('portal', portal).single();
+    const feed_token = existing?.feed_token || crypto.randomBytes(20).toString('hex');
+    const { error } = await supabase.from('portal_credentials').upsert({
+      user_email: req.user.email, portal,
+      api_key: api_key || '', api_secret: api_secret || '',
+      enabled: enabled ?? true, feed_token
+    }, { onConflict: 'user_email,portal' });
+    if (error) return res.status(500).json({ error: error.message });
+    res.json({ success: true, feed_token });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// GET estado de portales para todas las propiedades del usuario
+app.get('/api/v1/portals/status', verifyToken, async (req, res) => {
+  try {
+    const { data: props } = await supabase.from('properties').select('id').eq('user_email', req.user.email);
+    const ids = (props || []).map(p => p.id);
+    if (!ids.length) return res.json({ statuses: {} });
+    const { data } = await supabase.from('property_portals').select('property_id, portal, status').in('property_id', ids);
+    const statuses = {};
+    (data || []).forEach(s => {
+      if (!statuses[s.property_id]) statuses[s.property_id] = {};
+      statuses[s.property_id][s.portal] = s.status;
+    });
+    res.json({ statuses });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// POST activar/desactivar propiedad en un portal
+app.post('/api/v1/portals/:portal/properties/:propertyId', verifyToken, async (req, res) => {
+  const { portal, propertyId } = req.params;
+  if (!PORTALS.includes(portal)) return res.status(400).json({ error: 'Portal no válido' });
+  const { active } = req.body;
+  try {
+    const { error } = await supabase.from('property_portals').upsert({
+      property_id: parseInt(propertyId), portal,
+      status: active ? 'active' : 'inactive',
+      last_synced: active ? new Date().toISOString() : null,
+      error_msg: null
+    }, { onConflict: 'property_id,portal' });
+    if (error) return res.status(500).json({ error: error.message });
+    res.json({ success: true });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// ── Helpers XML ──────────────────────────────────────────────────────────
+const BASE_URL = process.env.BASE_URL || 'https://habitaclick-backend.onrender.com';
+
+async function getActivePropertiesForFeed(token, portal) {
+  const { data: cred } = await supabase.from('portal_credentials')
+    .select('user_email, enabled').eq('feed_token', token).eq('portal', portal).single();
+  if (!cred || !cred.enabled) return null;
+
+  const { data: active } = await supabase.from('property_portals')
+    .select('property_id').eq('portal', portal).eq('status', 'active');
+  const ids = (active || []).map(p => p.property_id);
+  if (!ids.length) return { user_email: cred.user_email, properties: [] };
+
+  const [{ data: props }, { data: photos }] = await Promise.all([
+    supabase.from('properties').select('*').eq('user_email', cred.user_email).in('id', ids),
+    supabase.from('property_photos').select('*').in('property_id', ids)
+      .eq('media_type', 'photo').order('sort_order', { ascending: true }),
+  ]);
+  const photoMap = {};
+  (photos || []).forEach(ph => {
+    if (!photoMap[ph.property_id]) photoMap[ph.property_id] = [];
+    photoMap[ph.property_id].push(ph);
+  });
+  const properties = (props || []).map(p => ({ ...p, photos: photoMap[p.id] || [] }));
+  return { user_email: cred.user_email, properties };
+}
+
+// ── Feed Idealista ───────────────────────────────────────────────────────
+app.get('/api/v1/feed/:token/idealista.xml', async (req, res) => {
+  const result = await getActivePropertiesForFeed(req.params.token, 'idealista');
+  if (!result) return res.status(403).send('Token inválido');
+  const typeMap = { apartment: 'piso', house: 'chalet', land: 'terreno', commercial: 'local' };
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<proyectos>
+  <proyecto nombre="HabitaClick">
+    <inmuebles>
+${result.properties.map(p => `      <inmueble>
+        <ref><![CDATA[${p.reference || p.id}]]></ref>
+        <operacion>${p.transaction_type === 'rent' ? '2' : '1'}</operacion>
+        <tipo>${typeMap[p.property_type] || 'piso'}</tipo>
+        <precio>${p.price || 0}</precio>
+        ${p.square_meters ? `<metros>${p.square_meters}</metros>` : ''}
+        ${p.bedrooms ? `<habitaciones>${p.bedrooms}</habitaciones>` : ''}
+        ${p.bathrooms ? `<banos>${p.bathrooms}</banos>` : ''}
+        <localizacion>
+          <pais>España</pais>
+          ${p.province ? `<provincia><![CDATA[${p.province}]]></provincia>` : ''}
+          ${p.city ? `<municipio><![CDATA[${p.city}]]></municipio>` : ''}
+          ${p.address ? `<direccion><![CDATA[${p.address}]]></direccion>` : ''}
+        </localizacion>
+        <descripcion><![CDATA[${p.description || ''}]]></descripcion>
+        <imagenes>
+          ${p.photos.slice(0, 20).map(ph => `<imagen><![CDATA[${BASE_URL}${ph.url}]]></imagen>`).join('\n          ')}
+        </imagenes>
+      </inmueble>`).join('\n')}
+    </inmuebles>
+  </proyecto>
+</proyectos>`;
+  res.set('Content-Type', 'application/xml; charset=UTF-8');
+  res.send(xml);
+});
+
+// ── Feed Fotocasa ────────────────────────────────────────────────────────
+app.get('/api/v1/feed/:token/fotocasa.xml', async (req, res) => {
+  const result = await getActivePropertiesForFeed(req.params.token, 'fotocasa');
+  if (!result) return res.status(403).send('Token inválido');
+  const typeMap = { apartment: '1', house: '2', land: '14', commercial: '5' };
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<inmuebles>
+${result.properties.map(p => `  <inmueble>
+    <referencia><![CDATA[${p.reference || p.id}]]></referencia>
+    <tipo_operacion>${p.transaction_type === 'rent' ? '2' : '1'}</tipo_operacion>
+    <tipo_inmueble>${typeMap[p.property_type] || '1'}</tipo_inmueble>
+    <precio>${p.price || 0}</precio>
+    ${p.square_meters ? `<superficie_construida>${p.square_meters}</superficie_construida>` : ''}
+    ${p.bedrooms ? `<hab>${p.bedrooms}</hab>` : ''}
+    ${p.bathrooms ? `<ban>${p.bathrooms}</ban>` : ''}
+    ${p.province ? `<provincia><![CDATA[${p.province}]]></provincia>` : ''}
+    ${p.city ? `<municipio><![CDATA[${p.city}]]></municipio>` : ''}
+    ${p.address ? `<direccion><![CDATA[${p.address}]]></direccion>` : ''}
+    <descripcion><![CDATA[${p.description || ''}]]></descripcion>
+    <imagenes>
+      ${p.photos.slice(0, 20).map((ph, i) => `<imagen orden="${i + 1}"><![CDATA[${BASE_URL}${ph.url}]]></imagen>`).join('\n      ')}
+    </imagenes>
+  </inmueble>`).join('\n')}
+</inmuebles>`;
+  res.set('Content-Type', 'application/xml; charset=UTF-8');
+  res.send(xml);
+});
+
+// ── Feed Pisos.com ───────────────────────────────────────────────────────
+app.get('/api/v1/feed/:token/pisos.xml', async (req, res) => {
+  const result = await getActivePropertiesForFeed(req.params.token, 'pisos');
+  if (!result) return res.status(403).send('Token inválido');
+  const typeMap = { apartment: 'piso', house: 'casa', land: 'solar', commercial: 'local' };
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<inmuebles>
+${result.properties.map(p => `  <inmueble>
+    <ref><![CDATA[${p.reference || p.id}]]></ref>
+    <tipo>${typeMap[p.property_type] || 'piso'}</tipo>
+    <operacion>${p.transaction_type === 'rent' ? 'alquiler' : 'venta'}</operacion>
+    <precio>${p.price || 0}</precio>
+    ${p.square_meters ? `<metros_construidos>${p.square_meters}</metros_construidos>` : ''}
+    ${p.bedrooms ? `<dormitorios>${p.bedrooms}</dormitorios>` : ''}
+    ${p.bathrooms ? `<banos>${p.bathrooms}</banos>` : ''}
+    ${p.province ? `<provincia><![CDATA[${p.province}]]></provincia>` : ''}
+    ${p.city ? `<localidad><![CDATA[${p.city}]]></localidad>` : ''}
+    ${p.address ? `<direccion><![CDATA[${p.address}]]></direccion>` : ''}
+    <descripcion><![CDATA[${p.description || ''}]]></descripcion>
+    <fotos>
+      ${p.photos.slice(0, 20).map(ph => `<foto><![CDATA[${BASE_URL}${ph.url}]]></foto>`).join('\n      ')}
+    </fotos>
+  </inmueble>`).join('\n')}
+</inmuebles>`;
+  res.set('Content-Type', 'application/xml; charset=UTF-8');
+  res.send(xml);
+});
+
+// ── Feed Habitaclia ──────────────────────────────────────────────────────
+app.get('/api/v1/feed/:token/habitaclia.xml', async (req, res) => {
+  const result = await getActivePropertiesForFeed(req.params.token, 'habitaclia');
+  if (!result) return res.status(403).send('Token inválido');
+  const typeMap = { apartment: 'piso', house: 'casa', land: 'terreno', commercial: 'local_comercial' };
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<habitaclia>
+  <anuncios>
+${result.properties.map(p => `    <anuncio>
+      <referencia><![CDATA[${p.reference || p.id}]]></referencia>
+      <tipo_operacion>${p.transaction_type === 'rent' ? 'alquiler' : 'venta'}</tipo_operacion>
+      <tipo_inmueble>${typeMap[p.property_type] || 'piso'}</tipo_inmueble>
+      <precio>${p.price || 0}</precio>
+      ${p.square_meters ? `<superficie>${p.square_meters}</superficie>` : ''}
+      ${p.bedrooms ? `<habitaciones>${p.bedrooms}</habitaciones>` : ''}
+      ${p.bathrooms ? `<banos>${p.bathrooms}</banos>` : ''}
+      ${p.province ? `<provincia><![CDATA[${p.province}]]></provincia>` : ''}
+      ${p.city ? `<poblacion><![CDATA[${p.city}]]></poblacion>` : ''}
+      ${p.address ? `<direccion><![CDATA[${p.address}]]></direccion>` : ''}
+      <descripcion><![CDATA[${p.description || ''}]]></descripcion>
+      <fotos>
+        ${p.photos.slice(0, 20).map(ph => `<foto><![CDATA[${BASE_URL}${ph.url}]]></foto>`).join('\n        ')}
+      </fotos>
+    </anuncio>`).join('\n')}
+  </anuncios>
+</habitaclia>`;
+  res.set('Content-Type', 'application/xml; charset=UTF-8');
+  res.send(xml);
+});
+
 // Captura errores de multer y otros no controlados
 app.use((err, req, res, next) => {
   console.error('❌ Error no controlado:', err.message);

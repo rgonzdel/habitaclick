@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Home, Building2, House, Store, Landmark, Tag, Key, Euro,
   Circle, Search, Download, Edit2, Trash2, Link2, Save,
@@ -7,6 +7,13 @@ import {
   MapPin, LayoutList, Sparkles
 } from 'lucide-react';
 import { generateDescription } from '../utils/descriptionGenerator';
+
+const PORTAL_META = {
+  idealista: { letter: 'I', color: '#00aff0', name: 'Idealista' },
+  fotocasa:  { letter: 'F', color: '#e8003d', name: 'Fotocasa'  },
+  pisos:     { letter: 'P', color: '#f47f16', name: 'Pisos.com' },
+  habitaclia:{ letter: 'H', color: '#6936b4', name: 'Habitaclia'},
+};
 import PropertyEditor from './PropertyEditor';
 import UserSearchInput from './UserSearchInput';
 import './PropertyManager.css';
@@ -312,6 +319,46 @@ export default function PropertyManager({ properties, loadProperties, showToast,
   const [showAddForm, setShowAddForm] = useState(false);
   const [showAddFilter, setShowAddFilter] = useState(false);
   const [addingFilter, setAddingFilter] = useState({ field: 'estado', value: '' });
+  const [portalStatuses, setPortalStatuses] = useState({});
+  const [togglingPortal, setTogglingPortal] = useState('');
+
+  const loadPortalStatuses = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API}/api/v1/portals/status`, { headers: { Authorization: 'Bearer ' + token } });
+      const data = await res.json();
+      setPortalStatuses(data.statuses || {});
+    } catch {}
+  }, []);
+
+  useEffect(() => { loadPortalStatuses(); }, [loadPortalStatuses]);
+
+  const togglePortal = async (propertyId, portal) => {
+    const key = `${propertyId}-${portal}`;
+    if (togglingPortal === key) return;
+    const current = portalStatuses[propertyId]?.[portal];
+    const next = current === 'active' ? false : true;
+    setTogglingPortal(key);
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API}/api/v1/portals/${portal}/properties/${propertyId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+        body: JSON.stringify({ active: next }),
+      });
+      if (res.ok) {
+        setPortalStatuses(prev => ({
+          ...prev,
+          [propertyId]: { ...(prev[propertyId] || {}), [portal]: next ? 'active' : 'inactive' },
+        }));
+        showToast('success', `${PORTAL_META[portal].name}: ${next ? 'publicado' : 'retirado'}`);
+      }
+    } catch {
+      showToast('error', 'Error al actualizar portal');
+    } finally {
+      setTogglingPortal('');
+    }
+  };
 
   const ROLE_LEVEL = { asesor: 1, director: 2, administrador: 3 };
   const can = (...roles) => roles.some(r => ROLE_LEVEL[userRole] >= ROLE_LEVEL[r]);
@@ -620,6 +667,25 @@ export default function PropertyManager({ properties, loadProperties, showToast,
                         {p.assigned_user.cargo && <span className="pm-asesor-cargo"> · {p.assigned_user.cargo}</span>}
                       </div>
                     )}
+
+                    <div className="pm-portal-row">
+                      {Object.entries(PORTAL_META).map(([key, meta]) => {
+                        const active = portalStatuses[p.id]?.[key] === 'active';
+                        const togKey = `${p.id}-${key}`;
+                        return (
+                          <button
+                            key={key}
+                            className={`pm-portal-icon${active ? ' active' : ''}`}
+                            style={active ? { background: meta.color, borderColor: meta.color, color: '#fff' } : {}}
+                            onClick={() => togglePortal(p.id, key)}
+                            disabled={togglingPortal === togKey}
+                            title={`${meta.name}: ${active ? 'publicado — clic para retirar' : 'clic para publicar'}`}
+                          >
+                            {meta.letter}
+                          </button>
+                        );
+                      })}
+                    </div>
 
                     <div className="pm-card-tags">
                       <span className="pm-tag">{TYPE_LABELS[p.property_type] || p.property_type}</span>

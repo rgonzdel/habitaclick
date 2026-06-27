@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Users, Globe, Check, X, LogOut } from 'lucide-react';
+import { Home, Users, Globe, Check, X, LogOut, Share2 } from 'lucide-react';
 import CookieConsent from './components/CookieConsent';
 import UserManager from './components/UserManager';
 import PropertyManager from './components/PropertyManager';
@@ -12,6 +12,7 @@ import SobreNosotros from './components/SobreNosotros';
 import Contacto from './components/Contacto';
 import WebsiteBuilder from './components/WebsiteBuilder';
 import WebsitePublic from './components/WebsitePublic';
+import PortalSettings from './components/PortalSettings';
 import './App.css';
 
 
@@ -167,6 +168,16 @@ function App() {
                   <span className="dash-tooltip">Página Web</span>
                 </button>
               )}
+
+              {can('director') && (
+                <button
+                  className={`dash-sitem${dashView === 'portales' ? ' active' : ''}`}
+                  onClick={() => setDashView('portales')}
+                >
+                  <Share2 size={21}/>
+                  <span className="dash-tooltip">Portales</span>
+                </button>
+              )}
             </nav>
 
             <div className="dash-sidebar-bottom">
@@ -205,6 +216,11 @@ function App() {
             )}
             {dashView === 'website' && can('director') && (
               <WebsiteBuilder currentUserRole={userRole} onToast={showToast} properties={properties} />
+            )}
+            {dashView === 'portales' && can('director') && (
+              <div className="dash-scrollable">
+                <PortalSettings showToast={showToast} />
+              </div>
             )}
           </div>
 
