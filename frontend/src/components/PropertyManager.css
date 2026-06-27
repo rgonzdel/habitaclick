@@ -2,7 +2,7 @@
 .pm-layout {
   display: grid;
   grid-template-columns: 210px 270px 1fr;
-  height: calc(100vh - 215px);
+  height: 100vh;
   overflow: hidden;
   background: #f1f5f9;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;

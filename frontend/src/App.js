@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Users, Globe, Check, X } from 'lucide-react';
+import { Home, Users, Globe, Check, X, LogOut } from 'lucide-react';
 import CookieConsent from './components/CookieConsent';
 import UserManager from './components/UserManager';
 import PropertyManager from './components/PropertyManager';
@@ -120,12 +120,9 @@ function App() {
 
   // VISTA: DASHBOARD
   if (isLoggedIn) {
+    const userInitial = ROLE_LABELS[userRole]?.charAt(0) || '?';
     return (
-      <div className="App dashboard-container" style={contentStyle}>
-        <video className="dashboard-video" autoPlay muted loop playsInline>
-          <source src="/videos/VideoLandingMadrid.mp4" type="video/mp4" />
-        </video>
-        <div className="dashboard-overlay" />
+      <div className="App dash-root" style={contentStyle}>
 
         {/* Toast */}
         {toast && (
@@ -135,71 +132,86 @@ function App() {
           </div>
         )}
 
-        <div className="dashboard-content">
-          <header className="header">
-            <div className="header-top">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                <img src="/logos/logo.png" alt="HABITACLICK" style={{ height: '50px', width: 'auto', objectFit: 'contain' }} />
-                <div>
-                  <h1 style={{ margin: 0 }}>Dashboard</h1>
-                  <p>Gestiona tus propiedades</p>
-                </div>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span className="role-badge" style={{ background: ROLE_COLORS[userRole] }}>
-                  {ROLE_LABELS[userRole]}
-                </span>
-                <button className="btn-logout" onClick={handleLogout}>Cerrar sesión</button>
-              </div>
+        <div className="dash-layout">
+
+          {/* ── Sidebar vertical ── */}
+          <aside className="dash-sidebar">
+            <div className="dash-sidebar-top">
+              <img src="/logos/logo.png" alt="HC" className="dash-sidebar-logo" />
             </div>
-          </header>
 
-          {can('director') && (
-            <nav className="dash-tabs">
+            <nav className="dash-sidebar-nav">
               <button
-                className={`dash-tab${dashView === 'properties' ? ' active' : ''}`}
+                className={`dash-sitem${dashView === 'properties' ? ' active' : ''}`}
                 onClick={() => setDashView('properties')}
+                title="Inmuebles"
               >
-                <Home size={14}/> Propiedades
+                <Home size={21}/>
+                <span>Inmuebles</span>
               </button>
-              <button
-                className={`dash-tab${dashView === 'users' ? ' active' : ''}`}
-                onClick={() => setDashView('users')}
-              >
-                <Users size={14}/> Equipo
-              </button>
-              <button
-                className={`dash-tab${dashView === 'website' ? ' active' : ''}`}
-                onClick={() => setDashView('website')}
-              >
-                <Globe size={14}/> Página Web
-              </button>
+
+              {can('director') && (
+                <button
+                  className={`dash-sitem${dashView === 'users' ? ' active' : ''}`}
+                  onClick={() => setDashView('users')}
+                  title="Equipo"
+                >
+                  <Users size={21}/>
+                  <span>Equipo</span>
+                </button>
+              )}
+
+              {can('director') && (
+                <button
+                  className={`dash-sitem${dashView === 'website' ? ' active' : ''}`}
+                  onClick={() => setDashView('website')}
+                  title="Página Web"
+                >
+                  <Globe size={21}/>
+                  <span>Web</span>
+                </button>
+              )}
             </nav>
-          )}
 
-          {dashView === 'properties' && (
-            <PropertyManager
-              properties={properties}
-              loadProperties={loadProperties}
-              showToast={showToast}
-              teamUsers={teamUsers}
-              getCurrentUserId={getCurrentUserId}
-              userRole={userRole}
-            />
-          )}
+            <div className="dash-sidebar-bottom">
+              <div
+                className="dash-user-avatar"
+                style={{ background: ROLE_COLORS[userRole] }}
+                title={ROLE_LABELS[userRole]}
+              >
+                {userInitial}
+              </div>
+              <button className="dash-logout-btn" onClick={handleLogout} title="Cerrar sesión">
+                <LogOut size={17}/>
+              </button>
+            </div>
+          </aside>
 
-          {(dashView === 'users' || dashView === 'website') && (
-            <main className="container">
-              {dashView === 'users' && can('director') && (
-                <UserManager currentUserRole={userRole} onToast={showToast} />
-              )}
-              {dashView === 'website' && can('director') && (
-                <WebsiteBuilder currentUserRole={userRole} onToast={showToast} properties={properties} />
-              )}
-            </main>
-          )}
+          {/* ── Contenido principal ── */}
+          <div className="dash-content">
+            {dashView === 'properties' && (
+              <PropertyManager
+                properties={properties}
+                loadProperties={loadProperties}
+                showToast={showToast}
+                teamUsers={teamUsers}
+                getCurrentUserId={getCurrentUserId}
+                userRole={userRole}
+              />
+            )}
+            {dashView === 'users' && can('director') && (
+              <div className="dash-scrollable">
+                <main className="container">
+                  <UserManager currentUserRole={userRole} onToast={showToast} />
+                </main>
+              </div>
+            )}
+            {dashView === 'website' && can('director') && (
+              <WebsiteBuilder currentUserRole={userRole} onToast={showToast} properties={properties} />
+            )}
+          </div>
+
         </div>
-
       </div>
     );
   }

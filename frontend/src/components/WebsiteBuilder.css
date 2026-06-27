@@ -20,7 +20,7 @@
 .wbe-layout {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 80px);
+  height: 100vh;
   background: #f1f5f9;
   border-radius: 12px;
   overflow: hidden;
