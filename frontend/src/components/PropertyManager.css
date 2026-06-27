@@ -694,13 +694,17 @@
   margin-bottom: 8px;
 }
 
+.pm-portal-wrap {
+  position: relative;
+}
+
 .pm-portal-icon {
   width: 28px;
   height: 28px;
   border-radius: 7px;
   border: 1.5px solid #e5e7eb;
   background: #f9fafb;
-  cursor: pointer;
+  cursor: default;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -735,6 +739,101 @@
 
 .pm-portal-logo-active {
   filter: none !important;
+}
+
+/* ─── Portal popup ───────────────────────────────── */
+.pm-portal-popup {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  width: 220px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.13), 0 2px 6px rgba(0,0,0,0.07);
+  padding: 12px;
+  z-index: 300;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.pm-portal-wrap:hover .pm-portal-popup {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: all;
+}
+
+/* arrow */
+.pm-portal-popup::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #fff;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.08));
+}
+
+.pm-pp-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.pm-pp-logo {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.pm-pp-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.pm-pp-status {
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.pm-pp-link {
+  margin-bottom: 8px;
+}
+
+.pm-pp-link a {
+  font-size: 0.75rem;
+  color: #003366;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.pm-pp-link a:hover { text-decoration: underline; }
+
+.pm-pp-btn {
+  width: 100%;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 7px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  transition: opacity 0.15s;
+}
+
+.pm-pp-btn:hover:not(:disabled) { opacity: 0.85; }
+.pm-pp-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.pm-pp-btn-active {
+  background: #f3f4f6 !important;
+  color: #374151 !important;
+  border: 1px solid #e5e7eb;
 }
 
 /* ─── AI button ─────────────────────────────────── */

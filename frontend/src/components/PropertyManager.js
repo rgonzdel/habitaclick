@@ -672,21 +672,54 @@ export default function PropertyManager({ properties, loadProperties, showToast,
                       {Object.entries(PORTAL_META).map(([key, meta]) => {
                         const active = portalStatuses[p.id]?.[key] === 'active';
                         const togKey = `${p.id}-${key}`;
+                        const portalLinks = {
+                          idealista: `https://www.idealista.com/buscar/comprar-viviendas/?busqueda=${p.reference || ''}`,
+                          fotocasa: `https://www.fotocasa.es/es/comprar/viviendas/`,
+                          pisos: `https://www.pisos.com/comprar/`,
+                          habitaclia: `https://www.habitaclia.com/`,
+                        };
                         return (
-                          <button
-                            key={key}
-                            className={`pm-portal-icon${active ? ' active' : ''}`}
-                            style={active ? { color: meta.color, borderColor: meta.color } : {}}
-                            onClick={() => togglePortal(p.id, key)}
-                            disabled={togglingPortal === togKey}
-                            title={`${meta.name}: ${active ? 'publicado — clic para retirar' : 'clic para publicar'}`}
-                          >
-                            <img
-                              src={meta.logo}
-                              alt={meta.name}
-                              className={`pm-portal-logo${active ? ' pm-portal-logo-active' : ''}`}
-                            />
-                          </button>
+                          <div key={key} className="pm-portal-wrap">
+                            <div
+                              className={`pm-portal-icon${active ? ' active' : ''}`}
+                              style={active ? { color: meta.color, borderColor: meta.color } : {}}
+                            >
+                              <img
+                                src={meta.logo}
+                                alt={meta.name}
+                                className={`pm-portal-logo${active ? ' pm-portal-logo-active' : ''}`}
+                              />
+                            </div>
+
+                            <div className="pm-portal-popup">
+                              <div className="pm-pp-head">
+                                <img src={meta.logo} alt={meta.name} className="pm-pp-logo" />
+                                <span className="pm-pp-name">{meta.name}</span>
+                              </div>
+                              <div className="pm-pp-status">
+                                Estado: <strong style={{ color: active ? '#16a34a' : '#6b7280' }}>{active ? 'Publicado' : 'No publicado'}</strong>
+                              </div>
+                              {active && (
+                                <div className="pm-pp-link">
+                                  <a href={portalLinks[key]} target="_blank" rel="noopener noreferrer">
+                                    Ver en {meta.name} ↗
+                                  </a>
+                                </div>
+                              )}
+                              <button
+                                className={`pm-pp-btn${active ? ' pm-pp-btn-active' : ''}`}
+                                style={active ? {} : { background: meta.color }}
+                                onClick={() => togglePortal(p.id, key)}
+                                disabled={togglingPortal === togKey}
+                              >
+                                {togglingPortal === togKey
+                                  ? '...'
+                                  : active
+                                    ? '✓ Publicado — Retirar'
+                                    : `Publicar en ${meta.name}`}
+                              </button>
+                            </div>
+                          </div>
                         );
                       })}
                     </div>
