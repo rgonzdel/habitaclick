@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import {
   Home, Building2, House, Store, Landmark, Tag, Key, Euro,
   Circle, Search, Download, Edit2, Trash2, Link2, Save,
@@ -320,6 +321,8 @@ export default function PropertyManager({ properties, loadProperties, showToast,
   const [showAddFilter, setShowAddFilter] = useState(false);
   const [addingFilter, setAddingFilter] = useState({ field: 'estado', value: '' });
   const [portalStatuses, setPortalStatuses] = useState({});
+  const [portalPopup, setPortalPopup] = useState(null); // { propertyId, key, rect }
+  const popupHideTimer = useRef(null);
   const [togglingPortal, setTogglingPortal] = useState('');
 
   const loadPortalStatuses = useCallback(async () => {
@@ -358,6 +361,20 @@ export default function PropertyManager({ properties, loadProperties, showToast,
     } finally {
       setTogglingPortal('');
     }
+  };
+
+  const showPortalPopup = (e, propertyId, key) => {
+    clearTimeout(popupHideTimer.current);
+    const rect = e.currentTarget.getBoundingClientRect();
+    setPortalPopup({ propertyId, key, rect });
+  };
+
+  const hidePortalPopup = () => {
+    popupHideTimer.current = setTimeout(() => setPortalPopup(null), 120);
+  };
+
+  const keepPortalPopup = () => {
+    clearTimeout(popupHideTimer.current);
   };
 
   const ROLE_LEVEL = { asesor: 1, director: 2, administrador: 3 };
@@ -446,8 +463,44 @@ export default function PropertyManager({ properties, loadProperties, showToast,
   const activeLabel = navFilter ? (VALUE_LABELS[navFilter.value] || navFilter.value).toUpperCase() : 'TODOS';
   const addFtDef = FILTER_TYPES.find(f => f.field === addingFilter.field);
 
+  const ppData = portalPopup
+    ? { meta: PORTAL_META[portalPopup.key], active: portalStatuses[portalPopup.propertyId]?.[portalPopup.key] === 'active', togKey: `${portalPopup.propertyId}-${portalPopup.key}` }
+    : null;
+
+  const PortalPopupOverlay = portalPopup && ppData && ReactDOM.createPortal(
+    <div
+      className="pm-portal-popup-fixed"
+      style={{
+        top: portalPopup.rect.top + window.scrollY - 8,
+        left: portalPopup.rect.left + portalPopup.rect.width / 2,
+      }}
+      onMouseEnter={keepPortalPopup}
+      onMouseLeave={hidePortalPopup}
+    >
+      <div className="pm-pp-head">
+        <img src={ppData.meta.logo} alt={ppData.meta.name} className="pm-pp-logo" />
+        <span className="pm-pp-name">{ppData.meta.name}</span>
+      </div>
+      <div className="pm-pp-status">
+        Estado: <strong style={{ color: ppData.active ? '#16a34a' : '#9ca3af' }}>
+          {ppData.active ? 'Publicado' : 'No publicado'}
+        </strong>
+      </div>
+      <button
+        className={`pm-pp-btn${ppData.active ? ' pm-pp-btn-active' : ''}`}
+        style={ppData.active ? {} : { background: ppData.meta.color }}
+        onClick={() => { togglePortal(portalPopup.propertyId, portalPopup.key); setPortalPopup(null); }}
+        disabled={togglingPortal === ppData.togKey}
+      >
+        {togglingPortal === ppData.togKey ? '…' : ppData.active ? '✓ Publicado — Retirar' : `Publicar en ${ppData.meta.name}`}
+      </button>
+    </div>,
+    document.body
+  );
+
   return (
     <div className="pm-layout">
+      {PortalPopupOverlay}
 
       {/* ── LEFT NAV ─────────────────── */}
       <div className="pm-left-nav">
@@ -671,54 +724,19 @@ export default function PropertyManager({ properties, loadProperties, showToast,
                     <div className="pm-portal-row">
                       {Object.entries(PORTAL_META).map(([key, meta]) => {
                         const active = portalStatuses[p.id]?.[key] === 'active';
-                        const togKey = `${p.id}-${key}`;
-                        const portalLinks = {
-                          idealista: `https://www.idealista.com/buscar/comprar-viviendas/?busqueda=${p.reference || ''}`,
-                          fotocasa: `https://www.fotocasa.es/es/comprar/viviendas/`,
-                          pisos: `https://www.pisos.com/comprar/`,
-                          habitaclia: `https://www.habitaclia.com/`,
-                        };
                         return (
-                          <div key={key} className="pm-portal-wrap">
-                            <div
-                              className={`pm-portal-icon${active ? ' active' : ''}`}
-                              style={active ? { color: meta.color, borderColor: meta.color } : {}}
-                            >
-                              <img
-                                src={meta.logo}
-                                alt={meta.name}
-                                className={`pm-portal-logo${active ? ' pm-portal-logo-active' : ''}`}
-                              />
-                            </div>
-
-                            <div className="pm-portal-popup">
-                              <div className="pm-pp-head">
-                                <img src={meta.logo} alt={meta.name} className="pm-pp-logo" />
-                                <span className="pm-pp-name">{meta.name}</span>
-                              </div>
-                              <div className="pm-pp-status">
-                                Estado: <strong style={{ color: active ? '#16a34a' : '#6b7280' }}>{active ? 'Publicado' : 'No publicado'}</strong>
-                              </div>
-                              {active && (
-                                <div className="pm-pp-link">
-                                  <a href={portalLinks[key]} target="_blank" rel="noopener noreferrer">
-                                    Ver en {meta.name} ↗
-                                  </a>
-                                </div>
-                              )}
-                              <button
-                                className={`pm-pp-btn${active ? ' pm-pp-btn-active' : ''}`}
-                                style={active ? {} : { background: meta.color }}
-                                onClick={() => togglePortal(p.id, key)}
-                                disabled={togglingPortal === togKey}
-                              >
-                                {togglingPortal === togKey
-                                  ? '...'
-                                  : active
-                                    ? '✓ Publicado — Retirar'
-                                    : `Publicar en ${meta.name}`}
-                              </button>
-                            </div>
+                          <div
+                            key={key}
+                            className={`pm-portal-icon${active ? ' active' : ''}`}
+                            style={active ? { color: meta.color, borderColor: meta.color } : {}}
+                            onMouseEnter={e => showPortalPopup(e, p.id, key)}
+                            onMouseLeave={hidePortalPopup}
+                          >
+                            <img
+                              src={meta.logo}
+                              alt={meta.name}
+                              className={`pm-portal-logo${active ? ' pm-portal-logo-active' : ''}`}
+                            />
                           </div>
                         );
                       })}
