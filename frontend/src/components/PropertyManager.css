@@ -855,7 +855,26 @@
 .pm-ai-btn:active { transform: scale(0.97); }
 
 /* ─── Add modal wide ────────────────────────────── */
-.pm-modal-wide { width: 820px !important; }
+.pm-modal-wide { width: 920px !important; }
+
+/* ─── Localización: campos | mapa ───────────────── */
+.pm-loc-wrap {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 16px;
+  align-items: start;
+}
+
+.pm-loc-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pm-loc-map {
+  position: sticky;
+  top: 0;
+}
 
 /* ─── Add modal sections (accordion) ────────────── */
 .pm-add-section {

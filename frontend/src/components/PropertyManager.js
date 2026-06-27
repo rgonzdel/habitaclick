@@ -249,51 +249,57 @@ function AddPropertyModal({ teamUsers, getCurrentUserId, showToast, loadProperti
 
           {/* LOCALIZACIÓN */}
           <AddSection title="Localización" sectionKey="localizacion" open={openSections.localizacion} onToggle={toggleSec}>
-            <PropertyMap lat={form.latitude} lng={form.longitude} onLocationChange={handleLocationChange} />
-            <div className="pm-form-row">
-              <div className="pm-field" style={{ flex: 3 }}>
-                <label>Calle / Dirección</label>
-                <input value={form.address} onChange={e => set('address', e.target.value)} placeholder="Calle Mayor" />
+            <div className="pm-loc-wrap">
+              <div className="pm-loc-fields">
+                <div className="pm-form-row">
+                  <div className="pm-field" style={{ flex: 2 }}>
+                    <label>Calle / Dirección</label>
+                    <input value={form.address} onChange={e => set('address', e.target.value)} placeholder="Calle Mayor" />
+                  </div>
+                  <div className="pm-field pm-field-xs">
+                    <label>Número</label>
+                    <input value={form.street_number} onChange={e => set('street_number', e.target.value)} placeholder="5" />
+                  </div>
+                  <div className="pm-field pm-field-xs">
+                    <label>Planta</label>
+                    <input value={form.floor} onChange={e => set('floor', e.target.value)} placeholder="2" />
+                  </div>
+                  <div className="pm-field pm-field-xs">
+                    <label>Puerta</label>
+                    <input value={form.door} onChange={e => set('door', e.target.value)} placeholder="A" />
+                  </div>
+                </div>
+                <div className="pm-form-row">
+                  <div className="pm-field">
+                    <label>Ciudad</label>
+                    <input value={form.city} onChange={e => set('city', e.target.value)} placeholder="Madrid" />
+                  </div>
+                  <div className="pm-field">
+                    <label>Provincia</label>
+                    <input value={form.province} onChange={e => set('province', e.target.value)} placeholder="Madrid" />
+                  </div>
+                  <div className="pm-field pm-field-xs">
+                    <label>C.P.</label>
+                    <input value={form.postal_code} onChange={e => set('postal_code', e.target.value)} placeholder="28001" />
+                  </div>
+                </div>
+                <div className="pm-form-row">
+                  <div className="pm-field">
+                    <label>Distrito</label>
+                    <input value={form.district} onChange={e => set('district', e.target.value)} />
+                  </div>
+                  <div className="pm-field">
+                    <label>Zona</label>
+                    <input value={form.zone} onChange={e => set('zone', e.target.value)} />
+                  </div>
+                  <div className="pm-field">
+                    <label>Urbanización</label>
+                    <input value={form.urbanization} onChange={e => set('urbanization', e.target.value)} />
+                  </div>
+                </div>
               </div>
-              <div className="pm-field pm-field-xs">
-                <label>Número</label>
-                <input value={form.street_number} onChange={e => set('street_number', e.target.value)} placeholder="5" />
-              </div>
-              <div className="pm-field pm-field-xs">
-                <label>Planta</label>
-                <input value={form.floor} onChange={e => set('floor', e.target.value)} placeholder="2" />
-              </div>
-              <div className="pm-field pm-field-xs">
-                <label>Puerta</label>
-                <input value={form.door} onChange={e => set('door', e.target.value)} placeholder="A" />
-              </div>
-            </div>
-            <div className="pm-form-row">
-              <div className="pm-field">
-                <label>Ciudad</label>
-                <input value={form.city} onChange={e => set('city', e.target.value)} placeholder="Madrid" />
-              </div>
-              <div className="pm-field">
-                <label>Provincia</label>
-                <input value={form.province} onChange={e => set('province', e.target.value)} placeholder="Madrid" />
-              </div>
-              <div className="pm-field pm-field-xs">
-                <label>C.P.</label>
-                <input value={form.postal_code} onChange={e => set('postal_code', e.target.value)} placeholder="28001" />
-              </div>
-            </div>
-            <div className="pm-form-row">
-              <div className="pm-field">
-                <label>Distrito</label>
-                <input value={form.district} onChange={e => set('district', e.target.value)} />
-              </div>
-              <div className="pm-field">
-                <label>Zona</label>
-                <input value={form.zone} onChange={e => set('zone', e.target.value)} />
-              </div>
-              <div className="pm-field">
-                <label>Urbanización</label>
-                <input value={form.urbanization} onChange={e => set('urbanization', e.target.value)} />
+              <div className="pm-loc-map">
+                <PropertyMap lat={form.latitude} lng={form.longitude} onLocationChange={handleLocationChange} />
               </div>
             </div>
           </AddSection>

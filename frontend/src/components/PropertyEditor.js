@@ -388,61 +388,67 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
 
             {/* LOCALIZACIÓN */}
             <Section title="Localización" sectionKey="localizacion" open={openSections.localizacion} onToggle={toggleSection}>
-              <PropertyMap lat={formData.latitude} lng={formData.longitude} onLocationChange={handleMapLocation} />
-              <div className="pe-row">
-                <div className="pe-field pe-field-grow">
-                  <label>Calle / Dirección</label>
-                  <input name="address" value={formData.address} onChange={handleChange} placeholder="Calle Mayor" />
+              <div className="pe-loc-wrap">
+                <div className="pe-loc-fields">
+                  <div className="pe-row">
+                    <div className="pe-field pe-field-grow">
+                      <label>Calle / Dirección</label>
+                      <input name="address" value={formData.address} onChange={handleChange} placeholder="Calle Mayor" />
+                    </div>
+                    <div className="pe-field pe-field-xs">
+                      <label>Número</label>
+                      <input name="street_number" value={formData.street_number} onChange={handleChange} placeholder="5" />
+                    </div>
+                  </div>
+                  <div className="pe-row">
+                    <div className="pe-field pe-field-xs">
+                      <label>Planta</label>
+                      <input name="floor" value={formData.floor} onChange={handleChange} placeholder="2" />
+                    </div>
+                    <div className="pe-field pe-field-xs">
+                      <label>Puerta</label>
+                      <input name="door" value={formData.door} onChange={handleChange} placeholder="A" />
+                    </div>
+                    <div className="pe-field pe-field-xs">
+                      <label>Bloque</label>
+                      <input name="block_num" value={formData.block_num} onChange={handleChange} placeholder="B" />
+                    </div>
+                    <div className="pe-field pe-field-xs">
+                      <label>Portal</label>
+                      <input name="portal_door" value={formData.portal_door} onChange={handleChange} placeholder="1" />
+                    </div>
+                  </div>
+                  <div className="pe-row">
+                    <div className="pe-field">
+                      <label>Ciudad</label>
+                      <input name="city" value={formData.city} onChange={handleChange} placeholder="Madrid" />
+                    </div>
+                    <div className="pe-field">
+                      <label>Provincia</label>
+                      <input name="province" value={formData.province} onChange={handleChange} placeholder="Madrid" />
+                    </div>
+                    <div className="pe-field pe-field-xs">
+                      <label>C.P.</label>
+                      <input name="postal_code" value={formData.postal_code} onChange={handleChange} placeholder="28001" />
+                    </div>
+                  </div>
+                  <div className="pe-row">
+                    <div className="pe-field">
+                      <label>Distrito</label>
+                      <input name="district" value={formData.district} onChange={handleChange} placeholder="Centro" />
+                    </div>
+                    <div className="pe-field">
+                      <label>Zona</label>
+                      <input name="zone" value={formData.zone} onChange={handleChange} placeholder="Chamberí" />
+                    </div>
+                    <div className="pe-field">
+                      <label>Urbanización</label>
+                      <input name="urbanization" value={formData.urbanization} onChange={handleChange} placeholder="" />
+                    </div>
+                  </div>
                 </div>
-                <div className="pe-field pe-field-xs">
-                  <label>Número</label>
-                  <input name="street_number" value={formData.street_number} onChange={handleChange} placeholder="5" />
-                </div>
-              </div>
-              <div className="pe-row">
-                <div className="pe-field pe-field-xs">
-                  <label>Planta</label>
-                  <input name="floor" value={formData.floor} onChange={handleChange} placeholder="2" />
-                </div>
-                <div className="pe-field pe-field-xs">
-                  <label>Puerta</label>
-                  <input name="door" value={formData.door} onChange={handleChange} placeholder="A" />
-                </div>
-                <div className="pe-field pe-field-xs">
-                  <label>Bloque</label>
-                  <input name="block_num" value={formData.block_num} onChange={handleChange} placeholder="B" />
-                </div>
-                <div className="pe-field pe-field-xs">
-                  <label>Portal</label>
-                  <input name="portal_door" value={formData.portal_door} onChange={handleChange} placeholder="1" />
-                </div>
-              </div>
-              <div className="pe-row">
-                <div className="pe-field">
-                  <label>Ciudad</label>
-                  <input name="city" value={formData.city} onChange={handleChange} placeholder="Madrid" />
-                </div>
-                <div className="pe-field">
-                  <label>Provincia</label>
-                  <input name="province" value={formData.province} onChange={handleChange} placeholder="Madrid" />
-                </div>
-                <div className="pe-field pe-field-xs">
-                  <label>C.P.</label>
-                  <input name="postal_code" value={formData.postal_code} onChange={handleChange} placeholder="28001" />
-                </div>
-              </div>
-              <div className="pe-row">
-                <div className="pe-field">
-                  <label>Distrito</label>
-                  <input name="district" value={formData.district} onChange={handleChange} placeholder="Centro" />
-                </div>
-                <div className="pe-field">
-                  <label>Zona</label>
-                  <input name="zone" value={formData.zone} onChange={handleChange} placeholder="Chamberí" />
-                </div>
-                <div className="pe-field">
-                  <label>Urbanización</label>
-                  <input name="urbanization" value={formData.urbanization} onChange={handleChange} placeholder="" />
+                <div className="pe-loc-map">
+                  <PropertyMap lat={formData.latitude} lng={formData.longitude} onLocationChange={handleMapLocation} />
                 </div>
               </div>
             </Section>

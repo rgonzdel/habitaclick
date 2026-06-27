@@ -519,7 +519,26 @@
 
 /* ── Form wider for more fields ──────────────────────────────── */
 .pe-form {
-  width: 380px;
+  width: 580px;
+}
+
+/* ── Localización: campos | mapa ─────────────────────────────── */
+.pe-loc-wrap {
+  display: grid;
+  grid-template-columns: 1fr 240px;
+  gap: 14px;
+  align-items: start;
+}
+
+.pe-loc-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.pe-loc-map {
+  position: sticky;
+  top: 0;
 }
 
 /* ── Reference badge in header ───────────────────────────────── */
