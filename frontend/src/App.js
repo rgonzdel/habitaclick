@@ -144,20 +144,18 @@ function App() {
               <button
                 className={`dash-sitem${dashView === 'properties' ? ' active' : ''}`}
                 onClick={() => setDashView('properties')}
-                title="Inmuebles"
               >
                 <Home size={21}/>
-                <span>Inmuebles</span>
+                <span className="dash-tooltip">Inmuebles</span>
               </button>
 
               {can('director') && (
                 <button
                   className={`dash-sitem${dashView === 'users' ? ' active' : ''}`}
                   onClick={() => setDashView('users')}
-                  title="Equipo"
                 >
                   <Users size={21}/>
-                  <span>Equipo</span>
+                  <span className="dash-tooltip">Equipo</span>
                 </button>
               )}
 
@@ -165,10 +163,9 @@ function App() {
                 <button
                   className={`dash-sitem${dashView === 'website' ? ' active' : ''}`}
                   onClick={() => setDashView('website')}
-                  title="Página Web"
                 >
                   <Globe size={21}/>
-                  <span>Web</span>
+                  <span className="dash-tooltip">Página Web</span>
                 </button>
               )}
             </nav>
@@ -181,8 +178,9 @@ function App() {
               >
                 {userInitial}
               </div>
-              <button className="dash-logout-btn" onClick={handleLogout} title="Cerrar sesión">
+              <button className="dash-logout-btn" onClick={handleLogout}>
                 <LogOut size={17}/>
+                <span className="dash-tooltip">Cerrar sesión</span>
               </button>
             </div>
           </aside>

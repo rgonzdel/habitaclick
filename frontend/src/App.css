@@ -58,19 +58,18 @@ html, body {
 }
 
 .dash-sitem {
+  position: relative;
   width: 52px;
-  height: 50px;
+  height: 48px;
   border-radius: 10px;
   border: none;
   background: none;
   cursor: pointer;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
   color: rgba(255,255,255,0.5);
-  transition: all 0.15s;
+  transition: background 0.15s, color 0.15s;
 }
 
 .dash-sitem:hover {
@@ -83,12 +82,39 @@ html, body {
   color: #fff;
 }
 
-.dash-sitem span {
-  font-size: 0.52rem;
+/* ── Tooltip ── */
+.dash-tooltip {
+  position: absolute;
+  left: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%) translateX(-6px);
+  background: #1a2f4a;
+  color: #fff;
+  font-size: 0.78rem;
   font-weight: 600;
-  letter-spacing: 0;
-  color: inherit;
-  text-transform: uppercase;
+  white-space: nowrap;
+  padding: 5px 11px;
+  border-radius: 6px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 200;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+.dash-tooltip::before {
+  content: '';
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 5px solid transparent;
+  border-right-color: #1a2f4a;
+}
+
+.dash-sitem:hover .dash-tooltip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
 }
 
 /* ── Sidebar bottom ── */
@@ -117,6 +143,7 @@ html, body {
 }
 
 .dash-logout-btn {
+  position: relative;
   width: 32px;
   height: 32px;
   border-radius: 8px;
@@ -133,6 +160,11 @@ html, body {
 .dash-logout-btn:hover {
   background: rgba(255,255,255,0.2);
   color: #fff;
+}
+
+.dash-logout-btn:hover .dash-tooltip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
 }
 
 /* ── Contenido ── */
