@@ -137,7 +137,10 @@ function App() {
           {/* ── Sidebar vertical ── */}
           <aside className="dash-sidebar">
             <div className="dash-sidebar-top">
-              <div className="dash-sidebar-logo" role="img" aria-label="HabitaClick"></div>
+              <div
+                className="dash-sidebar-logo"
+                style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/logos/Icono_Logo.png)` }}
+              ></div>
             </div>
 
             <nav className="dash-sidebar-nav">
