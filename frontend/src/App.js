@@ -137,7 +137,7 @@ function App() {
           {/* ── Sidebar vertical ── */}
           <aside className="dash-sidebar">
             <div className="dash-sidebar-top">
-              <div className="dash-sidebar-logo" role="img" aria-label="HabitaClick" />
+              <div className="dash-sidebar-logo" role="img" aria-label="HabitaClick"></div>
             </div>
 
             <nav className="dash-sidebar-nav">
