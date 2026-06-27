@@ -1,0 +1,100 @@
+.pmap-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pmap-search-row {
+  position: relative;
+}
+
+.pmap-form {
+  display: flex;
+  gap: 6px;
+}
+
+.pmap-input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  font-size: 0.85rem;
+  color: #111;
+  background: #fff;
+  outline: none;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.pmap-input:focus {
+  border-color: #003366;
+  box-shadow: 0 0 0 2px rgba(0,51,102,0.1);
+}
+
+.pmap-btn {
+  padding: 8px 14px;
+  background: #003366;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.pmap-btn:hover:not(:disabled) { background: #002244; }
+.pmap-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.pmap-suggestions {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.13);
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.pmap-suggestion {
+  display: block;
+  width: 100%;
+  padding: 9px 12px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #f3f4f6;
+  text-align: left;
+  font-size: 0.79rem;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.1s;
+  font-family: inherit;
+}
+
+.pmap-suggestion:last-child { border-bottom: none; }
+.pmap-suggestion:hover { background: #f9fafb; }
+
+.pmap-close-btn {
+  color: #9ca3af;
+  font-size: 0.75rem;
+  text-align: center;
+  justify-content: center;
+  background: #f9fafb;
+}
+
+.pmap-container {
+  height: 210px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+/* Override leaflet z-index for popups within modal */
+.pmap-container .leaflet-top,
+.pmap-container .leaflet-bottom {
+  z-index: 400;
+}

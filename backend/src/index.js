@@ -286,6 +286,7 @@ app.put('/api/v1/properties/:id', verifyToken, async (req, res) => {
   const {
     title, price, address, city, province, property_type, transaction_type,
     bedrooms, bathrooms, square_meters, description, assigned_to, estado,
+    latitude, longitude,
     postal_code, street_number, floor, door, block_num, portal_door,
     district, zone, urbanization, useful_area, year_built, community_fees,
     show_price, features, energy_consumption_cert, energy_emission_cert,
@@ -310,6 +311,7 @@ app.put('/api/v1/properties/:id', verifyToken, async (req, res) => {
       .update({
         title, price, address, city, province, property_type, transaction_type,
         bedrooms, bathrooms, square_meters, description,
+        latitude: latitude || null, longitude: longitude || null,
         assigned_to: assigned_to || null, estado: estado || 'disponible',
         postal_code: postal_code || null, street_number: street_number || null,
         floor: floor || null, door: door || null, block_num: block_num || null,
@@ -366,6 +368,7 @@ app.post('/api/v1/properties', verifyToken, async (req, res) => {
   const {
     title, price, address, city, province, property_type, transaction_type,
     bedrooms, bathrooms, square_meters, description, assigned_to, estado,
+    latitude, longitude,
     postal_code, street_number, floor, door, block_num, portal_door,
     district, zone, urbanization, useful_area, year_built, community_fees,
     show_price, features, energy_consumption_cert, energy_emission_cert,
@@ -399,6 +402,7 @@ app.post('/api/v1/properties', verifyToken, async (req, res) => {
         title, price, address: address || null, city: city || null,
         province: province || null, property_type, transaction_type,
         bedrooms, bathrooms, square_meters, description, reference,
+        latitude: latitude || null, longitude: longitude || null,
         assigned_to: assigned_to || null, estado: estado || 'disponible',
         user_email: req.user.email, publication_status: 'draft',
         postal_code: postal_code || null, street_number: street_number || null,
@@ -410,6 +414,22 @@ app.post('/api/v1/properties', verifyToken, async (req, res) => {
         community_fees: community_fees ? parseFloat(community_fees) : null,
         show_price: show_price !== undefined ? show_price : true,
         features: features || [],
+        energy_consumption_cert: energy_consumption_cert || 'en_tramite',
+        energy_emission_cert: energy_emission_cert || 'en_tramite',
+        energy_consumption_value: energy_consumption_value ? parseFloat(energy_consumption_value) : null,
+        co2_emission_value: co2_emission_value ? parseFloat(co2_emission_value) : null,
+        video_url: video_url || null, virtual_tour_url: virtual_tour_url || null,
+        cadastral_reference: cadastral_reference || null, owner: owner || null,
+        second_owner: second_owner || null, has_keys: has_keys || false,
+        key_reference: key_reference || null, sign_on_property: sign_on_property || false,
+        ibi: ibi ? parseFloat(ibi) : null, agreement_type: agreement_type || null,
+        agreement_from: agreement_from || null, agreement_to: agreement_to || null,
+        commission_percentage: commission_percentage ? parseFloat(commission_percentage) : null,
+        commission_value: commission_value ? parseFloat(commission_value) : null,
+        shared_commission_pct: shared_commission_pct ? parseFloat(shared_commission_pct) : null,
+        terrace_area: terrace_area ? parseFloat(terrace_area) : null,
+        garage_area: garage_area ? parseFloat(garage_area) : null,
+        garage_price: garage_price ? parseFloat(garage_price) : null,
       }])
       .select();
     if (error) return res.status(500).json({ error: error.message });

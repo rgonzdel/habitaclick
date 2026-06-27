@@ -611,6 +611,7 @@
   flex-direction: column;
   gap: 14px;
   flex: 1;
+  min-height: 0;
 }
 .pm-modal-foot {
   border-top: 1px solid #e5e7eb;

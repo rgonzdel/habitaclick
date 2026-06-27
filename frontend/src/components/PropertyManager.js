@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import ReactDOM from 'react-dom';
+import PropertyMap from './PropertyMap';
 import {
   Home, Building2, House, Store, Landmark, Tag, Key, Euro,
   Circle, Search, Download, Edit2, Trash2, Link2, Save,
@@ -118,6 +119,7 @@ function AddPropertyModal({ teamUsers, getCurrentUserId, showToast, loadProperti
     property_type: 'apartment', transaction_type: 'sale', estado: 'disponible',
     bedrooms: '', bathrooms: '', square_meters: '', useful_area: '',
     description: '', assigned_to: '',
+    latitude: null, longitude: null,
     postal_code: '', street_number: '', floor: '', door: '', block_num: '', portal_door: '',
     district: '', zone: '', urbanization: '',
     year_built: '', community_fees: '', show_price: true, features: [],
@@ -144,6 +146,19 @@ function AddPropertyModal({ teamUsers, getCurrentUserId, showToast, loadProperti
   const toggleFeature = (key) => set('features', form.features.includes(key)
     ? form.features.filter(f => f !== key) : [...form.features, key]);
 
+  const handleLocationChange = (lat, lng, addr) => {
+    setForm(p => ({
+      ...p,
+      latitude: lat,
+      longitude: lng,
+      address: addr.road || p.address,
+      street_number: addr.house_number || p.street_number,
+      city: addr.city || addr.town || addr.village || addr.municipality || p.city,
+      province: addr.state || p.province,
+      postal_code: addr.postcode || p.postal_code,
+    }));
+  };
+
   const handleGenerateDescription = () => { set('description', generateDescription(form)); };
 
   const handleSubmit = async () => {
@@ -156,6 +171,7 @@ function AddPropertyModal({ teamUsers, getCurrentUserId, showToast, loadProperti
     try {
       const body = {
         title: form.title, price: parseFloat(form.price),
+        latitude: form.latitude || null, longitude: form.longitude || null,
         address: form.address || null, city: form.city || null, province: form.province || null,
         property_type: form.property_type, transaction_type: form.transaction_type,
         bedrooms: form.bedrooms !== '' ? parseInt(form.bedrooms) : null,
@@ -233,6 +249,7 @@ function AddPropertyModal({ teamUsers, getCurrentUserId, showToast, loadProperti
 
           {/* LOCALIZACIÓN */}
           <AddSection title="Localización" sectionKey="localizacion" open={openSections.localizacion} onToggle={toggleSec}>
+            <PropertyMap lat={form.latitude} lng={form.longitude} onLocationChange={handleLocationChange} />
             <div className="pm-form-row">
               <div className="pm-field" style={{ flex: 3 }}>
                 <label>Calle / Dirección</label>

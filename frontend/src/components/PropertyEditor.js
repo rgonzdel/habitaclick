@@ -3,6 +3,7 @@ import { X, User, Check, Video, AlertTriangle, Sparkles, ChevronDown } from 'luc
 import { generateDescription } from '../utils/descriptionGenerator';
 import './PropertyEditor.css';
 import UserSearchInput from './UserSearchInput';
+import PropertyMap from './PropertyMap';
 
 const API = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
@@ -63,6 +64,8 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
     description: property.description || '',
     assigned_to: property.assigned_to || '',
     // Localización extra
+    latitude: property.latitude || null,
+    longitude: property.longitude || null,
     postal_code: property.postal_code || '',
     street_number: property.street_number || '',
     floor: property.floor || '',
@@ -142,6 +145,19 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
       features: p.features.includes(key)
         ? p.features.filter(f => f !== key)
         : [...p.features, key],
+    }));
+  };
+
+  const handleMapLocation = (lat, lng, addr) => {
+    setFormData(p => ({
+      ...p,
+      latitude: lat,
+      longitude: lng,
+      address: addr.road || p.address,
+      street_number: addr.house_number || p.street_number,
+      city: addr.city || addr.town || addr.village || addr.municipality || p.city,
+      province: addr.state || p.province,
+      postal_code: addr.postcode || p.postal_code,
     }));
   };
 
@@ -281,6 +297,8 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
         body: JSON.stringify({
           title: formData.title,
           price: parseFloat(formData.price),
+          latitude: formData.latitude || null,
+          longitude: formData.longitude || null,
           address: formData.address,
           city: formData.city,
           province: formData.province,
@@ -370,6 +388,7 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
 
             {/* LOCALIZACIÓN */}
             <Section title="Localización" sectionKey="localizacion" open={openSections.localizacion} onToggle={toggleSection}>
+              <PropertyMap lat={formData.latitude} lng={formData.longitude} onLocationChange={handleMapLocation} />
               <div className="pe-row">
                 <div className="pe-field pe-field-grow">
                   <label>Calle / Dirección</label>
