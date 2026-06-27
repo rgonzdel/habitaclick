@@ -69,8 +69,7 @@ export default function PropertyMap({ lat, lng, onLocationChange }) {
     return () => {
       if (mapRef.current) { mapRef.current.remove(); mapRef.current = null; markerRef.current = null; }
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []); // eslint-disable-line
 
   useEffect(() => {
     if (!mapRef.current || !lat || !lng) return;
