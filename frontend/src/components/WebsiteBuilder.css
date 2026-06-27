@@ -1,3 +1,20 @@
+/* ── ICON ALIGNMENT ─────────────────────────────────────────────────── */
+.wbe-toolbar-title,
+.wbe-btn-secondary,
+.wbe-btn-primary,
+.wbe-add-section-btn,
+.wbe-global-btn,
+.wbe-upload-btn,
+.wbe-right-header button,
+.wbe-right-header span,
+.wbe-publish-btn,
+.wbe-add-menu-item,
+.wbe-row-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
 /* ── LAYOUT ─────────────────────────────────────────────────────────── */
 
 .wbe-layout {

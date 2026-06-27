@@ -1,4 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import {
+  Target, Users2, BarChart2, Wrench, Home, MessageSquare, Phone, MapPin,
+  FileText, Image, Minus, Settings, Globe, Save, GripVertical,
+  ChevronUp, ChevronDown, Copy, X, Upload, RefreshCw,
+  AlignLeft, AlignCenter, AlignRight, Palette, Database, Rocket,
+  Plus, Check, Eye, Instagram, Facebook, Linkedin, Youtube,
+  Camera
+} from 'lucide-react';
 import './WebsiteBuilder.css';
 
 const API = process.env.REACT_APP_API_URL || 'http://localhost:3001';
@@ -34,18 +42,29 @@ function loadFont(fontId) {
 const BTN_RADII = { square: '3px', medium: '8px', round: '24px' };
 const getBR = id => BTN_RADII[id] || '8px';
 
+const SECTION_TYPE_ICONS = {
+  hero: Target, about: Users2, stats: BarChart2, services: Wrench,
+  properties: Home, testimonials: MessageSquare, contact: Phone,
+  map: MapPin, text: FileText, image: Image, divider: Minus,
+};
+
+function SectionIcon({ type, size = 14 }) {
+  const Icon = SECTION_TYPE_ICONS[type];
+  return Icon ? <Icon size={size} /> : null;
+}
+
 const SECTION_TYPES = [
-  { type: 'hero', icon: '🎯', label: 'Hero / Banner' },
-  { type: 'about', icon: '👥', label: 'Sobre nosotros' },
-  { type: 'stats', icon: '📊', label: 'Estadísticas' },
-  { type: 'services', icon: '🛠️', label: 'Servicios' },
-  { type: 'properties', icon: '🏠', label: 'Propiedades' },
-  { type: 'testimonials', icon: '💬', label: 'Testimonios' },
-  { type: 'contact', icon: '📞', label: 'Contacto' },
-  { type: 'map', icon: '📍', label: 'Mapa' },
-  { type: 'text', icon: '📝', label: 'Texto libre' },
-  { type: 'image', icon: '🖼️', label: 'Imagen' },
-  { type: 'divider', icon: '➖', label: 'Separador' },
+  { type: 'hero', label: 'Hero / Banner' },
+  { type: 'about', label: 'Sobre nosotros' },
+  { type: 'stats', label: 'Estadísticas' },
+  { type: 'services', label: 'Servicios' },
+  { type: 'properties', label: 'Propiedades' },
+  { type: 'testimonials', label: 'Testimonios' },
+  { type: 'contact', label: 'Contacto' },
+  { type: 'map', label: 'Mapa' },
+  { type: 'text', label: 'Texto libre' },
+  { type: 'image', label: 'Imagen' },
+  { type: 'divider', label: 'Separador' },
 ];
 
 const DEFAULTS = {
@@ -465,7 +484,7 @@ function GlobalEditor({ g, setG, onSave, saving }) {
   return (
     <div>
       <div className="wbe-right-tabs">
-        {[['design','🎨 Diseño'],['content','📋 Datos'],['publish','🚀 Publicar']].map(([id,label]) => (
+        {[['design', <><Palette size={13}/> Diseño</>],['content', <><Database size={13}/> Datos</>],['publish', <><Globe size={13}/> Publicar</>]].map(([id,label]) => (
           <button key={id} className={tab===id?'active':''} onClick={() => setTab(id)}>{label}</button>
         ))}
       </div>
@@ -482,7 +501,7 @@ function GlobalEditor({ g, setG, onSave, saving }) {
             <input type="file" accept="image/*" ref={logoInputRef} onChange={handleLogoUpload} style={{ display:'none' }} />
             <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
               <button className="wbe-upload-btn" onClick={() => logoInputRef.current.click()}>
-                {g.logoUrl ? '🔄 Cambiar logo' : '📁 Subir logo'}
+                {g.logoUrl ? <><RefreshCw size={13}/> Cambiar logo</> : <><Upload size={13}/> Subir logo</>}
               </button>
               {g.logoUrl && <button className="wbe-remove-btn" onClick={() => set('logoUrl','')}>Quitar</button>}
             </div>
@@ -490,7 +509,7 @@ function GlobalEditor({ g, setG, onSave, saving }) {
           <div className="wbe-prop-group">
             <label>Posición del logo</label>
             <div className="wbe-size-btns">
-              {[['left','⬅ Izq.'],['center','↔ Centro'],['right','Der. ➡']].map(([v,l]) => (
+              {[['left', <><AlignLeft size={13}/> Izq.</>],['center', <><AlignCenter size={13}/> Centro</>],['right', <><AlignRight size={13}/> Der.</>]].map(([v,l]) => (
                 <button key={v} className={`wbe-size-btn${g.logoPosition===v?' active':''}`} onClick={() => set('logoPosition',v)}>{l}</button>
               ))}
             </div>
@@ -606,7 +625,7 @@ function GlobalEditor({ g, setG, onSave, saving }) {
 
           <div className="wbe-publish-area">
             <button className={`wbe-publish-btn${g.published?' published':''}`} onClick={() => onSave(true)} disabled={saving || !g.slug || !g.companyName}>
-              {g.published ? '✓ Publicada — Republicar' : '🚀 Publicar página'}
+              {g.published ? <><Check size={14}/> Publicada — Republicar</> : <><Rocket size={14}/> Publicar página</>}
             </button>
             {(!g.slug || !g.companyName) && <p className="wbe-warn">Completa el nombre y la URL para publicar</p>}
             {g.published && g.slug && (
@@ -717,16 +736,16 @@ export default function WebsiteBuilder({ onToast, properties = [] }) {
       {/* Toolbar */}
       <div className="wbe-toolbar">
         <div className="wbe-toolbar-left">
-          <span className="wbe-toolbar-title">🌐 Editor de página web</span>
+          <span className="wbe-toolbar-title"><Globe size={15}/> Editor de página web</span>
           {global.companyName && <span className="wbe-toolbar-sub">{global.companyName}</span>}
         </div>
         <div className="wbe-toolbar-right">
           {global.published && global.slug && (
             <a href={`/sitio/${global.slug}`} target="_blank" rel="noreferrer" className="wbe-btn-outline">Ver página →</a>
           )}
-          <button className="wbe-btn-secondary" onClick={() => save()} disabled={saving}>{saving?'Guardando…':'💾 Guardar'}</button>
+          <button className="wbe-btn-secondary" onClick={() => save()} disabled={saving}>{saving?'Guardando…':<><Save size={14}/> Guardar</>}</button>
           <button className={`wbe-btn-primary${global.published?' published':''}`} onClick={() => save(true)} disabled={saving||!global.slug||!global.companyName}>
-            {global.published ? '✓ Publicada' : '🚀 Publicar'}
+            {global.published ? <><Check size={14}/> Publicada</> : <><Rocket size={14}/> Publicar</>}
           </button>
         </div>
       </div>
@@ -736,14 +755,14 @@ export default function WebsiteBuilder({ onToast, properties = [] }) {
         <div className="wbe-left">
           <div className="wbe-left-header">
             <span>Secciones</span>
-            <button className="wbe-add-section-btn" onClick={() => setShowAddMenu(v => !v)}>+ Añadir</button>
+            <button className="wbe-add-section-btn" onClick={() => setShowAddMenu(v => !v)}><Plus size={13}/> Añadir</button>
           </div>
 
           {showAddMenu && (
             <div className="wbe-add-menu">
               {SECTION_TYPES.map(st => (
                 <button key={st.type} className="wbe-add-menu-item" onClick={() => addSection(st.type)}>
-                  <span>{st.icon}</span> {st.label}
+                  <span className="wbe-menu-icon"><SectionIcon type={st.type} size={13}/></span> {st.label}
                 </button>
               ))}
             </div>
@@ -761,14 +780,14 @@ export default function WebsiteBuilder({ onToast, properties = [] }) {
                   onDragStart={() => setDragFrom(idx)}
                   onDragOver={e => { e.preventDefault(); if (dragFrom !== null && dragFrom !== idx) setDragOver(idx); }}
                 >
-                  <span className="wbe-drag-handle" title="Arrastrar para mover">⠿</span>
-                  <span className="wbe-row-icon">{ti?.icon}</span>
+                  <span className="wbe-drag-handle" title="Arrastrar para mover"><GripVertical size={13}/></span>
+                  <span className="wbe-row-icon"><SectionIcon type={s.type} size={13}/></span>
                   <span className="wbe-row-label">{ti?.label}</span>
                   <div className="wbe-row-actions" onClick={e => e.stopPropagation()}>
-                    <button onClick={() => moveSection(idx,-1)} disabled={idx===0} title="Subir">↑</button>
-                    <button onClick={() => moveSection(idx,1)} disabled={idx===sections.length-1} title="Bajar">↓</button>
-                    <button onClick={() => duplicateSection(s)} title="Duplicar">⧉</button>
-                    <button onClick={() => deleteSection(s.id)} title="Eliminar" className="wbe-del">✕</button>
+                    <button onClick={() => moveSection(idx,-1)} disabled={idx===0} title="Subir"><ChevronUp size={13}/></button>
+                    <button onClick={() => moveSection(idx,1)} disabled={idx===sections.length-1} title="Bajar"><ChevronDown size={13}/></button>
+                    <button onClick={() => duplicateSection(s)} title="Duplicar"><Copy size={13}/></button>
+                    <button onClick={() => deleteSection(s.id)} title="Eliminar" className="wbe-del"><X size={13}/></button>
                   </div>
                 </div>
               );
@@ -776,7 +795,7 @@ export default function WebsiteBuilder({ onToast, properties = [] }) {
           </div>
 
           <button className={`wbe-global-btn${!selectedId?' active':''}`} onClick={() => setSelectedId(null)}>
-            ⚙️ Ajustes generales
+            <Settings size={13}/> Ajustes generales
           </button>
         </div>
 
@@ -792,7 +811,7 @@ export default function WebsiteBuilder({ onToast, properties = [] }) {
                 }
               </div>
               <div className="wbe-header-contact">
-                {global.phone && <span style={{ color:'rgba(255,255,255,0.9)', fontSize:'0.85rem' }}>📞 {global.phone}</span>}
+                {global.phone && <span style={{ color:'rgba(255,255,255,0.9)', fontSize:'0.85rem', display:'inline-flex', alignItems:'center', gap:4 }}><Phone size={13}/> {global.phone}</span>}
                 {global.whatsapp && <span style={{ background:'#25d366', color:'white', padding:'5px 12px', borderRadius: getBR(global.buttonRadius), fontSize:'0.82rem', fontWeight:600 }}>WhatsApp</span>}
               </div>
             </div>
@@ -802,7 +821,7 @@ export default function WebsiteBuilder({ onToast, properties = [] }) {
           <div style={{ fontFamily: getFont(global.fontFamily) }}>
             {sections.length === 0 && (
               <div className="wbe-canvas-empty">
-                <div>🏗️</div>
+                <Plus size={32} color="#9ca3af" />
                 <p>Tu página está vacía</p>
                 <button onClick={() => setShowAddMenu(true)}>+ Añadir primera sección</button>
               </div>
@@ -814,7 +833,7 @@ export default function WebsiteBuilder({ onToast, properties = [] }) {
                 onClick={e => { e.stopPropagation(); setSelectedId(s.id); }}
               >
                 <div className="wbe-section-badge">
-                  {SECTION_TYPES.find(t => t.type===s.type)?.icon} {SECTION_TYPES.find(t => t.type===s.type)?.label}
+                  <SectionIcon type={s.type} size={11}/> {SECTION_TYPES.find(t => t.type===s.type)?.label}
                 </div>
                 {renderSection(s, global, properties)}
               </div>
@@ -833,15 +852,15 @@ export default function WebsiteBuilder({ onToast, properties = [] }) {
           {selectedSection ? (
             <>
               <div className="wbe-right-header">
-                <span>{SECTION_TYPES.find(t=>t.type===selectedSection.type)?.icon} {SECTION_TYPES.find(t=>t.type===selectedSection.type)?.label}</span>
-                <button onClick={() => setSelectedId(null)} title="Cerrar panel">✕</button>
+                <span><SectionIcon type={selectedSection.type} size={14}/> {SECTION_TYPES.find(t=>t.type===selectedSection.type)?.label}</span>
+                <button onClick={() => setSelectedId(null)} title="Cerrar panel"><X size={15}/></button>
               </div>
               <SectionEditorPanel section={selectedSection} onChange={updateSection} />
             </>
           ) : (
             <>
               <div className="wbe-right-header">
-                <span>⚙️ Ajustes generales</span>
+                <span><Settings size={14}/> Ajustes generales</span>
               </div>
               <GlobalEditor g={global} setG={setGlobal} onSave={save} saving={saving} />
             </>

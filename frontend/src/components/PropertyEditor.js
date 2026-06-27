@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { X, User, Check, Video, AlertTriangle } from 'lucide-react';
 import './PropertyEditor.css';
 import UserSearchInput from './UserSearchInput';
 
@@ -226,7 +227,7 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
 
         <div className="pe-header">
           <h2>Editar propiedad</h2>
-          <button className="pe-close" onClick={onClose}>✕</button>
+          <button className="pe-close" onClick={onClose}><X size={18}/></button>
         </div>
 
         <div className="pe-body">
@@ -319,7 +320,7 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
                     assigned_to: prev.assigned_to === currentUserId ? '' : currentUserId
                   }))}
                 >
-                  {formData.assigned_to === currentUserId ? '✓ Yo' : '👤 Asignarme'}
+                  {formData.assigned_to === currentUserId ? <><Check size={13}/> Yo</> : <><User size={13}/> Asignarme</>}
                 </button>
                 <UserSearchInput
                   users={teamUsers.filter(u => u.id !== currentUserId)}
@@ -397,7 +398,7 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
                   {/* Contenido del tile */}
                   {item.media_type === 'video' ? (
                     <div className="pe-item-video">
-                      <span className="pe-item-video-icon">🎬</span>
+                      <span className="pe-item-video-icon"><Video size={22}/></span>
                       <span className="pe-item-video-name">{item.filename || 'vídeo'}</span>
                     </div>
                   ) : item._blobUrl ? (
@@ -417,7 +418,7 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
                   {/* Overlay error */}
                   {item._error && (
                     <div className="pe-item-status-overlay pe-item-status-error" title={item._errorMsg}>
-                      <span>⚠</span>
+                      <AlertTriangle size={16}/>
                       <span className="pe-item-error-msg">{item._errorMsg || 'Error'}</span>
                     </div>
                   )}
@@ -430,7 +431,7 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
                     className="pe-item-delete"
                     onClick={() => handleDeleteMedia(item)}
                     title="Eliminar"
-                  >✕</button>
+                  ><X size={12}/></button>
                 </div>
               ))}
             </div>

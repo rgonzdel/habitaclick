@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { MapPin, Edit2, UserPlus, X } from 'lucide-react';
 import './UserManager.css';
 
 const API = process.env.REACT_APP_API_URL || 'http://localhost:3001';
@@ -129,7 +130,7 @@ function UserManager({ currentUserRole, onToast }) {
         </div>
         {isAdmin && (
           <button className="um-btn-add" onClick={() => { setShowForm(!showForm); cancelEdit(); }}>
-            {showForm ? 'Cancelar' : '+ Nuevo Usuario'}
+            {showForm ? <><X size={14}/> Cancelar</> : <><UserPlus size={14}/> Nuevo Usuario</>}
           </button>
         )}
       </div>
@@ -254,7 +255,7 @@ function UserManager({ currentUserRole, onToast }) {
                     <div className="um-meta">
                       <span className="um-cargo">{u.cargo}</span>
                       <span className="um-sep">·</span>
-                      <span className="um-oficina">📍 {u.ubicacion_oficina}</span>
+                      <span className="um-oficina" style={{display:'inline-flex',alignItems:'center',gap:3}}><MapPin size={11}/> {u.ubicacion_oficina}</span>
                     </div>
                     <div className="um-email">{u.email}</div>
                   </div>
@@ -270,8 +271,8 @@ function UserManager({ currentUserRole, onToast }) {
                   </div>
 
                   {isAdmin && (
-                    <button className="um-btn-edit" onClick={() => startEdit(u)} title="Editar usuario">
-                      ✏️ Editar
+                    <button className="um-btn-edit" onClick={() => startEdit(u)} title="Editar usuario" style={{display:'inline-flex',alignItems:'center',gap:5}}>
+                      <Edit2 size={14}/> Editar
                     </button>
                   )}
                 </>

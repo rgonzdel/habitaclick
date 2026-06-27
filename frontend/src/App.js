@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Home, Users, Globe, Check, X } from 'lucide-react';
 import CookieConsent from './components/CookieConsent';
 import UserManager from './components/UserManager';
 import PropertyManager from './components/PropertyManager';
@@ -129,7 +130,7 @@ function App() {
         {/* Toast */}
         {toast && (
           <div className={`toast toast--${toast.type}`}>
-            <span className="toast-icon">{toast.type === 'success' ? '✓' : '✕'}</span>
+            <span className="toast-icon">{toast.type === 'success' ? <Check size={14}/> : <X size={14}/>}</span>
             {toast.msg}
           </div>
         )}
@@ -159,19 +160,19 @@ function App() {
                 className={`dash-tab${dashView === 'properties' ? ' active' : ''}`}
                 onClick={() => setDashView('properties')}
               >
-                🏠 Propiedades
+                <Home size={14}/> Propiedades
               </button>
               <button
                 className={`dash-tab${dashView === 'users' ? ' active' : ''}`}
                 onClick={() => setDashView('users')}
               >
-                👥 Equipo
+                <Users size={14}/> Equipo
               </button>
               <button
                 className={`dash-tab${dashView === 'website' ? ' active' : ''}`}
                 onClick={() => setDashView('website')}
               >
-                🌐 Página Web
+                <Globe size={14}/> Página Web
               </button>
             </nav>
           )}
