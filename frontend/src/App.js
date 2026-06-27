@@ -137,7 +137,7 @@ function App() {
           {/* ── Sidebar vertical ── */}
           <aside className="dash-sidebar">
             <div className="dash-sidebar-top">
-              <img src="/logos/logo.png" alt="HC" className="dash-sidebar-logo" />
+              <img src="/logos/Icono_Logo.png" alt="HC" className="dash-sidebar-logo" />
             </div>
 
             <nav className="dash-sidebar-nav">
