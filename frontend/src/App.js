@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Home, Users, Globe, Check, X, LogOut } from 'lucide-react';
 import CookieConsent from './components/CookieConsent';
 import UserManager from './components/UserManager';
@@ -15,30 +15,27 @@ import WebsitePublic from './components/WebsitePublic';
 import './App.css';
 
 function SidebarLogo() {
-  const canvasRef = useRef(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const img = new Image();
-    img.onload = () => {
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.drawImage(img, 0, 0);
-      const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      for (let i = 0; i < data.length; i += 4) {
-        if (data[i] > 230 && data[i + 1] > 230 && data[i + 2] > 230) {
-          imageData.data[i + 3] = 0;
-        }
-      }
-      ctx.putImageData(imageData, 0, 0);
-    };
-    img.src = process.env.PUBLIC_URL + '/logos/Icono_Logo.png';
-  }, []);
-
-  return <canvas ref={canvasRef} className="dash-sidebar-logo" />;
+  return (
+    <>
+      <svg width="0" height="0" style={{ position: 'absolute', overflow: 'hidden' }}>
+        <defs>
+          <filter id="rm-white">
+            <feColorMatrix type="matrix"
+              values="1 0 0 0 0
+                      0 1 0 0 0
+                      0 0 1 0 0
+                     -1 -1 -1 0 3" />
+          </filter>
+        </defs>
+      </svg>
+      <img
+        src={`${process.env.PUBLIC_URL}/logos/Icono_Logo.png`}
+        className="dash-sidebar-logo"
+        alt="HC"
+        style={{ filter: 'url(#rm-white)' }}
+      />
+    </>
+  );
 }
 
 function App() {
