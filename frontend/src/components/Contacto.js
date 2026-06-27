@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Mail, Clock, CheckCircle2 } from 'lucide-react';
 
 function Contacto({ onBack }) {
   const [form, setForm] = useState({ nombre: '', email: '', mensaje: '' });
@@ -24,12 +25,12 @@ function Contacto({ onBack }) {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2.5rem' }}>
           <div style={{ background: 'white', borderRadius: '12px', padding: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📧</div>
+            <div style={{ marginBottom: '0.5rem', display: 'flex', justifyContent: 'center', color: '#003366' }}><Mail size={28}/></div>
             <div style={{ fontWeight: '600', color: '#003366', marginBottom: '0.25rem' }}>Email</div>
             <div style={{ color: '#666', fontSize: '0.9rem' }}>hola@habitaclick.es</div>
           </div>
           <div style={{ background: 'white', borderRadius: '12px', padding: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>⏱️</div>
+            <div style={{ marginBottom: '0.5rem', display: 'flex', justifyContent: 'center', color: '#003366' }}><Clock size={28}/></div>
             <div style={{ fontWeight: '600', color: '#003366', marginBottom: '0.25rem' }}>Respuesta</div>
             <div style={{ color: '#666', fontSize: '0.9rem' }}>En menos de 24h</div>
           </div>
@@ -37,7 +38,7 @@ function Contacto({ onBack }) {
 
         {sent ? (
           <div style={{ background: '#f0fdf4', border: '2px solid #2ECC71', borderRadius: '12px', padding: '2.5rem', textAlign: 'center' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✅</div>
+            <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'center', color: '#2ECC71' }}><CheckCircle2 size={48}/></div>
             <h2 style={{ color: '#003366', marginBottom: '0.5rem' }}>¡Mensaje enviado!</h2>
             <p style={{ color: '#555' }}>Nos pondremos en contacto contigo lo antes posible.</p>
           </div>

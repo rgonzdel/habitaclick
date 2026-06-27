@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Eye, EyeOff, AlertTriangle, Lock, Loader2 } from 'lucide-react';
 import './Auth.css';
 
 const API = process.env.REACT_APP_API_URL || 'http://localhost:3001';
@@ -153,13 +154,13 @@ function Login({ onLoginSuccess, onBackToLanding }) {
               required autoComplete="current-password"
             />
             <button type="button" className="auth-pass-toggle" onClick={() => setShowPass(s => !s)}>
-              {showPass ? '🙈' : '👁'}
+              {showPass ? <EyeOff size={16}/> : <Eye size={16}/>}
             </button>
           </div>
           <button type="submit" disabled={loading}>{loading ? 'Entrando…' : 'Entrar'}</button>
           {slowLoad && (
-            <p style={{ textAlign: 'center', color: '#888', fontSize: '0.85rem', marginTop: '0.75rem' }}>
-              ⏳ Iniciando servidor, un momento...
+            <p style={{ textAlign: 'center', color: '#888', fontSize: '0.85rem', marginTop: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+              <Loader2 size={14} className="auth-spin"/> Iniciando servidor, un momento...
             </p>
           )}
         </form>
@@ -193,7 +194,7 @@ function Login({ onLoginSuccess, onBackToLanding }) {
         </div>
         {devCode ? (
           <div className="auth-devcode">
-            <span className="auth-devcode-label">⚠ SMTP no configurado — código de prueba:</span>
+            <span className="auth-devcode-label"><AlertTriangle size={13}/> SMTP no configurado — código de prueba:</span>
             <span className="auth-devcode-value">{devCode}</span>
           </div>
         ) : (
@@ -233,7 +234,7 @@ function Login({ onLoginSuccess, onBackToLanding }) {
     if (step === 'newpass') return (
       <>
         <div className="auth-step-header">
-          <span className="auth-step-icon">🔒</span>
+          <span className="auth-step-icon"><Lock size={20}/></span>
           <h2>Nueva contraseña</h2>
         </div>
         <p className="auth-subtitle">Elige una contraseña segura de al menos 6 caracteres.</p>
