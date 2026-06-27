@@ -14,15 +14,6 @@ import WebsiteBuilder from './components/WebsiteBuilder';
 import WebsitePublic from './components/WebsitePublic';
 import './App.css';
 
-function SidebarLogo() {
-  return (
-    <img
-      src={`${process.env.PUBLIC_URL}/logos/Icono_Logo.png`}
-      className="dash-sidebar-logo"
-      alt="HC"
-    />
-  );
-}
 
 function App() {
   const [view, setView] = useState('landing');
@@ -146,9 +137,7 @@ function App() {
 
           {/* ── Sidebar vertical ── */}
           <aside className="dash-sidebar">
-            <div className="dash-sidebar-top">
-              <SidebarLogo />
-            </div>
+
 
             <nav className="dash-sidebar-nav">
               <button

@@ -24,7 +24,7 @@ html, body {
 /* ── Sidebar ── */
 .dash-sidebar {
   width: 68px;
-  background: linear-gradient(to bottom, #ffffff 0px, #003366 72px);
+  background: #003366;
   display: flex;
   flex-direction: column;
   align-items: center;
