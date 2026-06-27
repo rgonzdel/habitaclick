@@ -4,7 +4,7 @@ import {
   Circle, Search, Download, Edit2, Trash2, Link2, Save,
   User, Video, Camera, SlidersHorizontal, Plus, X, ChevronLeft,
   ChevronRight, ListFilter, CheckSquare, ArrowUpDown, FileText,
-  MapPin, LayoutList
+  MapPin, LayoutList, Sparkles, Loader2
 } from 'lucide-react';
 import PropertyEditor from './PropertyEditor';
 import UserSearchInput from './UserSearchInput';
@@ -89,6 +89,31 @@ function AddPropertyModal({ teamUsers, getCurrentUserId, showToast, loadProperti
   const [photos, setPhotos] = useState([]);
   const [videos, setVideos] = useState([]);
   const [saving, setSaving] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
+
+  const generateDescription = async () => {
+    setAiLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API}/api/v1/ai/describe-property`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+        body: JSON.stringify({
+          title: form.title, price: form.price, address: form.address,
+          city: form.city, province: form.province, property_type: form.property_type,
+          transaction_type: form.transaction_type, bedrooms: form.bedrooms,
+          bathrooms: form.bathrooms, square_meters: form.square_meters,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) set('description', data.description);
+      else showToast('error', data.error || 'Error al generar descripción');
+    } catch {
+      showToast('error', 'Error de conexión');
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
@@ -221,8 +246,13 @@ function AddPropertyModal({ teamUsers, getCurrentUserId, showToast, loadProperti
             </div>
           </div>
           <div className="pm-field">
-            <label>Descripción</label>
-            <textarea rows={4} value={form.description} onChange={e => set('description', e.target.value)} placeholder="Descripción del inmueble..." />
+            <div className="pm-label-row">
+              <label>Descripción</label>
+              <button type="button" className="pm-ai-btn" onClick={generateDescription} disabled={aiLoading}>
+                {aiLoading ? <><Loader2 size={13} className="pm-ai-spin" /> Generando...</> : <><Sparkles size={13} /> Generar con IA</>}
+              </button>
+            </div>
+            <textarea rows={4} value={form.description} onChange={e => set('description', e.target.value)} placeholder="Rellena los campos de arriba y pulsa «Generar con IA»..." />
           </div>
 
           <div className="pm-field">

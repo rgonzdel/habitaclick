@@ -6,6 +6,7 @@ const { createClient } = require('@supabase/supabase-js');
 const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
+const Anthropic = require('@anthropic-ai/sdk');
 const { sendAssignmentEmail } = require('./mailer');
 
 dotenv.config();
@@ -87,9 +88,51 @@ const requireRole = (...roles) => (req, res, next) => {
 // Almacén en memoria de códigos de recuperación: email → { code, expires }
 const resetCodes = new Map();
 
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+
 // Health
 app.get('/api/v1/health', (req, res) => {
   res.json({ status: 'OK' });
+});
+
+// ── IA: Generar descripción de inmueble ──────────────────────────────
+app.post('/api/v1/ai/describe-property', verifyToken, async (req, res) => {
+  const { title, price, address, city, province, property_type, transaction_type, bedrooms, bathrooms, square_meters } = req.body;
+
+  const typeMap = { apartment: 'apartamento', house: 'casa', land: 'terreno', commercial: 'local comercial' };
+  const txMap = { sale: 'venta', rent: 'alquiler' };
+
+  const parts = [];
+  if (title) parts.push(`Título: ${title}`);
+  if (typeMap[property_type]) parts.push(`Tipo: ${typeMap[property_type]}`);
+  if (txMap[transaction_type]) parts.push(`Operación: en ${txMap[transaction_type]}`);
+  if (price) parts.push(`Precio: ${Number(price).toLocaleString('es-ES')} €`);
+  if (city || province) parts.push(`Ubicación: ${[city, province].filter(Boolean).join(', ')}`);
+  if (address) parts.push(`Dirección: ${address}`);
+  if (bedrooms) parts.push(`Habitaciones: ${bedrooms}`);
+  if (bathrooms) parts.push(`Baños: ${bathrooms}`);
+  if (square_meters) parts.push(`Superficie: ${square_meters} m²`);
+
+  if (parts.length === 0) {
+    return res.status(400).json({ error: 'Rellena al menos algunos campos antes de generar la descripción.' });
+  }
+
+  try {
+    const message = await anthropic.messages.create({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 512,
+      messages: [{
+        role: 'user',
+        content: `Eres un experto redactor inmobiliario español. Escribe una descripción atractiva y profesional para este inmueble, en español, de entre 80 y 150 palabras. Resalta los puntos fuertes, usa lenguaje cálido y persuasivo. No uses listas con guiones. Devuelve solo la descripción, sin título ni explicaciones adicionales.\n\nDatos del inmueble:\n${parts.join('\n')}`
+      }]
+    });
+
+    const description = message.content[0]?.text?.trim() || '';
+    res.json({ description });
+  } catch (err) {
+    console.error('Anthropic error:', err.message);
+    res.status(500).json({ error: 'Error al generar la descripción con IA.' });
+  }
 });
 
 // REGISTRO
