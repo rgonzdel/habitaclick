@@ -53,7 +53,7 @@ export default function PropertyMap({ lat, lng, onLocationChange }) {
     const initLng = (lat && lng) ? lng : -3.7038;
     const zoom = (lat && lng) ? 15 : 6;
 
-    mapRef.current = L.map(containerRef.current).setView([initLat, initLng], zoom);
+    mapRef.current = L.map(containerRef.current, { scrollWheelZoom: false }).setView([initLat, initLng], zoom);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(mapRef.current);
