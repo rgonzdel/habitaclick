@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, User, Check, Video, AlertTriangle, Sparkles, Loader2 } from 'lucide-react';
+import { X, User, Check, Video, AlertTriangle, Sparkles } from 'lucide-react';
+import { generateDescription } from '../utils/descriptionGenerator';
 import './PropertyEditor.css';
 import UserSearchInput from './UserSearchInput';
 
@@ -29,26 +30,10 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [dropZoneActive, setDropZoneActive] = useState(false);
-  const [aiLoading, setAiLoading] = useState(false);
 
-  const generateDescription = async () => {
-    setAiLoading(true);
-    try {
-      const res = await fetch(`${API}/api/v1/ai/describe-property`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-        body: JSON.stringify({
-          title: formData.title, price: formData.price, address: formData.address,
-          city: formData.city, province: formData.province, property_type: formData.property_type,
-          transaction_type: formData.transaction_type, bedrooms: formData.bedrooms,
-          bathrooms: formData.bathrooms, square_meters: formData.square_meters,
-        }),
-      });
-      const data = await res.json();
-      if (res.ok) setFormData(prev => ({ ...prev, description: data.description }));
-    } finally {
-      setAiLoading(false);
-    }
+  const handleGenerateDescription = () => {
+    const desc = generateDescription(formData);
+    setFormData(prev => ({ ...prev, description: desc }));
   };
 
   const dragIndexRef = useRef(null);
@@ -321,8 +306,8 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
             <div className="pe-field">
               <div className="pm-label-row">
                 <label>Descripción</label>
-                <button type="button" className="pm-ai-btn" onClick={generateDescription} disabled={aiLoading}>
-                  {aiLoading ? <><Loader2 size={13} className="pm-ai-spin" /> Generando...</> : <><Sparkles size={13} /> Generar con IA</>}
+                <button type="button" className="pm-ai-btn" onClick={handleGenerateDescription}>
+                  <Sparkles size={13} /> Generar con IA
                 </button>
               </div>
               <textarea
