@@ -16,25 +16,11 @@ import './App.css';
 
 function SidebarLogo() {
   return (
-    <>
-      <svg width="0" height="0" style={{ position: 'absolute', overflow: 'hidden' }}>
-        <defs>
-          <filter id="rm-white">
-            <feColorMatrix type="matrix"
-              values="1 0 0 0 0
-                      0 1 0 0 0
-                      0 0 1 0 0
-                     -1 -1 -1 0 3" />
-          </filter>
-        </defs>
-      </svg>
-      <img
-        src={`${process.env.PUBLIC_URL}/logos/Icono_Logo.png`}
-        className="dash-sidebar-logo"
-        alt="HC"
-        style={{ filter: 'url(#rm-white)' }}
-      />
-    </>
+    <img
+      src={`${process.env.PUBLIC_URL}/logos/Icono_Logo.png`}
+      className="dash-sidebar-logo"
+      alt="HC"
+    />
   );
 }
 
