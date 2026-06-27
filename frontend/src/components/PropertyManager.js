@@ -9,10 +9,10 @@ import {
 import { generateDescription } from '../utils/descriptionGenerator';
 
 const PORTAL_META = {
-  idealista: { letter: 'I', color: '#00aff0', name: 'Idealista' },
-  fotocasa:  { letter: 'F', color: '#e8003d', name: 'Fotocasa'  },
-  pisos:     { letter: 'P', color: '#f47f16', name: 'Pisos.com' },
-  habitaclia:{ letter: 'H', color: '#6936b4', name: 'Habitaclia'},
+  idealista:  { color: '#003082', name: 'Idealista',  logo: '/logos/portals/idealista.png'  },
+  fotocasa:   { color: '#e30613', name: 'Fotocasa',   logo: '/logos/portals/fotocasa.png'   },
+  pisos:      { color: '#f58220', name: 'Pisos.com',  logo: '/logos/portals/pisos.png'      },
+  habitaclia: { color: '#6936b4', name: 'Habitaclia', logo: '/logos/portals/habitaclia.png' },
 };
 import PropertyEditor from './PropertyEditor';
 import UserSearchInput from './UserSearchInput';
@@ -676,12 +676,16 @@ export default function PropertyManager({ properties, loadProperties, showToast,
                           <button
                             key={key}
                             className={`pm-portal-icon${active ? ' active' : ''}`}
-                            style={active ? { background: meta.color, borderColor: meta.color, color: '#fff' } : {}}
+                            style={active ? { background: meta.color, borderColor: meta.color } : {}}
                             onClick={() => togglePortal(p.id, key)}
                             disabled={togglingPortal === togKey}
                             title={`${meta.name}: ${active ? 'publicado — clic para retirar' : 'clic para publicar'}`}
                           >
-                            {meta.letter}
+                            <img
+                              src={meta.logo}
+                              alt={meta.name}
+                              className={`pm-portal-logo${active ? ' pm-portal-logo-active' : ''}`}
+                            />
                           </button>
                         );
                       })}

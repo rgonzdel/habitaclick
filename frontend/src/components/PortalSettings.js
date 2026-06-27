@@ -7,30 +7,26 @@ const API = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 const PORTAL_META = {
   idealista: {
     name: 'Idealista',
-    color: '#00aff0',
-    bg: '#e8f7fe',
-    letter: 'I',
+    color: '#003082',
+    logo: '/logos/portals/idealista.png',
     desc: 'El portal inmobiliario líder en España.',
   },
   fotocasa: {
     name: 'Fotocasa',
-    color: '#e8003d',
-    bg: '#fde8ee',
-    letter: 'F',
+    color: '#e30613',
+    logo: '/logos/portals/fotocasa.png',
     desc: 'Segundo mayor portal de viviendas en España.',
   },
   pisos: {
     name: 'Pisos.com',
-    color: '#f47f16',
-    bg: '#fef3e8',
-    letter: 'P',
+    color: '#f58220',
+    logo: '/logos/portals/pisos.png',
     desc: 'Portal generalista con gran alcance nacional.',
   },
   habitaclia: {
     name: 'Habitaclia',
     color: '#6936b4',
-    bg: '#f0eafe',
-    letter: 'H',
+    logo: '/logos/portals/habitaclia.png',
     desc: 'Referente en el mercado catalán.',
   },
 };
@@ -133,8 +129,8 @@ export default function PortalSettings({ showToast }) {
           return (
             <div key={key} className="ps-card">
               <div className="ps-card-head" onClick={() => setExpanded(p => ({ ...p, [key]: !p[key] }))}>
-                <div className="ps-portal-badge" style={{ background: meta.bg, color: meta.color }}>
-                  {meta.letter}
+                <div className="ps-portal-badge" style={{ background: meta.color }}>
+                  <img src={meta.logo} alt={meta.name} className="ps-portal-logo" />
                 </div>
                 <div className="ps-portal-info">
                   <div className="ps-portal-name">{meta.name}</div>
