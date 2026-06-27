@@ -33,17 +33,17 @@ html, body {
 }
 
 .dash-sidebar-top {
-  padding: 14px 10px 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 14px 10px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
   width: 100%;
   display: flex;
   justify-content: center;
-  background: transparent;
+  background: linear-gradient(to bottom, #ffffff 0%, #4a90c4 55%, #003366 100%);
 }
 
 .dash-sidebar-logo {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
