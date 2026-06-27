@@ -731,6 +731,7 @@ export default function PropertyManager({ properties, loadProperties, showToast,
                             style={active ? { color: meta.color, borderColor: meta.color } : {}}
                             onMouseEnter={e => showPortalPopup(e, p.id, key)}
                             onMouseLeave={hidePortalPopup}
+                            onClick={() => togglePortal(p.id, key)}
                           >
                             <img
                               src={meta.logo}
