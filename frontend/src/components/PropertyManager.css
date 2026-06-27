@@ -52,7 +52,14 @@
   font-weight: 600;
   border-left-color: #003366;
 }
-.pm-nav-dot { font-size: 0.9rem; flex-shrink: 0; line-height: 1; }
+.pm-nav-icon-wrap {
+  width: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #6b7280;
+}
 .pm-nav-label { flex: 1; }
 .pm-nav-count {
   background: #e5e7eb;
@@ -65,6 +72,7 @@
   text-align: center;
 }
 .pm-nav-item.active .pm-nav-count { background: #dbeafe; color: #003366; }
+.pm-nav-item.active .pm-nav-icon-wrap { color: #003366; }
 .pm-nav-divider {
   padding: 10px 14px 4px;
   font-size: 0.67rem;
@@ -122,7 +130,7 @@
   margin-bottom: 6px;
 }
 .pm-active-filter--fixed { opacity: 0.85; }
-.pm-af-icon { color: #9ca3af; font-size: 0.9rem; margin-top: 1px; flex-shrink: 0; }
+.pm-af-icon { color: #9ca3af; margin-top: 2px; flex-shrink: 0; }
 .pm-af-text { flex: 1; }
 .pm-af-field { font-size: 0.78rem; font-weight: 600; color: #374151; }
 .pm-af-value { font-size: 0.78rem; color: #6b7280; }
@@ -166,7 +174,8 @@
   border: 1.5px dashed #d1d5db; border-radius: 6px;
   color: #6b7280; font-size: 0.82rem; cursor: pointer;
   transition: border-color 0.15s, color 0.15s;
-  display: flex; align-items: center; justify-content: center; gap: 4px;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  box-sizing: border-box;
 }
 .pm-add-filter-btn:hover { border-color: #003366; color: #003366; }
 
@@ -187,6 +196,7 @@
   border: 1.5px solid #003366; color: #003366;
   border-radius: 8px; font-size: 0.82rem; font-weight: 600;
   cursor: pointer; transition: background 0.15s, color 0.15s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
 }
 .pm-save-btn:hover { background: #003366; color: #fff; }
 
@@ -258,6 +268,7 @@
   cursor: pointer;
   white-space: nowrap;
   transition: background 0.15s;
+  display: flex; align-items: center; gap: 6px;
 }
 .pm-btn-add:hover { background: #002244; }
 .pm-btn-export {
@@ -269,6 +280,7 @@
   color: #374151;
   cursor: pointer;
   white-space: nowrap;
+  display: flex; align-items: center; gap: 5px;
 }
 .pm-btn-export:hover { background: #f3f4f6; }
 
@@ -497,6 +509,9 @@
 .pm-card-asesor {
   font-size: 0.77rem;
   color: #9ca3af;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 .pm-asesor-cargo { color: #d1d5db; }
 

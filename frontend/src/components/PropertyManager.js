@@ -1,4 +1,11 @@
 import React, { useState } from 'react';
+import {
+  Home, Building2, House, Store, Landmark, Tag, Key, Euro,
+  Circle, Search, Download, Edit2, Trash2, Link2, Save,
+  User, Video, Camera, SlidersHorizontal, Plus, X, ChevronLeft,
+  ChevronRight, ListFilter, CheckSquare, ArrowUpDown, FileText,
+  MapPin, LayoutList
+} from 'lucide-react';
 import PropertyEditor from './PropertyEditor';
 import UserSearchInput from './UserSearchInput';
 import './PropertyManager.css';
@@ -18,20 +25,20 @@ const SORT_OPTIONS = [
 ];
 
 const NAV_ITEMS = [
-  { id: 'all', icon: '🏠', label: 'Todos los inmuebles', filter: null },
+  { id: 'all', Icon: LayoutList, label: 'Todos los inmuebles', filter: null },
   { id: 'div1', type: 'divider', label: 'ESTADO' },
-  { id: 'disponible', icon: '●', label: 'Disponible', filter: { field: 'estado', value: 'disponible' }, color: '#22c55e' },
-  { id: 'reservado', icon: '●', label: 'Reservado', filter: { field: 'estado', value: 'reservado' }, color: '#f59e0b' },
-  { id: 'vendido', icon: '●', label: 'Vendido', filter: { field: 'estado', value: 'vendido' }, color: '#3b82f6' },
-  { id: 'alquilado', icon: '●', label: 'Alquilado', filter: { field: 'estado', value: 'alquilado' }, color: '#8b5cf6' },
+  { id: 'disponible', color: '#22c55e', label: 'Disponible', filter: { field: 'estado', value: 'disponible' } },
+  { id: 'reservado', color: '#f59e0b', label: 'Reservado', filter: { field: 'estado', value: 'reservado' } },
+  { id: 'vendido', color: '#3b82f6', label: 'Vendido', filter: { field: 'estado', value: 'vendido' } },
+  { id: 'alquilado', color: '#8b5cf6', label: 'Alquilado', filter: { field: 'estado', value: 'alquilado' } },
   { id: 'div2', type: 'divider', label: 'OPERACIÓN' },
-  { id: 'sale', icon: '💰', label: 'En venta', filter: { field: 'transaction_type', value: 'sale' } },
-  { id: 'rent', icon: '🔑', label: 'En alquiler', filter: { field: 'transaction_type', value: 'rent' } },
+  { id: 'sale', Icon: Euro, label: 'En venta', filter: { field: 'transaction_type', value: 'sale' } },
+  { id: 'rent', Icon: Key, label: 'En alquiler', filter: { field: 'transaction_type', value: 'rent' } },
   { id: 'div3', type: 'divider', label: 'TIPO' },
-  { id: 'apartment', icon: '🏢', label: 'Apartamentos', filter: { field: 'property_type', value: 'apartment' } },
-  { id: 'house', icon: '🏡', label: 'Casas', filter: { field: 'property_type', value: 'house' } },
-  { id: 'commercial', icon: '🏪', label: 'Comercial', filter: { field: 'property_type', value: 'commercial' } },
-  { id: 'land', icon: '🌳', label: 'Terrenos', filter: { field: 'property_type', value: 'land' } },
+  { id: 'apartment', Icon: Building2, label: 'Apartamentos', filter: { field: 'property_type', value: 'apartment' } },
+  { id: 'house', Icon: House, label: 'Casas', filter: { field: 'property_type', value: 'house' } },
+  { id: 'commercial', Icon: Store, label: 'Comercial', filter: { field: 'property_type', value: 'commercial' } },
+  { id: 'land', Icon: Landmark, label: 'Terrenos', filter: { field: 'property_type', value: 'land' } },
 ];
 
 const FILTER_TYPES = [
@@ -51,7 +58,11 @@ const VALUE_LABELS = {
 function PhotoCarousel({ photos }) {
   const [idx, setIdx] = useState(0);
   const list = (photos || []).filter(p => p.media_type === 'photo');
-  if (list.length === 0) return <div className="pm-photo-placeholder">📷</div>;
+  if (list.length === 0) return (
+    <div className="pm-photo-placeholder">
+      <Camera size={28} color="#d1d5db" />
+    </div>
+  );
   const prev = e => { e.stopPropagation(); setIdx(i => (i - 1 + list.length) % list.length); };
   const next = e => { e.stopPropagation(); setIdx(i => (i + 1) % list.length); };
   return (
@@ -59,11 +70,11 @@ function PhotoCarousel({ photos }) {
       <img src={`${API}${list[idx].url}`} alt="" className="pm-photo-img" />
       {list.length > 1 && (
         <>
-          <button className="pm-photo-btn pm-photo-prev" onClick={prev}>‹</button>
-          <button className="pm-photo-btn pm-photo-next" onClick={next}>›</button>
+          <button className="pm-photo-btn pm-photo-prev" onClick={prev}><ChevronLeft size={16} /></button>
+          <button className="pm-photo-btn pm-photo-next" onClick={next}><ChevronRight size={16} /></button>
         </>
       )}
-      <div className="pm-photo-count">📷 {list.length}</div>
+      <div className="pm-photo-count"><Camera size={11} /> {list.length}</div>
     </div>
   );
 }
@@ -139,7 +150,7 @@ function AddPropertyModal({ teamUsers, getCurrentUserId, showToast, loadProperti
       <div className="pm-modal" onClick={e => e.stopPropagation()}>
         <div className="pm-modal-head">
           <h3>Añadir inmueble</h3>
-          <button className="pm-modal-x" onClick={onClose}>✕</button>
+          <button className="pm-modal-x" onClick={onClose}><X size={18} /></button>
         </div>
         <div className="pm-modal-body">
           <div className="pm-form-row">
@@ -222,7 +233,8 @@ function AddPropertyModal({ teamUsers, getCurrentUserId, showToast, loadProperti
                 className={`pm-assign-me${form.assigned_to === myId ? ' active' : ''}`}
                 onClick={() => set('assigned_to', form.assigned_to === myId ? '' : myId)}
               >
-                {form.assigned_to === myId ? '✓ Yo' : '👤 Asignarme'}
+                <User size={14} />
+                {form.assigned_to === myId ? 'Asignado a mí' : 'Asignarme'}
               </button>
               <UserSearchInput
                 users={teamUsers.filter(u => u.id !== myId)}
@@ -237,7 +249,8 @@ function AddPropertyModal({ teamUsers, getCurrentUserId, showToast, loadProperti
             <div className="pm-field">
               <label>Fotografías</label>
               <label className="pm-upload-lbl" htmlFor="new-photos">
-                📷 {photos.length > 0 ? `${photos.length} foto(s) seleccionada(s)` : 'Seleccionar fotos'}
+                <Camera size={15} />
+                {photos.length > 0 ? `${photos.length} foto(s) seleccionada(s)` : 'Seleccionar fotos'}
               </label>
               <input id="new-photos" type="file" multiple accept="image/*" style={{ display: 'none' }}
                 onChange={e => setPhotos(Array.from(e.target.files))} />
@@ -250,13 +263,14 @@ function AddPropertyModal({ teamUsers, getCurrentUserId, showToast, loadProperti
             <div className="pm-field">
               <label>Vídeos</label>
               <label className="pm-upload-lbl" htmlFor="new-videos">
-                🎬 {videos.length > 0 ? `${videos.length} vídeo(s)` : 'Seleccionar vídeos'}
+                <Video size={15} />
+                {videos.length > 0 ? `${videos.length} vídeo(s)` : 'Seleccionar vídeos'}
               </label>
               <input id="new-videos" type="file" multiple accept="video/*" style={{ display: 'none' }}
                 onChange={e => setVideos(Array.from(e.target.files))} />
               {videos.length > 0 && (
                 <ul style={{ margin: '4px 0 0', paddingLeft: 18, fontSize: '0.82rem', color: '#6b7280' }}>
-                  {videos.map((f, i) => <li key={i}>🎬 {f.name}</li>)}
+                  {videos.map((f, i) => <li key={i}>{f.name}</li>)}
                 </ul>
               )}
             </div>
@@ -291,11 +305,9 @@ export default function PropertyManager({ properties, loadProperties, showToast,
   const ROLE_LEVEL = { asesor: 1, director: 2, administrador: 3 };
   const can = (...roles) => roles.some(r => ROLE_LEVEL[userRole] >= ROLE_LEVEL[r]);
 
-  // Active nav filter
   const navItem = NAV_ITEMS.find(n => n.id === activeNav);
   const navFilter = navItem?.filter;
 
-  // Build displayed list
   let displayed = [...properties];
   if (navFilter) displayed = displayed.filter(p => p[navFilter.field] === navFilter.value);
   filters.forEach(f => {
@@ -322,12 +334,10 @@ export default function PropertyManager({ properties, loadProperties, showToast,
 
   const countFor = item => !item.filter ? properties.length : properties.filter(p => p[item.filter.field] === item.filter.value).length;
 
-  // Selection
   const allSelected = displayedSlice.length > 0 && selectedIds.length === displayedSlice.length;
   const toggleSelect = id => setSelectedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
   const toggleAll = () => setSelectedIds(allSelected ? [] : displayedSlice.map(p => p.id));
 
-  // Delete
   const deleteProperty = async id => {
     const token = localStorage.getItem('token');
     try {
@@ -339,7 +349,6 @@ export default function PropertyManager({ properties, loadProperties, showToast,
     } catch { showToast('error', 'Error al eliminar'); }
   };
 
-  // Bulk
   const applyBulk = async () => {
     if (!bulkAction || selectedIds.length === 0) return;
     if (bulkAction === 'delete') {
@@ -367,7 +376,6 @@ export default function PropertyManager({ properties, loadProperties, showToast,
     URL.revokeObjectURL(url);
   };
 
-  // Filters
   const addFilter = () => {
     if (!addingFilter.value) return;
     const ft = FILTER_TYPES.find(f => f.field === addingFilter.field);
@@ -386,23 +394,25 @@ export default function PropertyManager({ properties, loadProperties, showToast,
       {/* ── LEFT NAV ─────────────────── */}
       <div className="pm-left-nav">
         <div className="pm-nav-header">
-          <span className="pm-nav-icon">🏠</span>
+          <Home size={16} className="pm-nav-icon" />
           <span className="pm-nav-title">Inmuebles</span>
         </div>
         <div className="pm-nav-list">
           {NAV_ITEMS.map(item => {
             if (item.type === 'divider') return (
-              <div key={item.id} className="pm-nav-divider">
-                <span>{item.label}</span>
-              </div>
+              <div key={item.id} className="pm-nav-divider"><span>{item.label}</span></div>
             );
             const count = countFor(item);
             const active = activeNav === item.id;
             return (
               <button key={item.id} className={`pm-nav-item${active ? ' active' : ''}`}
                 onClick={() => { setActiveNav(item.id); setFilters([]); setSearch(''); }}>
-                <span className="pm-nav-dot" style={{ color: item.color || '#6b7280', fontSize: item.color ? '1.1rem' : '1rem' }}>
-                  {item.icon}
+                <span className="pm-nav-icon-wrap">
+                  {item.color ? (
+                    <Circle size={10} fill={item.color} color={item.color} />
+                  ) : item.Icon ? (
+                    <item.Icon size={15} />
+                  ) : null}
                 </span>
                 <span className="pm-nav-label">{item.label}</span>
                 {count > 0 && <span className="pm-nav-count">{count}</span>}
@@ -424,7 +434,7 @@ export default function PropertyManager({ properties, loadProperties, showToast,
             <div className="pm-section-label">FILTROS DE BÚSQUEDA</div>
             {navFilter && (
               <div className="pm-active-filter pm-active-filter--fixed">
-                <span className="pm-af-icon">☰</span>
+                <ListFilter size={13} className="pm-af-icon" />
                 <div className="pm-af-text">
                   <div className="pm-af-field">{navFilter.field === 'estado' ? 'Estado' : navFilter.field === 'transaction_type' ? 'Operación' : 'Tipo'}</div>
                   <div className="pm-af-value">es {VALUE_LABELS[navFilter.value] || navFilter.value}</div>
@@ -433,12 +443,14 @@ export default function PropertyManager({ properties, loadProperties, showToast,
             )}
             {filters.map((f, i) => (
               <div key={i} className="pm-active-filter">
-                <span className="pm-af-icon">☰</span>
+                <ListFilter size={13} className="pm-af-icon" />
                 <div className="pm-af-text">
                   <div className="pm-af-field">{f.label}</div>
                   <div className="pm-af-value">{f.opLabel} {VALUE_LABELS[f.value] || f.value}</div>
                 </div>
-                <button className="pm-af-del" onClick={() => removeFilter(i)} title="Eliminar filtro">🗑</button>
+                <button className="pm-af-del" onClick={() => removeFilter(i)} title="Eliminar filtro">
+                  <Trash2 size={13} />
+                </button>
               </div>
             ))}
           </div>
@@ -465,7 +477,9 @@ export default function PropertyManager({ properties, loadProperties, showToast,
               </div>
             </div>
           ) : (
-            <button className="pm-add-filter-btn" onClick={() => setShowAddFilter(true)}>+ Añadir filtro</button>
+            <button className="pm-add-filter-btn" onClick={() => setShowAddFilter(true)}>
+              <Plus size={14} /> Añadir filtro
+            </button>
           )}
         </div>
 
@@ -488,7 +502,7 @@ export default function PropertyManager({ properties, loadProperties, showToast,
             <button className="pm-clear-btn" onClick={() => setFilters([])}>Limpiar filtros</button>
           )}
           <button className="pm-save-btn" onClick={() => showToast('success', 'Búsqueda guardada')}>
-            💾 Guardar búsqueda
+            <Save size={14} /> Guardar búsqueda
           </button>
         </div>
       </div>
@@ -499,17 +513,23 @@ export default function PropertyManager({ properties, loadProperties, showToast,
         {/* Top bar */}
         <div className="pm-topbar">
           <div className="pm-search-wrap">
-            <span className="pm-search-icon">🔍</span>
+            <Search size={15} className="pm-search-icon" />
             <input className="pm-search-input" type="text" placeholder="Buscar..." value={search}
               onChange={e => setSearch(e.target.value)} />
-            {search && <button className="pm-search-clear" onClick={() => setSearch('')}>✕</button>}
-            <button className="pm-search-btn" onClick={() => {}}>Buscar</button>
+            {search && (
+              <button className="pm-search-clear" onClick={() => setSearch('')}><X size={13} /></button>
+            )}
+            <button className="pm-search-btn">Buscar</button>
           </div>
           <div className="pm-topbar-right">
             {can('director') && (
-              <button className="pm-btn-add" onClick={() => setShowAddForm(true)}>+ Añadir inmueble</button>
+              <button className="pm-btn-add" onClick={() => setShowAddForm(true)}>
+                <Plus size={16} /> Añadir inmueble
+              </button>
             )}
-            <button className="pm-btn-export" onClick={() => exportCSV()} title="Exportar CSV">⬇ CSV</button>
+            <button className="pm-btn-export" onClick={() => exportCSV()} title="Exportar CSV">
+              <Download size={15} /> CSV
+            </button>
           </div>
         </div>
 
@@ -532,7 +552,7 @@ export default function PropertyManager({ properties, loadProperties, showToast,
         <div className="pm-list">
           {displayedSlice.length === 0 ? (
             <div className="pm-empty">
-              <div className="pm-empty-icon">🏠</div>
+              <Home size={36} color="#d1d5db" />
               <p>{search ? `Sin resultados para "${search}"` : 'No hay inmuebles con estos filtros.'}</p>
             </div>
           ) : (
@@ -542,14 +562,15 @@ export default function PropertyManager({ properties, loadProperties, showToast,
                 : null;
               const isSelected = selectedIds.includes(p.id);
               const isConfirming = confirmDeleteId === p.id;
+              const photoCount = (p.photos || []).filter(ph => ph.media_type === 'photo').length;
+              const videoCount = (p.photos || []).filter(ph => ph.media_type === 'video').length;
               return (
                 <div key={p.id} className={`pm-card${isSelected ? ' selected' : ''}${isConfirming ? ' confirming' : ''}`}>
-                  {/* Checkbox */}
+
                   <div className="pm-card-chk">
                     <input type="checkbox" className="pm-chk" checked={isSelected} onChange={() => toggleSelect(p.id)} />
                   </div>
 
-                  {/* Photo */}
                   <div className="pm-card-photo">
                     <PhotoCarousel photos={p.photos} />
                     <div className="pm-card-estado" style={{ background: ESTADO_COLORS[p.estado] || '#6b7280' }}>
@@ -557,12 +578,11 @@ export default function PropertyManager({ properties, loadProperties, showToast,
                     </div>
                   </div>
 
-                  {/* Info */}
                   <div className="pm-card-info">
                     <div className="pm-card-head">
                       {p.reference && <span className="pm-card-ref">{p.reference}</span>}
                       <span className="pm-card-title">{p.title}</span>
-                      <span className="pm-card-linkicon" title="Referencia">🔗</span>
+                      <Link2 size={13} className="pm-card-linkicon" />
                     </div>
 
                     <div className="pm-card-priceline">
@@ -571,20 +591,18 @@ export default function PropertyManager({ properties, loadProperties, showToast,
                       <span className="pm-card-details">
                         {p.bedrooms ? `${p.bedrooms} hab. · ` : ''}
                         {p.bathrooms ? `${p.bathrooms} baño${p.bathrooms > 1 ? 's' : ''}. · ` : ''}
-                        {p.square_meters ? `${p.square_meters} m² · ` : ''}
+                        {p.square_meters ? `${p.square_meters} m²  · ` : ''}
                       </span>
                       <span className={`pm-tx-badge pm-tx-${p.transaction_type}`}>
                         {p.transaction_type === 'sale' ? 'Venta' : 'Alquiler'}
                       </span>
                     </div>
 
-                    {p.description && (
-                      <div className="pm-card-desc">{p.description}</div>
-                    )}
+                    {p.description && <div className="pm-card-desc">{p.description}</div>}
 
                     {p.assigned_user && (
                       <div className="pm-card-asesor">
-                        👤{' '}
+                        <User size={12} />
                         {p.assigned_user.nombre && p.assigned_user.apellidos
                           ? `${p.assigned_user.nombre} ${p.assigned_user.apellidos}`
                           : p.assigned_user.email}
@@ -594,18 +612,17 @@ export default function PropertyManager({ properties, loadProperties, showToast,
 
                     <div className="pm-card-tags">
                       <span className="pm-tag">{TYPE_LABELS[p.property_type] || p.property_type}</span>
-                      {p.city && <span className="pm-tag">📍 {p.city}{p.province ? `, ${p.province}` : ''}</span>}
+                      {p.city && (
+                        <span className="pm-tag">
+                          <MapPin size={11} /> {p.city}{p.province ? `, ${p.province}` : ''}
+                        </span>
+                      )}
                       {p.address && <span className="pm-tag">{p.address}</span>}
-                      {p.photos?.filter(ph => ph.media_type === 'photo').length > 0 && (
-                        <span className="pm-tag">📷 {p.photos.filter(ph => ph.media_type === 'photo').length} fotos</span>
-                      )}
-                      {p.photos?.filter(ph => ph.media_type === 'video').length > 0 && (
-                        <span className="pm-tag">🎬 {p.photos.filter(ph => ph.media_type === 'video').length} vídeos</span>
-                      )}
+                      {photoCount > 0 && <span className="pm-tag"><Camera size={11} /> {photoCount}</span>}
+                      {videoCount > 0 && <span className="pm-tag"><Video size={11} /> {videoCount}</span>}
                     </div>
                   </div>
 
-                  {/* Actions */}
                   <div className="pm-card-actions">
                     {isConfirming ? (
                       <div className="pm-confirm-inline">
@@ -615,9 +632,13 @@ export default function PropertyManager({ properties, loadProperties, showToast,
                       </div>
                     ) : (
                       <>
-                        <button className="pm-act-btn" onClick={() => setEditingProperty(p)} title="Editar">✏️</button>
+                        <button className="pm-act-btn" onClick={() => setEditingProperty(p)} title="Editar">
+                          <Edit2 size={15} />
+                        </button>
                         {can('director') && (
-                          <button className="pm-act-btn pm-act-del" onClick={() => setConfirmDeleteId(p.id)} title="Eliminar">🗑</button>
+                          <button className="pm-act-btn pm-act-del" onClick={() => setConfirmDeleteId(p.id)} title="Eliminar">
+                            <Trash2 size={15} />
+                          </button>
                         )}
                       </>
                     )}
@@ -635,7 +656,6 @@ export default function PropertyManager({ properties, loadProperties, showToast,
         </div>
       </div>
 
-      {/* Edit modal */}
       {editingProperty && (
         <PropertyEditor
           property={editingProperty}
@@ -646,7 +666,6 @@ export default function PropertyManager({ properties, loadProperties, showToast,
         />
       )}
 
-      {/* Add modal */}
       {showAddForm && (
         <AddPropertyModal
           teamUsers={teamUsers}
