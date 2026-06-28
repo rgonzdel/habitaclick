@@ -139,6 +139,15 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+.mm-preview-title-link {
+  cursor: pointer;
+  color: #003366;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 2px;
+  transition: text-decoration-color 0.15s;
+}
+.mm-preview-title-link:hover { text-decoration-color: #003366; }
 
 .mm-preview-price {
   margin: 0 0 4px;

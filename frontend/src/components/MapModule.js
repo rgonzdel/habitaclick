@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './MapModule.css';
@@ -24,7 +24,7 @@ function makeIcon(status, size = 14) {
 
 const fmt = (n) => n != null && n !== '' ? Number(n).toLocaleString('es-ES') + ' €' : null;
 
-function PreviewCard({ property, pos, mapWidth }) {
+function PreviewCard({ property, pos, mapWidth, onMouseEnter, onMouseLeave, onOpen }) {
   const cardWidth = 240;
   const gap = 18;
   const flip = pos.x + cardWidth + gap > mapWidth;
@@ -33,7 +33,12 @@ function PreviewCard({ property, pos, mapWidth }) {
   const primary = property.photos?.find(p => p.is_primary) || property.photos?.[0];
 
   return (
-    <div className="mm-preview" style={{ left, top }}>
+    <div
+      className="mm-preview"
+      style={{ left, top }}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       {primary && (
         <img className="mm-preview-img" src={`${API}${primary.url}`} alt="" />
       )}
@@ -41,7 +46,12 @@ function PreviewCard({ property, pos, mapWidth }) {
         <span className="mm-preview-badge" style={{ background: STATUS_META[property.estado]?.color }}>
           {STATUS_META[property.estado]?.label || property.estado}
         </span>
-        <p className="mm-preview-title">{property.title}</p>
+        <p
+          className="mm-preview-title mm-preview-title-link"
+          onClick={() => onOpen && onOpen(property)}
+        >
+          {property.title}
+        </p>
         {fmt(property.price) && <p className="mm-preview-price">{fmt(property.price)}</p>}
         <p className="mm-preview-details">
           {[
@@ -58,16 +68,31 @@ function PreviewCard({ property, pos, mapWidth }) {
   );
 }
 
-export default function MapModule({ token }) {
+export default function MapModule({ token, onSelect }) {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const mapWidthRef = useRef(0);
+  const hideTimerRef = useRef(null);
 
   const [properties, setProperties] = useState([]);
   const [hovered, setHovered] = useState(null);
   const [hoverPx, setHoverPx] = useState({ x: 0, y: 0 });
   const [showSold, setShowSold] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const showCard = useCallback((property, pos) => {
+    clearTimeout(hideTimerRef.current);
+    setHoverPx(pos);
+    setHovered(property);
+  }, []);
+
+  const scheduleHide = useCallback(() => {
+    hideTimerRef.current = setTimeout(() => setHovered(null), 200);
+  }, []);
+
+  const cancelHide = useCallback(() => {
+    clearTimeout(hideTimerRef.current);
+  }, []);
 
   // Fetch all properties
   useEffect(() => {
@@ -96,7 +121,6 @@ export default function MapModule({ token }) {
   // Add markers when properties or showSold changes
   useEffect(() => {
     if (!mapRef.current) return;
-    // Remove existing markers
     mapRef.current.eachLayer(l => { if (l instanceof L.Marker) mapRef.current.removeLayer(l); });
 
     const visible = showSold
@@ -113,19 +137,17 @@ export default function MapModule({ token }) {
 
       marker.on('mouseover', (e) => {
         mapWidthRef.current = mapContainerRef.current?.offsetWidth || 800;
-        setHoverPx({ x: e.containerPoint.x, y: e.containerPoint.y });
-        setHovered(p);
+        showCard(p, { x: e.containerPoint.x, y: e.containerPoint.y });
       });
-      marker.on('mouseout', () => setHovered(null));
+      marker.on('mouseout', scheduleHide);
     });
 
     if (bounds.length > 0) {
       mapRef.current.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
     }
-  }, [properties, showSold]);
+  }, [properties, showSold, showCard, scheduleHide]);
 
-  const withCoords = properties.filter(p => p.latitude && p.longitude);
-  const without = properties.length - withCoords.length;
+  const without = properties.filter(p => !p.latitude || !p.longitude).length;
 
   return (
     <div className="mm-wrap">
@@ -143,16 +165,21 @@ export default function MapModule({ token }) {
           <input type="checkbox" checked={showSold} onChange={e => setShowSold(e.target.checked)} />
           Mostrar vendidos
         </label>
-        {without > 0 && (
-          <span className="mm-no-coords">{without} sin ubicación</span>
-        )}
+        {without > 0 && <span className="mm-no-coords">{without} sin ubicación</span>}
         {loading && <span className="mm-loading">Cargando…</span>}
       </div>
 
       <div className="mm-map-outer">
         <div ref={mapContainerRef} className="mm-map-inner" />
         {hovered && (
-          <PreviewCard property={hovered} pos={hoverPx} mapWidth={mapWidthRef.current} />
+          <PreviewCard
+            property={hovered}
+            pos={hoverPx}
+            mapWidth={mapWidthRef.current}
+            onMouseEnter={cancelHide}
+            onMouseLeave={scheduleHide}
+            onOpen={onSelect}
+          />
         )}
       </div>
     </div>

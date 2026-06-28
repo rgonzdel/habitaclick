@@ -835,7 +835,7 @@ export default function PropertyManager({ properties, loadProperties, showToast,
 
       {/* ── MAP VIEW ─────────────────── */}
       {activeNav === 'map' ? (
-        <MapModule token={localStorage.getItem('token')} />
+        <MapModule token={localStorage.getItem('token')} onSelect={setEditingProperty} />
       ) : <>
 
       {/* ── FILTER PANEL ─────────────── */}
