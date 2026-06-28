@@ -379,7 +379,7 @@
   content: '';
   position: absolute;
   top: 0; bottom: 0;
-  width: 22px;
+  width: 14px;
   z-index: 3;
   pointer-events: none;
 }
@@ -471,7 +471,7 @@
   font-weight: 700;
   padding: 4px 10px;
   border-top-right-radius: 8px;
-  z-index: 2;
+  z-index: 4;
   letter-spacing: 0.02em;
 }
 
