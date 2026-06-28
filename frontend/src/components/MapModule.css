@@ -97,8 +97,8 @@
   box-shadow: 0 8px 32px rgba(0,0,0,0.2), 0 2px 8px rgba(0,0,0,0.1);
   overflow: hidden;
   width: 240px;
-  pointer-events: none;
   animation: mm-fade-in 0.1s ease;
+  cursor: default;
 }
 
 @keyframes mm-fade-in {
