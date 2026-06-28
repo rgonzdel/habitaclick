@@ -139,6 +139,8 @@ function AddPropertyModal({ teamUsers, getCurrentUserId, showToast, loadProperti
   const [photos, setPhotos] = useState([]);
   const [videos, setVideos] = useState([]);
   const [saving, setSaving] = useState(false);
+  const geocodeTimer = useRef(null);
+  const skipGeocode = useRef(false);
 
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
   const setChk = (k) => (e) => set(k, e.target.checked);
@@ -147,6 +149,7 @@ function AddPropertyModal({ teamUsers, getCurrentUserId, showToast, loadProperti
     ? form.features.filter(f => f !== key) : [...form.features, key]);
 
   const handleLocationChange = (lat, lng, addr) => {
+    skipGeocode.current = true;
     setForm(p => ({
       ...p,
       latitude: lat,
@@ -158,6 +161,26 @@ function AddPropertyModal({ teamUsers, getCurrentUserId, showToast, loadProperti
       postal_code: addr.postcode || p.postal_code,
     }));
   };
+
+  useEffect(() => {
+    if (skipGeocode.current) { skipGeocode.current = false; return; }
+    const query = [form.address, form.street_number, form.city, form.postal_code, form.province]
+      .filter(Boolean).join(', ');
+    if (!query.trim()) return;
+    clearTimeout(geocodeTimer.current);
+    geocodeTimer.current = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1&accept-language=es`
+        );
+        const data = await res.json();
+        if (data && data.length > 0) {
+          setForm(p => ({ ...p, latitude: parseFloat(data[0].lat), longitude: parseFloat(data[0].lon) }));
+        }
+      } catch {}
+    }, 900);
+    return () => clearTimeout(geocodeTimer.current);
+  }, [form.address, form.street_number, form.city, form.postal_code, form.province]); // eslint-disable-line
 
   const handleGenerateDescription = () => { set('description', generateDescription(form)); };
 
