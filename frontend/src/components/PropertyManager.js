@@ -6,8 +6,9 @@ import {
   Circle, Search, Edit2, Trash2, Link2, Save,
   User, Video, Camera, SlidersHorizontal, Plus, X, ChevronLeft,
   ChevronRight, ListFilter, CheckSquare, ArrowUpDown, FileText,
-  MapPin, LayoutList, Sparkles, ChevronDown
+  MapPin, LayoutList, Sparkles, ChevronDown, Map
 } from 'lucide-react';
+import MapModule from './MapModule';
 import { generateDescription } from '../utils/descriptionGenerator';
 
 const PORTAL_META = {
@@ -35,6 +36,7 @@ const SORT_OPTIONS = [
 ];
 
 const NAV_ITEMS = [
+  { id: 'map', Icon: Map, label: 'Mapa', filter: null, noCount: true },
   { id: 'all', Icon: LayoutList, label: 'Todos los inmuebles', filter: null },
   { id: 'div1', type: 'divider', label: 'ESTADO' },
   { id: 'disponible', color: '#22c55e', label: 'Disponible', filter: { field: 'estado', value: 'disponible' } },
@@ -805,12 +807,17 @@ export default function PropertyManager({ properties, loadProperties, showToast,
                   ) : null}
                 </span>
                 <span className="pm-nav-label">{item.label}</span>
-                {count > 0 && <span className="pm-nav-count">{count}</span>}
+                {!item.noCount && count > 0 && <span className="pm-nav-count">{count}</span>}
               </button>
             );
           })}
         </div>
       </div>
+
+      {/* ── MAP VIEW ─────────────────── */}
+      {activeNav === 'map' ? (
+        <MapModule token={localStorage.getItem('token')} />
+      ) : <>
 
       {/* ── FILTER PANEL ─────────────── */}
       <div className="pm-filter-panel">
@@ -1062,6 +1069,8 @@ export default function PropertyManager({ properties, loadProperties, showToast,
           )}
         </div>
       </div>
+
+      </> /* end map conditional */}
 
       {editingProperty && (
         <PropertyEditor
