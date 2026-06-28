@@ -34,8 +34,8 @@ function calcBreakdown(price, comm, newBuild) {
   const items = [];
   if (newBuild) {
     const ajdPct = comm?.ajd ?? 0.015;
-    items.push({ label: 'IVA (vivienda nueva)',        pct: '10 %',                             amount: Math.round(price * 0.10) });
-    items.push({ label: 'AJD (actos jurídicos)',        pct: `${+(ajdPct * 100).toFixed(2)} %`, amount: Math.round(price * ajdPct) });
+    items.push({ label: 'IVA (vivienda nueva)',         pct: '10 %',                             amount: Math.round(price * 0.10) });
+    items.push({ label: 'AJD (actos jurídicos)',         pct: `${+(ajdPct * 100).toFixed(2)} %`, amount: Math.round(price * ajdPct) });
   } else {
     const itpPct = comm?.itp ?? 0.06;
     items.push({ label: 'ITP (transmisión patrimonial)', pct: `${+(itpPct * 100).toFixed(1)} %`, amount: Math.round(price * itpPct) });
@@ -119,7 +119,6 @@ function BreakdownTable({ items, total }) {
   );
 }
 
-// Genera DataURL de un SVG en memoria (sin renderizado DOM)
 function buildPieSvgDataURL(loan, savings, interest) {
   return new Promise(resolve => {
     const total = loan + savings + interest;
@@ -153,7 +152,7 @@ function buildPieSvgDataURL(loan, savings, interest) {
       const canvas = document.createElement('canvas');
       canvas.width = 280; canvas.height = 280;
       const ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#eff6ff';
+      ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, 280, 280);
       ctx.drawImage(img, 0, 0);
       URL.revokeObjectURL(url);
@@ -188,197 +187,292 @@ export default function MortgageCalculator({ agencyConfig }) {
     return { loan, monthly, interest, totalCost: price + interest + (inclTax ? 0 : taxes) };
   }, [price, savings, years, rate, taxes, inclTax]);
 
-  const savingsPct = price > 0 ? Math.round((savings / price) * 100) : 0;
+  const savingsPct     = price > 0 ? Math.round((savings / price) * 100) : 0;
   const communityLabel = comm?.label || '';
   const estadoLabel    = newBuild ? 'Nueva construcción' : 'Segunda mano';
 
   const generatePDF = async () => {
     setExporting(true);
     try {
-      const doc  = new jsPDF({ unit: 'mm', format: 'a4' });
-      const W    = 210;
-      const navy = [30, 58, 95];
-      const blue = [37, 99, 235];
-      const grey = [107, 114, 128];
+      const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+      const W = 210, M = 14, CW = W - 2 * M;
       const dateStr = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 
-      // ── Cabecera ──────────────────────────────────────────────
-      doc.setFillColor(...navy);
-      doc.rect(0, 0, W, 30, 'F');
+      // Paleta de colores
+      const navy    = [0, 51, 102];
+      const navyMid = [30, 58, 95];
+      const blue    = [37, 99, 235];
+      const blueP   = [239, 246, 255];
+      const blueB   = [191, 219, 254];
+      const textM   = [55, 65, 81];
+      const textG   = [107, 114, 128];
+      const bgL     = [249, 250, 251];
+      const white   = [255, 255, 255];
 
-      let logoRight = 14;
+      // ══ CABECERA ════════════════════════════════════════════════
+      // Franja azul eléctrico superior (acento)
+      doc.setFillColor(...blue);
+      doc.rect(0, 0, W, 3, 'F');
+      // Bloque navy
+      doc.setFillColor(...navy);
+      doc.rect(0, 3, W, 38, 'F');
+
+      // Logo (si existe)
+      let nameX = M;
       if (agencyConfig?.logo) {
         try {
-          doc.addImage(agencyConfig.logo, 16, 5, 38, 20, undefined, 'FAST');
-          logoRight = 60;
+          doc.addImage(agencyConfig.logo, M, 7, 28, 28, undefined, 'FAST');
+          nameX = M + 33;
         } catch (_) {}
       }
 
-      doc.setTextColor(255, 255, 255);
+      // Nombre de la inmobiliaria
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(15);
-      doc.text(agencyConfig?.name || 'Simulación hipotecaria', logoRight, 16);
+      doc.setTextColor(...white);
+      doc.text(agencyConfig?.name || 'Simulación Hipotecaria', nameX, 19);
+
+      // Subtítulo y parámetros
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(8);
-      doc.setTextColor(180, 200, 230);
-      doc.text(dateStr, W - 14, 16, { align: 'right' });
+      doc.setTextColor(147, 197, 253);
+      doc.text('Simulación de hipoteca personalizada', nameX, 27);
+      doc.text(`${communityLabel}  ·  ${estadoLabel}`, nameX, 33);
 
-      // ── Título ────────────────────────────────────────────────
-      let y = 42;
-      doc.setTextColor(...navy);
+      // Fecha y parámetros principales (derecha)
+      doc.setFontSize(8);
+      doc.setTextColor(180, 210, 240);
+      doc.text(dateStr, W - M, 19, { align: 'right' });
+      doc.setFontSize(7.5);
+      doc.text(`Tipo de interés ${rate.toFixed(1)}%  ·  Plazo ${years} años`, W - M, 27, { align: 'right' });
+
+      let y = 52;
+
+      // ══ BLOQUE A: CUOTA MENSUAL (izq) + PARÁMETROS (dcha) ══════
+      const cardH = 56;
+      const c1W   = 84;
+      const c2X   = M + c1W + 6;
+      const c2W   = CW - c1W - 6;
+
+      // — Tarjeta azul: cuota mensual —
+      doc.setFillColor(...blue);
+      doc.roundedRect(M, y, c1W, cardH, 4, 4, 'F');
+
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(18);
-      doc.text('Simulación de hipoteca', 14, y);
+      doc.setFontSize(7.5);
+      doc.setTextColor(180, 215, 255);
+      doc.text('CUOTA MENSUAL ESTIMADA', M + 7, y + 12);
 
-      y += 7;
+      doc.setFontSize(28);
+      doc.setTextColor(...white);
+      doc.text(`${fmt(results.monthly)}`, M + 7, y + 30);
+
+      doc.setFontSize(12);
+      doc.setTextColor(200, 225, 255);
+      doc.text('€ / mes', M + 7, y + 40);
+
       doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
-      doc.setTextColor(...grey);
-      doc.text(`${communityLabel}  ·  ${estadoLabel}  ·  Tipo de interés ${rate}%  ·  Plazo ${years} años`, 14, y);
+      doc.setFontSize(7);
+      doc.setTextColor(160, 200, 240);
+      doc.text('Cuota fija durante todo el plazo', M + 7, y + 50);
+
+      // — Tarjeta gris: parámetros —
+      doc.setFillColor(...bgL);
+      doc.roundedRect(c2X, y, c2W, cardH, 4, 4, 'F');
+      doc.setDrawColor(...blueB);
+      doc.setLineWidth(0.3);
+      doc.roundedRect(c2X, y, c2W, cardH, 4, 4, 'S');
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(...navyMid);
+      doc.text('PARÁMETROS DE LA SIMULACIÓN', c2X + 7, y + 10);
+
+      const params = [
+        ['Precio del inmueble',  `${fmt(price)} €`],
+        ['Ahorro / entrada',     `${fmt(savings)} € (${savingsPct}%)`],
+        ['Importe hipoteca',     `${fmt(results.loan)} €`],
+        ['Plazo',                `${years} años`],
+        ['Tipo de interés',      `${rate.toFixed(1)} %`],
+        ['Comunidad Autónoma',   communityLabel.length > 18 ? communityLabel.slice(0, 18) + '…' : communityLabel],
+      ];
+      let py = y + 18;
+      params.forEach(([lbl, val]) => {
+        doc.setDrawColor(229, 231, 235);
+        doc.setLineWidth(0.2);
+        doc.line(c2X + 7, py - 3, c2X + c2W - 7, py - 3);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(7.8);
+        doc.setTextColor(...textG);
+        doc.text(lbl, c2X + 7, py);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(...navyMid);
+        doc.text(val, c2X + c2W - 7, py, { align: 'right' });
+        py += 7.5;
+      });
+
+      y += cardH + 9;
+
+      // ══ BLOQUE B: TRES TARJETAS RESUMEN ════════════════════════
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.setTextColor(...navyMid);
+      doc.text('RESUMEN FINANCIERO', M, y + 1);
+      doc.setDrawColor(...blueB);
+      doc.setLineWidth(0.4);
+      doc.line(M + 53, y - 0.5, W - M, y - 0.5);
 
       y += 6;
-      doc.setDrawColor(219, 234, 254);
-      doc.setLineWidth(0.4);
-      doc.line(14, y, W - 14, y);
-
-      // ── Cuota mensual destacada ────────────────────────────────
-      y += 9;
-      doc.setFillColor(239, 246, 255);
-      doc.roundedRect(14, y - 5, W - 28, 14, 2, 2, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      doc.setTextColor(...navy);
-      doc.text('CUOTA MENSUAL ESTIMADA', 19, y + 3);
-      doc.setFontSize(14);
-      doc.text(`${fmt(results.monthly)} €`, W - 18, y + 4, { align: 'right' });
-
-      // ── Resumen datos ──────────────────────────────────────────
-      y += 18;
-      const rows = [
-        ['Importe hipoteca',         fmt(results.loan)      + ' €'],
-        ['Ahorro aportado',          fmt(savings)           + ' €'],
-        ['Interés total estimado',   fmt(results.interest)  + ' €'],
+      const summW = (CW - 8) / 3;
+      const summH = 22;
+      const summCards = [
+        { lbl: 'Importe hipoteca',       val: `${fmt(results.loan)} €`,      bar: navyMid,       barC: navyMid },
+        { lbl: 'Interés total estimado', val: `${fmt(results.interest)} €`,  bar: [8, 92, 186],  barC: [8, 92, 186] },
+        { lbl: 'Coste total hipoteca',   val: `${fmt(results.totalCost)} €`, bar: navy,           barC: navy },
       ];
-      rows.forEach(([label, val]) => {
+      summCards.forEach((card, i) => {
+        const sx = M + i * (summW + 4);
+        doc.setFillColor(...blueP);
+        doc.roundedRect(sx, y, summW, summH, 3, 3, 'F');
+        doc.setDrawColor(...blueB);
+        doc.setLineWidth(0.3);
+        doc.roundedRect(sx, y, summW, summH, 3, 3, 'S');
+        // barra izquierda de color
+        doc.setFillColor(...card.bar);
+        doc.rect(sx, y + 3.5, 3.5, summH - 7, 'F');
         doc.setFont('helvetica', 'normal');
-        doc.setFontSize(9.5);
-        doc.setTextColor(55, 65, 81);
-        doc.text(label, 19, y);
+        doc.setFontSize(7);
+        doc.setTextColor(...textG);
+        doc.text(card.lbl, sx + 7, y + 8);
         doc.setFont('helvetica', 'bold');
-        doc.setTextColor(...navy);
-        doc.text(val, W - 18, y, { align: 'right' });
-        y += 9;
+        doc.setFontSize(11);
+        doc.setTextColor(...card.barC);
+        doc.text(card.val, sx + 7, y + 18);
       });
 
-      // Coste total
-      doc.setFillColor(219, 234, 254);
-      doc.roundedRect(14, y - 1, W - 28, 11, 2, 2, 'F');
+      y += summH + 10;
+
+      // ══ BLOQUE C: GRÁFICO DE TARTA + TABLA DE GASTOS ══════════
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      doc.setTextColor(...navy);
-      doc.text('Coste total con hipoteca', 19, y + 6);
-      doc.setFontSize(12);
-      doc.text(`${fmt(results.totalCost)} €`, W - 18, y + 6.5, { align: 'right' });
+      doc.setFontSize(8);
+      doc.setTextColor(...navyMid);
+      doc.text('DESGLOSE DE GASTOS DE COMPRA', M, y + 1);
+      doc.setDrawColor(...blueB);
+      doc.setLineWidth(0.4);
+      doc.line(M + 72, y - 0.5, W - M, y - 0.5);
 
-      y += 18;
-      doc.setDrawColor(219, 234, 254);
-      doc.line(14, y, W - 14, y);
-      y += 8;
+      y += 6;
+      const pieSize = 48;
+      const tableX  = M + pieSize + 12;
+      const tableW  = CW - pieSize - 12;
 
-      // ── Gráfico + tabla ────────────────────────────────────────
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10.5);
-      doc.setTextColor(...navy);
-      doc.text('Desglose de gastos de compra', 74, y + 2);
-
-      // Pie chart
+      // Gráfico de tarta
       const pieImg = await buildPieSvgDataURL(results.loan, savings, results.interest);
       if (pieImg) {
-        doc.addImage(pieImg, 'PNG', 14, y, 52, 52);
-        // Leyenda debajo del gráfico
-        const legend = [
-          { color: navy,       label: 'Hipoteca' },
-          { color: [147,197,253], label: 'Ahorro' },
-          { color: [191,219,254], label: 'Intereses' },
-        ];
-        let ly = y + 55;
-        legend.forEach(({ color, label }) => {
-          doc.setFillColor(...color);
-          doc.roundedRect(14, ly - 2.5, 4, 4, 0.5, 0.5, 'F');
-          doc.setFont('helvetica', 'normal');
-          doc.setFontSize(7.5);
-          doc.setTextColor(...grey);
-          doc.text(label, 20, ly + 0.5);
-          ly += 6;
-        });
+        doc.addImage(pieImg, 'PNG', M, y, pieSize, pieSize);
       }
-
-      // Tabla de gastos
-      let ty = y + 10;
-      breakdown.items.forEach(item => {
+      // Leyenda debajo del gráfico
+      const legend = [
+        { color: navyMid,       lbl: 'Préstamo',  val: `${fmt(results.loan)} €` },
+        { color: [147,197,253], lbl: 'Ahorro',    val: `${fmt(savings)} €` },
+        { color: [191,219,254], lbl: 'Intereses', val: `${fmt(results.interest)} €` },
+      ];
+      let ly = y + pieSize + 5;
+      legend.forEach(({ color, lbl, val }) => {
+        doc.setFillColor(...color);
+        doc.roundedRect(M, ly - 2.5, 3.5, 3.5, 0.5, 0.5, 'F');
         doc.setFont('helvetica', 'normal');
-        doc.setFontSize(8.5);
-        doc.setTextColor(55, 65, 81);
-        doc.text(item.label, 74, ty);
-        doc.setTextColor(...grey);
-        doc.text(item.pct, 160, ty, { align: 'right' });
+        doc.setFontSize(6.5);
+        doc.setTextColor(...textG);
+        doc.text(lbl, M + 6, ly + 0.5);
         doc.setFont('helvetica', 'bold');
-        doc.setTextColor(...navy);
-        doc.text(`${fmt(item.amount)} €`, W - 14, ty, { align: 'right' });
-        doc.setDrawColor(235, 238, 245);
-        doc.setLineWidth(0.2);
-        doc.line(74, ty + 2.5, W - 14, ty + 2.5);
-        ty += 9;
+        doc.setTextColor(...navyMid);
+        doc.text(val, M + 21, ly + 0.5);
+        ly += 5.5;
       });
 
-      // Total gastos
-      doc.setFillColor(239, 246, 255);
-      doc.roundedRect(72, ty - 1, W - 14 - 72, 10, 1, 1, 'F');
+      // Cabecera de la tabla
+      doc.setFillColor(...navyMid);
+      doc.roundedRect(tableX, y, tableW, 8, 2, 2, 'F');
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9.5);
-      doc.setTextColor(...navy);
-      doc.text('Total gastos', 75, ty + 6);
-      doc.text(`${fmt(breakdown.total)} €`, W - 14, ty + 6, { align: 'right' });
+      doc.setFontSize(7.5);
+      doc.setTextColor(...white);
+      doc.text('Concepto', tableX + 4, y + 5.5);
+      doc.text('Tipo', tableX + tableW - 26, y + 5.5, { align: 'right' });
+      doc.text('Importe', tableX + tableW - 4, y + 5.5, { align: 'right' });
 
-      // ── Nota legal ─────────────────────────────────────────────
-      const legalY = Math.max(y + 80, ty + 18);
-      doc.setFillColor(248, 250, 252);
-      doc.roundedRect(14, legalY, W - 28, 38, 3, 3, 'F');
-      doc.setDrawColor(203, 213, 225);
+      // Filas de la tabla (alternadas)
+      let ty = y + 8;
+      const rowH = 7.5;
+      breakdown.items.forEach((item, i) => {
+        if (i % 2 === 0) {
+          doc.setFillColor(248, 250, 252);
+          doc.rect(tableX, ty, tableW, rowH, 'F');
+        }
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(7.5);
+        doc.setTextColor(...textM);
+        doc.text(item.label, tableX + 4, ty + 5.2);
+        doc.setTextColor(...textG);
+        doc.text(item.pct, tableX + tableW - 26, ty + 5.2, { align: 'right' });
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(...navyMid);
+        doc.text(`${fmt(item.amount)} €`, tableX + tableW - 4, ty + 5.2, { align: 'right' });
+        ty += rowH;
+      });
+
+      // Fila total gastos
+      doc.setFillColor(...blueP);
+      doc.roundedRect(tableX, ty, tableW, 10, 2, 2, 'F');
+      doc.setDrawColor(...blueB);
       doc.setLineWidth(0.3);
-      doc.roundedRect(14, legalY, W - 28, 38, 3, 3, 'S');
+      doc.roundedRect(tableX, ty, tableW, 10, 2, 2, 'S');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8.5);
+      doc.setTextColor(...navy);
+      doc.text('TOTAL GASTOS', tableX + 4, ty + 7);
+      doc.text(`${fmt(breakdown.total)} €`, tableX + tableW - 4, ty + 7, { align: 'right' });
+      ty += 10;
+
+      // ══ NOTA LEGAL ══════════════════════════════════════════════
+      const legalY = Math.max(y + 82, ty + 10);
+      const legalH = 38;
+
+      // Fondo gris + barra izquierda azul
+      doc.setFillColor(...bgL);
+      doc.roundedRect(M, legalY, CW, legalH, 3, 3, 'F');
+      doc.setFillColor(...blue);
+      doc.rect(M, legalY + 3.5, 3.5, legalH - 7, 'F');
 
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(7.5);
       doc.setTextColor(...blue);
-      doc.text('NOTA LEGAL — SIMULACIÓN ORIENTATIVA', 18, legalY + 7);
+      doc.text('NOTA LEGAL — CARÁCTER ORIENTATIVO', M + 8, legalY + 8);
 
       doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7);
-      doc.setTextColor(...grey);
-      const legalText = [
-        'Esta simulación tiene carácter meramente informativo y orientativo. No constituye oferta vinculante ni compromiso contractual de ningún',
-        'tipo por parte de la inmobiliaria o de cualquier entidad financiera. Los cálculos son estimaciones basadas en los parámetros introducidos',
-        'y pueden diferir de las condiciones reales aplicadas por las entidades financieras en función de la solvencia del solicitante, las garantías',
-        'aportadas y la política crediticia vigente en cada momento. Los tipos impositivos (ITP, IVA, AJD) y los gastos de compraventa están',
-        'sujetos a modificación según la normativa fiscal vigente y la legislación de la Comunidad Autónoma competente en materia tributaria.',
-        'Se recomienda consultar con un profesional cualificado antes de tomar cualquier decisión financiera o de inversión.',
-      ];
-      legalText.forEach((line, i) => {
-        doc.text(line, 18, legalY + 14 + i * 4.2);
-      });
+      doc.setFontSize(6.8);
+      doc.setTextColor(...textG);
+      const legalLines = doc.splitTextToSize(
+        'Esta simulación tiene carácter meramente informativo y orientativo. No constituye oferta vinculante ni compromiso contractual de ningún tipo por parte de la inmobiliaria o de cualquier entidad financiera. Los cálculos son estimaciones basadas en los parámetros introducidos y pueden diferir de las condiciones reales aplicadas por las entidades financieras en función de la solvencia del solicitante y la política crediticia vigente en cada momento. Los tipos impositivos (ITP, IVA, AJD) y los gastos asociados a la compraventa están sujetos a modificación según la normativa fiscal vigente y la legislación de la Comunidad Autónoma competente en materia tributaria. Se recomienda consultar con un profesional cualificado antes de tomar cualquier decisión financiera o de inversión.',
+        CW - 16
+      );
+      doc.text(legalLines, M + 8, legalY + 16);
 
-      // ── Pie de página ─────────────────────────────────────────
-      doc.setDrawColor(219, 234, 254);
-      doc.setLineWidth(0.3);
-      doc.line(14, 286, W - 14, 286);
+      // ══ FOOTER ══════════════════════════════════════════════════
+      doc.setFillColor(...navy);
+      doc.rect(0, 284, W, 13, 'F');
+      doc.setFillColor(...blue);
+      doc.rect(0, 284, W, 1.5, 'F');
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(147, 197, 253);
+      if (agencyConfig?.name) doc.text(agencyConfig.name, M, 292);
       doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7);
-      doc.setTextColor(...grey);
-      if (agencyConfig?.name) doc.text(agencyConfig.name, 14, 291);
-      doc.text(`Generado el ${dateStr}`, W - 14, 291, { align: 'right' });
+      doc.setTextColor(180, 210, 240);
+      doc.text(`Generado el ${dateStr}`, W - M, 292, { align: 'right' });
 
-      doc.save(`simulacion-hipoteca-${new Date().toISOString().slice(0,10)}.pdf`);
+      doc.save(`simulacion-hipoteca-${new Date().toISOString().slice(0, 10)}.pdf`);
     } finally {
       setExporting(false);
     }
@@ -470,7 +564,7 @@ export default function MortgageCalculator({ agencyConfig }) {
           </label>
         </div>
 
-        {/* ── Resultados ── */}
+        {/* ── Panel de resultados ── */}
         <div className="mc-result">
           <h3 className="mc-result-title">Resultado</h3>
           <p className="mc-disclaimer">
