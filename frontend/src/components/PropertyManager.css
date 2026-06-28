@@ -896,7 +896,6 @@
 .pm-add-section {
   border: 1px solid #e5e7eb;
   border-radius: 10px;
-  overflow: hidden;
 }
 
 .pm-add-section-hdr {
@@ -905,6 +904,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px 14px;
+  border-radius: 10px;
   background: #f9fafb;
   border: none;
   cursor: pointer;

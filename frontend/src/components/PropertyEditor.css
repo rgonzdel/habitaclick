@@ -552,7 +552,6 @@
   border: 1px solid #e5e7eb;
   border-radius: 10px;
   margin-bottom: 10px;
-  overflow: hidden;
 }
 
 .pe-section-hdr {
@@ -569,6 +568,7 @@
   color: #374151;
   text-align: left;
   transition: background 0.1s;
+  border-radius: 10px;
 }
 
 .pe-section-hdr:hover { background: #f3f4f6; }
