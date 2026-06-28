@@ -16,7 +16,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: clip;
+  isolation: isolate;
   margin: 0 auto;
 }
 

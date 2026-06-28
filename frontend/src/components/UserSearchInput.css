@@ -67,7 +67,7 @@
   list-style: none;
   margin: 0;
   padding: 6px;
-  z-index: 500;
+  z-index: 2000;
   max-height: 260px;
   overflow-y: auto;
 }
@@ -137,7 +137,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  z-index: 500;
+  z-index: 2000;
 }
 
 /* ── Seleccionado ── */
