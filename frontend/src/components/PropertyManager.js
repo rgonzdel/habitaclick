@@ -6,9 +6,10 @@ import {
   Circle, Search, Edit2, Trash2, Link2, Save,
   User, Video, Camera, SlidersHorizontal, Plus, X, ChevronLeft,
   ChevronRight, ListFilter, CheckSquare, ArrowUpDown, FileText,
-  MapPin, LayoutList, Sparkles, ChevronDown, Map
+  MapPin, LayoutList, Sparkles, ChevronDown, Map, Calculator
 } from 'lucide-react';
 import MapModule from './MapModule';
+import MortgageCalculator from './MortgageCalculator';
 import { generateDescription } from '../utils/descriptionGenerator';
 
 const PORTAL_META = {
@@ -36,8 +37,9 @@ const SORT_OPTIONS = [
 ];
 
 const NAV_ITEMS = [
-  { id: 'map', Icon: Map, label: 'Mapa', filter: null, noCount: true },
-  { id: 'all', Icon: LayoutList, label: 'Todos los inmuebles', filter: null },
+  { id: 'map',           Icon: Map,        label: 'Mapa',                  filter: null, noCount: true },
+  { id: 'all',           Icon: LayoutList, label: 'Todos los inmuebles',   filter: null },
+  { id: 'calculadora',   Icon: Calculator, label: 'Calculadora hipoteca',  filter: null, noCount: true },
   { id: 'div1', type: 'divider', label: 'ESTADO' },
   { id: 'disponible', color: '#22c55e', label: 'Disponible', filter: { field: 'estado', value: 'disponible' } },
   { id: 'reservado', color: '#f59e0b', label: 'Reservado', filter: { field: 'estado', value: 'reservado' } },
@@ -836,6 +838,8 @@ export default function PropertyManager({ properties, loadProperties, showToast,
       {/* ── MAP VIEW ─────────────────── */}
       {activeNav === 'map' ? (
         <MapModule token={localStorage.getItem('token')} onSelect={setEditingProperty} />
+      ) : activeNav === 'calculadora' ? (
+        <MortgageCalculator />
       ) : <>
 
       {/* ── FILTER PANEL ─────────────── */}
