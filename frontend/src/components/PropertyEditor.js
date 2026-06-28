@@ -166,7 +166,11 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
   };
 
   useEffect(() => {
-    if (firstRender.current) { firstRender.current = false; return; }
+    if (firstRender.current) {
+      firstRender.current = false;
+      if (formData.latitude && formData.longitude) return; // ya tiene coords, el mapa las carga
+      // sin coords pero con dirección → geocodifica al montar
+    }
     if (skipGeocode.current) { skipGeocode.current = false; return; }
     const query = [formData.address, formData.street_number, formData.city, formData.postal_code, formData.province]
       .filter(Boolean).join(', ');
