@@ -264,7 +264,7 @@ export default function MortgageCalculator({ agencyConfig }) {
       let y = 52;
 
       // ══ BLOQUE A: CUOTA MENSUAL (izq) + PARÁMETROS (dcha) ══════
-      const cardH = 56;
+      const cardH = 62;
       const c1W   = 84;
       const c2X   = M + c1W + 6;
       const c2W   = CW - c1W - 6;
@@ -301,7 +301,7 @@ export default function MortgageCalculator({ agencyConfig }) {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(7.5);
       doc.setTextColor(...navyMid);
-      doc.text('PARÁMETROS DE LA SIMULACIÓN', c2X + 7, y + 10);
+      doc.text('PARÁMETROS DE LA SIMULACIÓN', c2X + 7, y + 11);
 
       const params = [
         ['Precio del inmueble',  `${fmt(price)} €`],
@@ -309,21 +309,35 @@ export default function MortgageCalculator({ agencyConfig }) {
         ['Importe hipoteca',     `${fmt(results.loan)} €`],
         ['Plazo',                `${years} años`],
         ['Tipo de interés',      `${rate.toFixed(1)} %`],
-        ['Comunidad Autónoma',   communityLabel.length > 18 ? communityLabel.slice(0, 18) + '…' : communityLabel],
+        ['Comunidad Autónoma',   communityLabel],
       ];
-      let py = y + 18;
+      const paramPad  = 8;
+      const labelColW = 38; // ancho fijo columna etiqueta
+      const valX      = c2X + c2W - paramPad;
+      const valMaxW   = c2W - paramPad - labelColW - paramPad;
+
+      let py = y + 20;
       params.forEach(([lbl, val]) => {
         doc.setDrawColor(229, 231, 235);
         doc.setLineWidth(0.2);
-        doc.line(c2X + 7, py - 3, c2X + c2W - 7, py - 3);
+        doc.line(c2X + paramPad, py - 3.5, c2X + c2W - paramPad, py - 3.5);
+
         doc.setFont('helvetica', 'normal');
-        doc.setFontSize(7.8);
+        doc.setFontSize(7.5);
         doc.setTextColor(...textG);
-        doc.text(lbl, c2X + 7, py);
+        doc.text(lbl, c2X + paramPad, py);
+
+        // Auto-fit font si el valor es demasiado largo
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(...navyMid);
-        doc.text(val, c2X + c2W - 7, py, { align: 'right' });
-        py += 7.5;
+        let vSize = 7.8;
+        doc.setFontSize(vSize);
+        while (doc.getTextWidth(val) > valMaxW && vSize > 5.5) {
+          vSize -= 0.2;
+          doc.setFontSize(vSize);
+        }
+        doc.text(val, valX, py, { align: 'right' });
+        py += 7.8;
       });
 
       y += cardH + 9;
@@ -339,11 +353,11 @@ export default function MortgageCalculator({ agencyConfig }) {
 
       y += 6;
       const summW = (CW - 8) / 3;
-      const summH = 22;
+      const summH = 27;
       const summCards = [
-        { lbl: 'Importe hipoteca',       val: `${fmt(results.loan)} €`,      bar: navyMid,       barC: navyMid },
-        { lbl: 'Interés total estimado', val: `${fmt(results.interest)} €`,  bar: [8, 92, 186],  barC: [8, 92, 186] },
-        { lbl: 'Coste total hipoteca',   val: `${fmt(results.totalCost)} €`, bar: navy,           barC: navy },
+        { lbl: 'Importe hipoteca',       val: `${fmt(results.loan)} €`,      bar: navyMid,      barC: navyMid },
+        { lbl: 'Interés total estimado', val: `${fmt(results.interest)} €`,  bar: [8, 92, 186], barC: [8, 92, 186] },
+        { lbl: 'Coste total hipoteca',   val: `${fmt(results.totalCost)} €`, bar: navy,          barC: navy },
       ];
       summCards.forEach((card, i) => {
         const sx = M + i * (summW + 4);
@@ -352,17 +366,20 @@ export default function MortgageCalculator({ agencyConfig }) {
         doc.setDrawColor(...blueB);
         doc.setLineWidth(0.3);
         doc.roundedRect(sx, y, summW, summH, 3, 3, 'S');
-        // barra izquierda de color
+
+        // Barra fina vertical redondeada (1.5mm) — elegante, no un rect macizo
         doc.setFillColor(...card.bar);
-        doc.rect(sx, y + 3.5, 3.5, summH - 7, 'F');
+        doc.roundedRect(sx + 2, y + 4, 1.5, summH - 8, 0.75, 0.75, 'F');
+
         doc.setFont('helvetica', 'normal');
-        doc.setFontSize(7);
+        doc.setFontSize(8.5);
         doc.setTextColor(...textG);
-        doc.text(card.lbl, sx + 7, y + 8);
+        doc.text(card.lbl, sx + 7, y + 10);
+
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(11);
+        doc.setFontSize(13);
         doc.setTextColor(...card.barC);
-        doc.text(card.val, sx + 7, y + 18);
+        doc.text(card.val, sx + 7, y + 22);
       });
 
       y += summH + 10;
