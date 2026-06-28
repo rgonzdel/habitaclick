@@ -383,9 +383,6 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
 
         <div className="pe-body">
 
-          {/* ── Formulario izquierda ── */}
-          <div className="pe-form">
-
             {/* LOCALIZACIÓN */}
             <Section title="Localización" sectionKey="localizacion" open={openSections.localizacion} onToggle={toggleSection}>
               <div className="pe-loc-wrap">
@@ -707,10 +704,8 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
               </div>
             </Section>
 
-          </div>
-
-          {/* ── Media derecha ── */}
-          <div className="pe-media">
+          {/* ── Fotos y vídeos ── */}
+          <div className="pe-media-block">
             <p className="pe-section-title">
               Fotos y vídeos
               <span className="pe-hint"> — arrastra para reordenar · la primera es la portada</span>

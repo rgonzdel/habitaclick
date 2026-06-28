@@ -943,7 +943,7 @@ export default function PropertyManager({ properties, loadProperties, showToast,
                   <div className="pm-card-info">
                     <div className="pm-card-head">
                       {p.reference && <span className="pm-card-ref">{p.reference}</span>}
-                      <span className="pm-card-title">{p.title}</span>
+                      <span className="pm-card-title pm-card-title-link" onClick={() => setEditingProperty(p)}>{p.title}</span>
                       <Link2 size={13} className="pm-card-linkicon" />
                     </div>
 

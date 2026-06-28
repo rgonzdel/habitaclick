@@ -2,26 +2,22 @@
 .pe-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0, 0, 0, 0.55);
   z-index: 2000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  backdrop-filter: blur(4px);
+  overflow-y: auto;
 }
 
 /* ── Panel ───────────────────────────────────────────────────── */
 .pe-panel {
   background: #fff;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 1060px;
-  max-height: 92vh;
+  border-radius: 0;
+  width: 960px;
+  max-width: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+  overflow: clip;
+  margin: 0 auto;
 }
 
 /* ── Header ──────────────────────────────────────────────────── */
@@ -32,6 +28,11 @@
   padding: 18px 26px;
   border-bottom: 1px solid #e5e7eb;
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
 .pe-header h2 {
@@ -63,19 +64,11 @@
 
 /* ── Body ────────────────────────────────────────────────────── */
 .pe-body {
-  display: flex;
   flex: 1;
-  overflow: hidden;
-  min-height: 0;
-}
-
-/* ── Form (left panel) ───────────────────────────────────────── */
-.pe-form {
-  width: 320px;
-  flex-shrink: 0;
-  padding: 22px 24px;
-  overflow-y: auto;
-  border-right: 1px solid #e5e7eb;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .pe-reference {
@@ -217,15 +210,14 @@
   flex: 1;
 }
 
-/* ── Media (right panel) ─────────────────────────────────────── */
-.pe-media {
-  flex: 1;
-  padding: 22px 24px;
-  overflow-y: auto;
+/* ── Media block (bottom section) ───────────────────────────── */
+.pe-media-block {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  min-width: 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 14px;
 }
 
 /* ── Drop zone ───────────────────────────────────────────────── */
@@ -474,7 +466,11 @@
   padding: 14px 26px;
   border-top: 1px solid #e5e7eb;
   flex-shrink: 0;
-  background: #fafafa;
+  background: #fff;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
 }
 
 .pe-btn-cancel {
@@ -517,16 +513,11 @@
   cursor: not-allowed;
 }
 
-/* ── Form wider for more fields ──────────────────────────────── */
-.pe-form {
-  width: 580px;
-}
-
 /* ── Localización: campos | mapa ─────────────────────────────── */
 .pe-loc-wrap {
   display: grid;
-  grid-template-columns: 1fr 240px;
-  gap: 14px;
+  grid-template-columns: 1fr 340px;
+  gap: 16px;
   align-items: start;
 }
 
