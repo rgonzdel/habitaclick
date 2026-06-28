@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import PropertyMap from './PropertyMap';
 import {
   Home, Building2, House, Store, Landmark, Tag, Key, Euro,
-  Circle, Search, Download, Edit2, Trash2, Link2, Save,
+  Circle, Search, Edit2, Trash2, Link2, Save,
   User, Video, Camera, SlidersHorizontal, Plus, X, ChevronLeft,
   ChevronRight, ListFilter, CheckSquare, ArrowUpDown, FileText,
   MapPin, LayoutList, Sparkles, ChevronDown
@@ -894,9 +894,6 @@ export default function PropertyManager({ properties, loadProperties, showToast,
                 <Plus size={16} /> Añadir inmueble
               </button>
             )}
-            <button className="pm-btn-export" onClick={() => exportCSV()} title="Exportar CSV">
-              <Download size={15} /> CSV
-            </button>
           </div>
         </div>
 
