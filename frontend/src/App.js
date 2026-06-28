@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Users, Globe, Check, X, LogOut, Share2 } from 'lucide-react';
+import { Home, Users, Globe, Check, X, LogOut, Share2, Settings, Upload, Trash2 } from 'lucide-react';
 import CookieConsent from './components/CookieConsent';
 import UserManager from './components/UserManager';
 import PropertyManager from './components/PropertyManager';
@@ -26,6 +26,10 @@ function App() {
   const [loadingProperties, setLoadingProperties] = useState(false);
   const [dashView, setDashView] = useState('properties');
   const [teamUsers, setTeamUsers] = useState([]);
+  const [showAgencyConfig, setShowAgencyConfig] = useState(false);
+  const [agencyConfig, setAgencyConfig] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('agencyConfig') || '{}'); } catch { return {}; }
+  });
 
   const showToast = (type, msg) => {
     setToast({ type, msg });
@@ -93,6 +97,14 @@ function App() {
     }
   };
 
+
+  const updateAgencyConfig = (key, value) => {
+    setAgencyConfig(prev => {
+      const next = { ...prev, [key]: value };
+      localStorage.setItem('agencyConfig', JSON.stringify(next));
+      return next;
+    });
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -188,11 +200,60 @@ function App() {
               >
                 {userInitial}
               </div>
+              <button
+                className={`dash-logout-btn${showAgencyConfig ? ' active' : ''}`}
+                onClick={() => setShowAgencyConfig(v => !v)}
+                title="Configuración"
+              >
+                <Settings size={17}/>
+                <span className="dash-tooltip">Configuración</span>
+              </button>
               <button className="dash-logout-btn" onClick={handleLogout}>
                 <LogOut size={17}/>
                 <span className="dash-tooltip">Cerrar sesión</span>
               </button>
             </div>
+
+            {/* ── Panel configuración inmobiliaria ── */}
+            {showAgencyConfig && (
+              <div className="dash-agency-panel">
+                <div className="dap-header">
+                  <span>Configuración</span>
+                  <button className="dap-close" onClick={() => setShowAgencyConfig(false)}><X size={14}/></button>
+                </div>
+                <div className="dap-body">
+                  <label className="dap-label">Nombre de la inmobiliaria</label>
+                  <input
+                    className="dap-input"
+                    type="text"
+                    placeholder="Ej: Inmobiliaria García"
+                    value={agencyConfig.name || ''}
+                    onChange={e => updateAgencyConfig('name', e.target.value)}
+                  />
+                  <label className="dap-label" style={{ marginTop: 14 }}>Logo</label>
+                  {agencyConfig.logo ? (
+                    <div className="dap-logo-preview">
+                      <img src={agencyConfig.logo} alt="Logo" />
+                      <button className="dap-logo-del" onClick={() => updateAgencyConfig('logo', null)}>
+                        <Trash2 size={13}/> Eliminar
+                      </button>
+                    </div>
+                  ) : (
+                    <label className="dap-upload">
+                      <Upload size={15}/> Subir logo
+                      <input type="file" accept="image/*" style={{ display: 'none' }} onChange={e => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        const reader = new FileReader();
+                        reader.onload = ev => updateAgencyConfig('logo', ev.target.result);
+                        reader.readAsDataURL(file);
+                      }} />
+                    </label>
+                  )}
+                  <p className="dap-hint">Estos datos se usarán en los PDFs de simulación hipotecaria.</p>
+                </div>
+              </div>
+            )}
           </aside>
 
           {/* ── Contenido principal ── */}
@@ -205,6 +266,7 @@ function App() {
                 teamUsers={teamUsers}
                 getCurrentUserId={getCurrentUserId}
                 userRole={userRole}
+                agencyConfig={agencyConfig}
               />
             )}
             {dashView === 'users' && can('director') && (

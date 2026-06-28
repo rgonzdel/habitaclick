@@ -609,7 +609,7 @@ function AddPropertyModal({ teamUsers, getCurrentUserId, showToast, loadProperti
 }
 
 // ── Main PropertyManager ─────────────────────────────────────────────
-export default function PropertyManager({ properties, loadProperties, showToast, teamUsers, getCurrentUserId, userRole }) {
+export default function PropertyManager({ properties, loadProperties, showToast, teamUsers, getCurrentUserId, userRole, agencyConfig }) {
   const [activeNav, setActiveNav] = useState('all');
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState([]);
@@ -839,7 +839,7 @@ export default function PropertyManager({ properties, loadProperties, showToast,
       {activeNav === 'map' ? (
         <MapModule token={localStorage.getItem('token')} onSelect={setEditingProperty} />
       ) : activeNav === 'calculadora' ? (
-        <MortgageCalculator />
+        <MortgageCalculator agencyConfig={agencyConfig} />
       ) : <>
 
       {/* ── FILTER PANEL ─────────────── */}

@@ -164,6 +164,122 @@ html, body {
   transform: translateY(-50%) translateX(0);
 }
 
+.dash-logout-btn.active {
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+}
+
+/* ── Panel configuración ── */
+.dash-agency-panel {
+  position: fixed;
+  left: 68px;
+  bottom: 14px;
+  width: 260px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 200;
+  overflow: hidden;
+  animation: dap-in 0.15s ease;
+}
+@keyframes dap-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.dap-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px 10px;
+  background: #003366;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+.dap-close {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+}
+.dap-close:hover { color: #fff; background: rgba(255,255,255,0.15); }
+
+.dap-body { padding: 14px; display: flex; flex-direction: column; }
+
+.dap-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #374151;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.dap-input {
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  padding: 8px 10px;
+  font-size: 0.83rem;
+  color: #111;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+.dap-input:focus { border-color: #003366; }
+
+.dap-upload {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 12px;
+  border: 1.5px dashed #d1d5db;
+  border-radius: 7px;
+  font-size: 0.8rem;
+  color: #6b7280;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.dap-upload:hover { border-color: #003366; color: #003366; }
+
+.dap-logo-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.dap-logo-preview img {
+  max-width: 100%;
+  max-height: 70px;
+  object-fit: contain;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 4px;
+  background: #f9fafb;
+}
+.dap-logo-del {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  color: #ef4444;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+.dap-logo-del:hover { text-decoration: underline; }
+
+.dap-hint {
+  margin: 12px 0 0;
+  font-size: 0.7rem;
+  color: #9ca3af;
+  line-height: 1.4;
+}
+
 /* ── Contenido ── */
 .dash-content {
   flex: 1;

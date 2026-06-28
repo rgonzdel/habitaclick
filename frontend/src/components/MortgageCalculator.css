@@ -18,12 +18,39 @@
 /* ── Formulario ── */
 .mc-form { display: flex; flex-direction: column; gap: 28px; }
 
+.mc-form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .mc-heading {
   font-size: 1.35rem;
   font-weight: 700;
   color: #111;
   margin: 0;
 }
+
+.mc-pdf-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  background: #003366;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.83rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.mc-pdf-btn:hover:not(:disabled) { background: #1e3a5f; }
+.mc-pdf-btn:disabled { opacity: 0.6; cursor: default; }
 
 .mc-field { display: flex; flex-direction: column; gap: 8px; }
 
