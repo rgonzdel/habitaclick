@@ -70,20 +70,39 @@ const VALUE_LABELS = {
 function PhotoCarousel({ photos }) {
   const [idx, setIdx] = useState(0);
   const list = (photos || []).filter(p => p.media_type === 'photo');
+
   if (list.length === 0) return (
     <div className="pm-photo-placeholder">
       <Camera size={28} color="#d1d5db" />
     </div>
   );
-  const prev = e => { e.stopPropagation(); setIdx(i => (i - 1 + list.length) % list.length); };
-  const next = e => { e.stopPropagation(); setIdx(i => (i + 1) % list.length); };
+
+  const prev = e => { e.stopPropagation(); e.preventDefault(); setIdx(i => (i - 1 + list.length) % list.length); };
+  const next = e => { e.stopPropagation(); e.preventDefault(); setIdx(i => (i + 1) % list.length); };
+
   return (
     <div className="pm-photo-wrap">
-      <img src={`${API}${list[idx].url}`} alt="" className="pm-photo-img" />
+      {list.map((photo, i) => {
+        // Solo carga la actual + adyacentes para no pedir todas a la vez
+        const dist = Math.min(Math.abs(i - idx), list.length - Math.abs(i - idx));
+        if (dist > 1) return null;
+        return (
+          <img
+            key={photo.id || i}
+            src={`${API}${photo.url}`}
+            alt=""
+            className="pm-photo-img"
+            style={{ opacity: i === idx ? 1 : 0 }}
+          />
+        );
+      })}
       {list.length > 1 && (
         <>
           <button className="pm-photo-btn pm-photo-prev" onClick={prev}><ChevronLeft size={16} /></button>
           <button className="pm-photo-btn pm-photo-next" onClick={next}><ChevronRight size={16} /></button>
+          <div className="pm-photo-dots">
+            {list.map((_, i) => <span key={i} className={`pm-photo-dot${i === idx ? ' active' : ''}`} />)}
+          </div>
         </>
       )}
       <div className="pm-photo-count"><Camera size={11} /> {list.length}</div>
