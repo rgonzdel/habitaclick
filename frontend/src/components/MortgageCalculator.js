@@ -119,6 +119,15 @@ function BreakdownTable({ items, total }) {
   );
 }
 
+function getImageNaturalSize(src) {
+  return new Promise(resolve => {
+    const img = new window.Image();
+    img.onload = () => resolve({ w: img.naturalWidth, h: img.naturalHeight });
+    img.onerror = () => resolve({ w: 1, h: 1 });
+    img.src = src;
+  });
+}
+
 function buildPieSvgDataURL(loan, savings, interest) {
   return new Promise(resolve => {
     const total = loan + savings + interest;
@@ -217,12 +226,18 @@ export default function MortgageCalculator({ agencyConfig }) {
       doc.setFillColor(...navy);
       doc.rect(0, 3, W, 38, 'F');
 
-      // Logo (si existe)
+      // Logo (si existe) — escala proporcional, sin deformar
       let nameX = M;
       if (agencyConfig?.logo) {
         try {
-          doc.addImage(agencyConfig.logo, M, 7, 28, 28, undefined, 'FAST');
-          nameX = M + 33;
+          const { w, h } = await getImageNaturalSize(agencyConfig.logo);
+          const maxW = 44, maxH = 26;
+          const ratio = Math.min(maxW / w, maxH / h);
+          const logoW = w * ratio;
+          const logoH = h * ratio;
+          const logoY = 3 + (38 - logoH) / 2; // centrado vertical en la cabecera
+          doc.addImage(agencyConfig.logo, M, logoY, logoW, logoH, undefined, 'FAST');
+          nameX = M + logoW + 5;
         } catch (_) {}
       }
 
