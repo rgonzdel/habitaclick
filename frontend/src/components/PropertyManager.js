@@ -888,13 +888,6 @@ export default function PropertyManager({ properties, loadProperties, showToast,
             )}
             <button className="pm-search-btn">Buscar</button>
           </div>
-          <div className="pm-topbar-right">
-            {can('director') && (
-              <button className="pm-btn-add" onClick={() => setShowAddForm(true)}>
-                <Plus size={16} /> Añadir inmueble
-              </button>
-            )}
-          </div>
         </div>
 
         {/* Bulk bar */}
@@ -904,6 +897,11 @@ export default function PropertyManager({ properties, loadProperties, showToast,
             <span className="pm-selected-label">{selectedIds.length} seleccionado{selectedIds.length > 1 ? 's' : ''}</span>
           )}
           <div style={{ flex: 1 }} />
+          {can('director') && (
+            <button className="pm-btn-add" onClick={() => setShowAddForm(true)}>
+              <Plus size={16} /> Añadir inmueble
+            </button>
+          )}
           <select className="pm-bulk-sel" value={bulkAction} onChange={e => setBulkAction(e.target.value)}>
             <option value="">Selecciona una acción</option>
             <option value="export_csv">Exportar a CSV</option>

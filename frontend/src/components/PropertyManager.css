@@ -256,7 +256,7 @@
   flex-shrink: 0;
 }
 .pm-search-btn:hover { background: #e5e7eb; }
-.pm-topbar-right { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+.pm-search-wrap { max-width: none; }
 .pm-btn-add {
   padding: 9px 18px;
   background: #003366;
