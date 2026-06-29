@@ -1,4 +1,16 @@
 User-agent: *
 Allow: /
+Disallow: /dashboard
+Disallow: /api/
+
+# Archivos de verificación de propiedad
+Allow: /google82cf2f68cc08ebca.html
 
 Sitemap: https://habitaclick.es/sitemap.xml
+
+# Crawl-delay para bots agresivos
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10

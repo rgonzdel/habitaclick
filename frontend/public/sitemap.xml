@@ -1,11 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- Página principal -->
   <url>
     <loc>https://habitaclick.es/</loc>
-    <lastmod>2026-06-26</lastmod>
+    <lastmod>2026-06-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="es" href="https://habitaclick.es/"/>
+    <image:image>
+      <image:loc>https://habitaclick.es/logos/logo.png</image:loc>
+      <image:title>HabitaClick — CRM Inmobiliario Español</image:title>
+    </image:image>
   </url>
+
+  <!-- Sobre nosotros -->
+  <url>
+    <loc>https://habitaclick.es/sobre-nosotros</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://habitaclick.es/sobre-nosotros"/>
+  </url>
+
+  <!-- Contacto -->
+  <url>
+    <loc>https://habitaclick.es/contacto</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://habitaclick.es/contacto"/>
+  </url>
+
+  <!-- Política de privacidad -->
+  <url>
+    <loc>https://habitaclick.es/politica-privacidad</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://habitaclick.es/politica-privacidad"/>
+  </url>
+
+  <!-- Política de cookies -->
+  <url>
+    <loc>https://habitaclick.es/politica-cookies</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://habitaclick.es/politica-cookies"/>
+  </url>
+
 </urlset>
