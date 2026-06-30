@@ -288,15 +288,17 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
           🎉 Pagas un año y ahorras dos meses — facturado anualmente
         </p>
 
-        <div className={`pricing-grid${pricingBlur ? ' pricing--blurring' : ''}`}>
+        <div className="pricing-grid">
           <div className="pricing-card animate-on-scroll" style={{ '--delay': '0s' }}>
             <h3>Starter</h3>
-            <div className="price-old" style={{ visibility: billing === 'anual' ? 'visible' : 'hidden' }}>€18,99<span>/mes</span></div>
-            <div className="price">
-              {billing === 'anual' ? '€15,19' : '€18,99'}
-              <span>/mes</span>
+            <div className={`pricing-price-area${pricingBlur ? ' pricing--blurring' : ''}`}>
+              <div className="price-old" style={{ visibility: billing === 'anual' ? 'visible' : 'hidden' }}>€18,99<span>/mes</span></div>
+              <div className="price">
+                {billing === 'anual' ? '€15,19' : '€18,99'}
+                <span>/mes</span>
+              </div>
+              <p className="price-yearly" style={{ visibility: billing === 'anual' ? 'visible' : 'hidden' }}>€182,28 facturado al año · ahorras €45,60</p>
             </div>
-            <p className="price-yearly" style={{ visibility: billing === 'anual' ? 'visible' : 'hidden' }}>€182,28 facturado al año · ahorras €45,60</p>
             <p className="description">Para agencias pequeñas</p>
             <ul>
               <li><Check size={13}/> Hasta 50 propiedades</li>
@@ -310,12 +312,14 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
           <div className="pricing-card featured animate-on-scroll" style={{ '--delay': '0.1s' }}>
             <div className="badge">MÁS POPULAR</div>
             <h3>Professional</h3>
-            <div className="price-old" style={{ visibility: billing === 'anual' ? 'visible' : 'hidden' }}>€39,99<span>/mes</span></div>
-            <div className="price">
-              {billing === 'anual' ? '€31,99' : '€39,99'}
-              <span>/mes</span>
+            <div className={`pricing-price-area${pricingBlur ? ' pricing--blurring' : ''}`}>
+              <div className="price-old" style={{ visibility: billing === 'anual' ? 'visible' : 'hidden' }}>€39,99<span>/mes</span></div>
+              <div className="price">
+                {billing === 'anual' ? '€31,99' : '€39,99'}
+                <span>/mes</span>
+              </div>
+              <p className="price-yearly" style={{ visibility: billing === 'anual' ? 'visible' : 'hidden' }}>€383,88 facturado al año · ahorras €96,00</p>
             </div>
-            <p className="price-yearly" style={{ visibility: billing === 'anual' ? 'visible' : 'hidden' }}>€383,88 facturado al año · ahorras €96,00</p>
             <p className="description">Para agencias medianas</p>
             <ul>
               <li><Check size={13}/> Hasta 500 propiedades</li>

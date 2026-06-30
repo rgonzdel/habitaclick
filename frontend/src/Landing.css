@@ -385,13 +385,15 @@ body {
   transition: opacity 0.2s;
 }
 
-/* Blur transition al cambiar periodo */
-.pricing-grid {
-  transition: filter 0.16s ease, opacity 0.16s ease;
+/* Blur solo en el bloque del precio al cambiar periodo */
+.pricing-price-area {
+  transition: filter 0.18s ease, opacity 0.18s ease, transform 0.18s ease;
+  will-change: filter, opacity, transform;
 }
-.pricing-grid.pricing--blurring {
-  filter: blur(7px);
-  opacity: 0.45;
+.pricing-price-area.pricing--blurring {
+  filter: blur(10px);
+  opacity: 0;
+  transform: scale(0.97);
 }
 
 /* Precio tachado (mensual original cuando está en anual) */
