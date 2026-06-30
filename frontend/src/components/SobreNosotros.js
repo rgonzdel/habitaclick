@@ -29,7 +29,7 @@ function SobreNosotros({ onBack }) {
           {[
             { num: '90%', text: 'Ahorro en tiempo de publicación' },
             { num: '5+', text: 'Portales sincronizados' },
-            { num: '14 días', text: 'Prueba gratuita sin compromiso' },
+            { num: '45 días', text: 'Prueba gratuita sin compromiso' },
             { num: '24/7', text: 'Soporte para clientes Enterprise' },
           ].map((item, i) => (
             <div key={i} style={{ background: 'white', borderRadius: '12px', padding: '1.5rem', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
@@ -41,7 +41,7 @@ function SobreNosotros({ onBack }) {
 
         <div style={{ background: '#003366', borderRadius: '12px', padding: '2rem', color: 'white', textAlign: 'center' }}>
           <h2 style={{ marginBottom: '1rem' }}>¿Quieres saber más?</h2>
-          <p style={{ opacity: 0.9, marginBottom: '1.5rem' }}>Prueba HabitaClick gratis durante 14 días sin necesidad de tarjeta de crédito.</p>
+          <p style={{ opacity: 0.9, marginBottom: '1.5rem' }}>Prueba HabitaClick gratis durante 45 días sin necesidad de tarjeta de crédito.</p>
           <button onClick={onBack} style={{ background: '#2ECC71', color: 'white', border: 'none', padding: '0.85rem 2rem', borderRadius: '6px', fontSize: '1rem', fontWeight: '600', cursor: 'pointer' }}>
             Comenzar prueba gratuita
           </button>

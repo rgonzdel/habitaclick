@@ -28,7 +28,7 @@ const FAQ_ITEMS = [
   },
   {
     q: '¿Tiene HabitaClick prueba gratuita?',
-    a: 'Sí, HabitaClick ofrece una prueba gratuita de 14 días con acceso completo a todas las funcionalidades del plan Professional. No se requiere tarjeta de crédito y puedes cancelar en cualquier momento. Al terminar la prueba puedes elegir el plan que mejor se adapte a tu agencia.'
+    a: 'Sí, HabitaClick ofrece una prueba gratuita de 45 días con acceso completo a todas las funcionalidades del plan Professional. No se requiere tarjeta de crédito y puedes cancelar en cualquier momento. Al terminar la prueba puedes elegir el plan que mejor se adapte a tu agencia.'
   },
   {
     q: '¿Es HabitaClick un CRM inmobiliario español?',
@@ -184,7 +184,7 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
           <h1>HabitaClick — CRM inmobiliario español para publicar en Idealista, Fotocasa y todos los portales</h1>
           <p>El CRM inmobiliario para agencias y agentes en España. Sincroniza tus propiedades automáticamente en todos los portales inmobiliarios, gestiona tu cartera y ahorra horas cada semana.</p>
           <button className="btn-primary btn-large" onClick={onSignupClick}>Comienza tu prueba gratuita</button>
-          <p className="hero-subtext"><Check size={13} style={{verticalAlign:'middle',marginRight:'5px'}}/> 14 días gratis • Sin tarjeta de crédito • Cancela en cualquier momento</p>
+          <p className="hero-subtext"><Check size={13} style={{verticalAlign:'middle',marginRight:'5px'}}/> 45 días gratis • Sin tarjeta de crédito • Cancela en cualquier momento</p>
         </div>
       </section>
 
@@ -389,7 +389,7 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
               <li><Check size={14}/> ITP/AJD por Comunidad Autónoma</li>
               <li><Check size={14}/> Soporte en castellano</li>
               <li><Check size={14}/> Sin contrato de permanencia</li>
-              <li><Check size={14}/> Prueba gratis 14 días</li>
+              <li><Check size={14}/> Prueba gratis 45 días</li>
             </ul>
           </div>
           <div className="scc-col scc-col--other">
@@ -449,7 +449,7 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
       <section className="final-cta">
         <h2 className="animate-on-scroll">¿Listo para empezar con el CRM inmobiliario HabitaClick?</h2>
         <p className="animate-on-scroll">Únete a las agencias inmobiliarias españolas que ya gestionan su CRM y publican en todos los portales automáticamente con HabitaClick. Sin complicaciones, sin costes extra.</p>
-        <button className="btn-primary btn-large animate-on-scroll" onClick={onSignupClick}>Empieza gratis 14 días</button>
+        <button className="btn-primary btn-large animate-on-scroll" onClick={onSignupClick}>Empieza gratis 45 días</button>
       </section>
 
       {/* Footer */}
