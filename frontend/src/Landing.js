@@ -12,7 +12,7 @@ const videos = [
 const FAQ_ITEMS = [
   {
     q: '¿Qué es un CRM inmobiliario?',
-    a: 'Un CRM inmobiliario es un software de gestión específicamente diseñado para agencias y agentes inmobiliarios. Permite centralizar la cartera de inmuebles, gestionar contactos y clientes, automatizar la publicación en portales y hacer seguimiento de cada operación de compraventa o alquiler. HabitaClick es el CRM inmobiliario español creado específicamente para el mercado de España.'
+    a: 'Un CRM inmobiliario es un software de gestión diseñado para agencias y agentes inmobiliarios. Permite centralizar la cartera de inmuebles, gestionar contactos y clientes, automatizar la publicación en portales y hacer seguimiento de cada operación de compraventa o alquiler desde un único lugar.'
   },
   {
     q: '¿Cómo funciona HabitaClick?',
@@ -20,27 +20,27 @@ const FAQ_ITEMS = [
   },
   {
     q: '¿En qué se diferencia HabitaClick de otros CRM inmobiliarios?',
-    a: 'HabitaClick es un CRM inmobiliario español, desarrollado y con soporte en español, enfocado en el mercado de España. A diferencia de otros CRM genéricos adaptados, HabitaClick está diseñado desde cero para las necesidades de las agencias inmobiliarias españolas: portales locales, fiscalidad (ITP, AJD por CCAA), calculadora hipotecaria y página web propia incluida.'
+    a: 'A diferencia de CRM genéricos adaptados al sector, HabitaClick está diseñado desde cero para agencias inmobiliarias: integración nativa con portales, fiscalidad por Comunidad Autónoma (ITP/AJD), calculadora hipotecaria y página web propia incluida en el plan.'
   },
   {
     q: '¿Puedo publicar en Idealista y Fotocasa con HabitaClick?',
-    a: 'Sí. HabitaClick se integra con Idealista, Fotocasa, Habitaclia, Pisos.com y otros portales inmobiliarios. Con un solo clic tus propiedades se publican y sincronizan automáticamente en todos los portales activos, sin necesidad de entrar en cada portal por separado.'
+    a: 'Sí. HabitaClick se integra con Idealista, Fotocasa, Habitaclia, Pisos.com y otros portales. Con un solo clic tus propiedades se publican y sincronizan automáticamente en todos los portales activos, sin necesidad de entrar en cada uno por separado.'
   },
   {
     q: '¿Tiene HabitaClick prueba gratuita?',
-    a: 'Sí, HabitaClick ofrece una prueba gratuita de 45 días con acceso completo a todas las funcionalidades del plan Professional. No se requiere tarjeta de crédito y puedes cancelar en cualquier momento. Al terminar la prueba puedes elegir el plan que mejor se adapte a tu agencia.'
+    a: 'Sí, HabitaClick ofrece una prueba gratuita de 45 días con acceso completo a todas las funcionalidades del plan Professional. No se requiere tarjeta de crédito y puedes cancelar en cualquier momento.'
   },
   {
-    q: '¿Es HabitaClick un CRM inmobiliario español?',
-    a: 'Sí. HabitaClick es un software CRM inmobiliario desarrollado en España, con soporte técnico en castellano, integrado con los portales inmobiliarios españoles y adaptado a la normativa fiscal española (ITP/AJD por Comunidad Autónoma). Está disponible para agencias inmobiliarias en toda España: Madrid, Barcelona, Valencia, Sevilla, Málaga, Bilbao, Zaragoza y el resto de provincias.'
+    q: '¿De dónde es HabitaClick?',
+    a: 'HabitaClick es una empresa de origen español, con soporte técnico en castellano y adaptada a la normativa fiscal y los portales inmobiliarios del mercado nacional.'
   },
   {
-    q: '¿Cuánto cuesta el CRM inmobiliario HabitaClick?',
-    a: 'HabitaClick tiene dos planes principales: Starter desde 18,99 €/mes (ideal para agentes independientes y agencias pequeñas, hasta 50 propiedades) y Professional desde 39,99 €/mes (hasta 500 propiedades, sincronización bidireccional y analytics). Para grandes agencias existe el plan Enterprise con precio personalizado. Todos los planes incluyen sincronización con portales.'
+    q: '¿Cuánto cuesta HabitaClick?',
+    a: 'Hay dos planes principales: Starter desde 18,99 €/mes (hasta 50 propiedades) y Professional desde 39,99 €/mes (hasta 500 propiedades, sincronización bidireccional y analytics). Para grandes agencias existe el plan Enterprise con precio personalizado.'
   },
   {
     q: '¿Incluye HabitaClick página web para mi inmobiliaria?',
-    a: 'Sí. Los planes Professional y Enterprise incluyen una página web propia para tu inmobiliaria con dominio personalizado. La web se actualiza automáticamente con tu cartera de propiedades, sin necesidad de conocimientos técnicos. Es una herramienta adicional dentro del CRM inmobiliario HabitaClick.'
+    a: 'Sí. Los planes Professional y Enterprise incluyen una página web propia con dominio personalizado que se actualiza automáticamente con tu cartera de propiedades, sin necesidad de conocimientos técnicos.'
   }
 ];
 
