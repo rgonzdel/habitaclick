@@ -189,8 +189,8 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
         <div className="hero-overlay"></div>
 
         <div className="hero-content animate-on-scroll">
-          <h1>HabitaClick — CRM inmobiliario español para publicar en Idealista, Fotocasa y todos los portales</h1>
-          <p>El CRM inmobiliario para agencias y agentes en España. Sincroniza tus propiedades automáticamente en todos los portales inmobiliarios, gestiona tu cartera y ahorra horas cada semana.</p>
+          <h1>HabitaClick — CRM inmobiliario para publicar en Idealista, Fotocasa y todos los portales</h1>
+          <p>Sincroniza tus propiedades automáticamente en todos los portales, gestiona tu cartera y cierra más operaciones. Todo desde una sola plataforma.</p>
           <button className="btn-primary btn-large" onClick={onSignupClick}>Comienza tu prueba gratuita</button>
           <p className="hero-subtext"><Check size={13} style={{verticalAlign:'middle',marginRight:'5px'}}/> 45 días gratis • Sin tarjeta de crédito • Cancela en cualquier momento</p>
         </div>
@@ -217,7 +217,7 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
           </div>
         </div>
 
-        <h2 className="animate-on-scroll" style={{ marginTop: '60px' }}>La solución: HabitaClick, el CRM inmobiliario español</h2>
+        <h2 className="animate-on-scroll" style={{ marginTop: '60px' }}>La solución: HabitaClick</h2>
         <div className="solution-list">
           <div className="solution-item animate-on-scroll" style={{ '--delay': '0s' }}>
             <div className="check"><CheckCircle2 size={20}/></div>
@@ -243,8 +243,8 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
           <div className="solution-item animate-on-scroll" style={{ '--delay': '0.2s' }}>
             <div className="check"><CheckCircle2 size={20}/></div>
             <div>
-              <h4>CRM inmobiliario integrado para toda tu agencia</h4>
-              <p>Gestiona toda tu cartera de propiedades, clientes y agentes desde un único CRM inmobiliario en español</p>
+              <h4>Gestión completa de tu agencia en un solo lugar</h4>
+              <p>Propiedades, clientes, asesores y operaciones centralizados en una única plataforma</p>
             </div>
           </div>
         </div>
@@ -260,7 +260,7 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
           <div className="portal-logo animate-on-scroll" style={{ '--delay': '0.24s' }}>Inmuebles24</div>
           <div className="portal-logo animate-on-scroll" style={{ '--delay': '0.32s' }}>Vivanuncios</div>
         </div>
-        <p className="portals-note animate-on-scroll">Y muchos más. Nos integramos continuamente con nuevos portales inmobiliarios en España.</p>
+        <p className="portals-note animate-on-scroll">Y muchos más. Nos integramos continuamente con nuevos portales.</p>
       </section>
 
       {/* Planes */}
@@ -350,7 +350,7 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
       {/* ── Funcionalidades CRM ── */}
       <section className="seo-features" id="funcionalidades">
         <h2 className="animate-on-scroll">Todo lo que incluye el CRM inmobiliario HabitaClick</h2>
-        <p className="seo-features-sub animate-on-scroll">Una plataforma completa para gestionar tu agencia inmobiliaria en España</p>
+        <p className="seo-features-sub animate-on-scroll">Todo lo que necesitas para gestionar tu agencia, en un solo sitio</p>
         <div className="seo-features-grid">
           <div className="seo-feat-card animate-on-scroll" style={{ '--delay': '0s' }}>
             <div className="sfc-icon">🏠</div>
@@ -360,7 +360,7 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
           <div className="seo-feat-card animate-on-scroll" style={{ '--delay': '0.07s' }}>
             <div className="sfc-icon">👥</div>
             <h3>CRM de contactos y clientes</h3>
-            <p>Base de datos de compradores, arrendatarios y propietarios. Seguimiento de cada lead, asignación de asesores y historial de comunicaciones centralizado en el CRM.</p>
+            <p>Base de datos de compradores, arrendatarios y propietarios. Seguimiento de cada lead, asignación de asesores e historial de comunicaciones centralizado.</p>
           </div>
           <div className="seo-feat-card animate-on-scroll" style={{ '--delay': '0.14s' }}>
             <div className="sfc-icon">🔄</div>
@@ -388,32 +388,32 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
       {/* ── Comparativa ── */}
       <section className="seo-compare animate-on-scroll">
         <h2>HabitaClick frente a otros CRM inmobiliarios</h2>
-        <p className="seo-compare-sub">¿Por qué elegir HabitaClick como software CRM para tu inmobiliaria?</p>
+        <p className="seo-compare-sub">¿Qué hace diferente a HabitaClick?</p>
         <div className="seo-compare-grid">
           <div className="scc-col scc-col--hc">
             <div className="scc-head">HabitaClick</div>
             <ul>
-              <li><Check size={14}/> CRM inmobiliario en español</li>
-              <li><Check size={14}/> Integrado con portales españoles</li>
+              <li><Check size={14}/> Interfaz y soporte en castellano</li>
+              <li><Check size={14}/> Integrado con los principales portales</li>
               <li><Check size={14}/> Calculadora hipotecaria incluida</li>
-              <li><Check size={14}/> Página web de inmobiliaria incluida</li>
+              <li><Check size={14}/> Página web propia incluida</li>
               <li><Check size={14}/> ITP/AJD por Comunidad Autónoma</li>
-              <li><Check size={14}/> Soporte en castellano</li>
-              <li><Check size={14}/> Sin contrato de permanencia</li>
+              <li><Check size={14}/> Precio mensual sin permanencia</li>
               <li><Check size={14}/> Prueba gratis 45 días</li>
+              <li><Check size={14}/> Mapa de inmuebles integrado</li>
             </ul>
           </div>
           <div className="scc-col scc-col--other">
-            <div className="scc-head">Otros CRM inmobiliarios</div>
+            <div className="scc-head">Otros CRM</div>
             <ul>
-              <li><span className="scc-x">✗</span> Interfaz en otros idiomas</li>
+              <li><span className="scc-x">✗</span> Soporte en otro idioma</li>
               <li><span className="scc-x">✗</span> Integraciones limitadas</li>
               <li><span className="scc-x">✗</span> Calculadora de pago extra</li>
               <li><span className="scc-x">✗</span> Web propia no incluida</li>
-              <li><span className="scc-x">✗</span> Sin fiscalidad española</li>
-              <li><span className="scc-x">✗</span> Soporte técnico en inglés</li>
-              <li><span className="scc-x">✗</span> Contratos anuales</li>
+              <li><span className="scc-x">✗</span> Fiscalidad local no integrada</li>
+              <li><span className="scc-x">✗</span> Contratos anuales obligatorios</li>
               <li><span className="scc-x">✗</span> Sin periodo de prueba</li>
+              <li><span className="scc-x">✗</span> Sin mapa de propiedades</li>
             </ul>
           </div>
         </div>
@@ -422,7 +422,7 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
       {/* ── Cobertura España ── */}
       <section className="seo-cities animate-on-scroll">
         <h2>CRM inmobiliario disponible en toda España</h2>
-        <p>HabitaClick es el CRM inmobiliario español utilizado por agencias inmobiliarias en las principales ciudades y provincias de España:</p>
+        <p>HabitaClick está disponible para agencias y agentes en cualquier punto del territorio nacional:</p>
         <div className="seo-cities-grid">
           {['Madrid','Barcelona','Valencia','Sevilla','Málaga','Bilbao','Zaragoza','Alicante',
             'Murcia','Palma de Mallorca','Las Palmas','Santa Cruz de Tenerife','Valladolid',
@@ -431,12 +431,12 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
             <span key={city} className="seo-city-tag">{city}</span>
           ))}
         </div>
-        <p className="seo-cities-note">¿Tu ciudad no aparece? HabitaClick está disponible para cualquier agencia inmobiliaria en España sin restricción geográfica.</p>
+        <p className="seo-cities-note">¿No ves tu ciudad? Sin problema — HabitaClick funciona en cualquier provincia sin restricción.</p>
       </section>
 
       {/* ── FAQ ── */}
       <section className="seo-faq" id="faq">
-        <h2 className="animate-on-scroll">Preguntas frecuentes sobre el CRM inmobiliario HabitaClick</h2>
+        <h2 className="animate-on-scroll">Preguntas frecuentes</h2>
         <div className="seo-faq-list">
           {FAQ_ITEMS.map((item, i) => (
             <div key={i} className={`seo-faq-item${openFaq === i ? ' open' : ''}`}>
@@ -458,8 +458,8 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
 
       {/* CTA Final */}
       <section className="final-cta">
-        <h2 className="animate-on-scroll">¿Listo para empezar con el CRM inmobiliario HabitaClick?</h2>
-        <p className="animate-on-scroll">Únete a las agencias inmobiliarias españolas que ya gestionan su CRM y publican en todos los portales automáticamente con HabitaClick. Sin complicaciones, sin costes extra.</p>
+        <h2 className="animate-on-scroll">¿Probamos juntos?</h2>
+        <p className="animate-on-scroll">45 días gratis, sin tarjeta de crédito. Empieza hoy y comprueba cuánto tiempo recuperas cada semana.</p>
         <button className="btn-primary btn-large animate-on-scroll" onClick={onSignupClick}>Empieza gratis 45 días</button>
       </section>
 
@@ -468,8 +468,8 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
         <div className="footer-content">
           <div className="footer-section footer-section--brand">
             <h4>HabitaClick</h4>
-            <p>El <strong>CRM inmobiliario español</strong> para agencias y agentes. Gestiona tu cartera y publica en Idealista, Fotocasa y más portales desde una sola plataforma.</p>
-            <p className="footer-tagline">🇪🇸 Hecho en España · Soporte en castellano</p>
+            <p>Gestiona tu cartera, publica en todos los portales y cierra más operaciones desde una sola plataforma.</p>
+            <p className="footer-tagline">🇪🇸 Empresa española · Soporte en castellano</p>
           </div>
           <div className="footer-section">
             <h4>CRM Inmobiliario</h4>
