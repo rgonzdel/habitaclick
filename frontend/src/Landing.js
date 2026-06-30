@@ -47,6 +47,7 @@ const FAQ_ITEMS = [
 function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPrivacyClick, onSobreClick, onContactoClick }) {
   const [activeSlot, setActiveSlot] = useState(0);
   const [openFaq, setOpenFaq] = useState(null);
+  const [billing, setBilling] = useState('mensual');
   const currentIdxRef = useRef(0);
   const nextIdxRef = useRef(1);
   const videoRef0 = useRef(null);
@@ -257,10 +258,38 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
       {/* Planes */}
       <section className="pricing" id="pricing">
         <h2 className="animate-on-scroll">Planes simples y transparentes</h2>
+
+        {/* Toggle mensual / anual */}
+        <div className="pricing-toggle animate-on-scroll">
+          <button
+            className={`pt-opt${billing === 'mensual' ? ' pt-opt--active' : ''}`}
+            onClick={() => setBilling('mensual')}
+          >
+            Mensual
+          </button>
+          <button
+            className={`pt-opt${billing === 'anual' ? ' pt-opt--active' : ''}`}
+            onClick={() => setBilling('anual')}
+          >
+            Anual
+            <span className="pt-badge">−20%</span>
+          </button>
+        </div>
+        {billing === 'anual' && (
+          <p className="pricing-anual-note animate-on-scroll">
+            🎉 Pagas un año y ahorras dos meses — facturado anualmente
+          </p>
+        )}
+
         <div className="pricing-grid">
           <div className="pricing-card animate-on-scroll" style={{ '--delay': '0s' }}>
             <h3>Starter</h3>
-            <div className="price">€18,99<span>/mes</span></div>
+            {billing === 'anual' && <div className="price-old">€18,99<span>/mes</span></div>}
+            <div className="price">
+              {billing === 'anual' ? '€15,19' : '€18,99'}
+              <span>/mes</span>
+            </div>
+            {billing === 'anual' && <p className="price-yearly">€182,28 facturado al año · ahorras €45,60</p>}
             <p className="description">Para agencias pequeñas</p>
             <ul>
               <li><Check size={13}/> Hasta 50 propiedades</li>
@@ -274,7 +303,12 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
           <div className="pricing-card featured animate-on-scroll" style={{ '--delay': '0.1s' }}>
             <div className="badge">MÁS POPULAR</div>
             <h3>Professional</h3>
-            <div className="price">€39,99<span>/mes</span></div>
+            {billing === 'anual' && <div className="price-old">€39,99<span>/mes</span></div>}
+            <div className="price">
+              {billing === 'anual' ? '€31,99' : '€39,99'}
+              <span>/mes</span>
+            </div>
+            {billing === 'anual' && <p className="price-yearly">€383,88 facturado al año · ahorras €96,00</p>}
             <p className="description">Para agencias medianas</p>
             <ul>
               <li><Check size={13}/> Hasta 500 propiedades</li>
