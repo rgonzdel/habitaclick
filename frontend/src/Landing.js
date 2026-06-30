@@ -48,6 +48,14 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
   const [activeSlot, setActiveSlot] = useState(0);
   const [openFaq, setOpenFaq] = useState(null);
   const [billing, setBilling] = useState('mensual');
+  const [pricingBlur, setPricingBlur] = useState(false);
+
+  const switchBilling = (val) => {
+    if (val === billing) return;
+    setPricingBlur(true);
+    setTimeout(() => setBilling(val), 160);
+    setTimeout(() => setPricingBlur(false), 320);
+  };
   const currentIdxRef = useRef(0);
   const nextIdxRef = useRef(1);
   const videoRef0 = useRef(null);
@@ -263,33 +271,32 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
         <div className="pricing-toggle animate-on-scroll">
           <button
             className={`pt-opt${billing === 'mensual' ? ' pt-opt--active' : ''}`}
-            onClick={() => setBilling('mensual')}
+            onClick={() => switchBilling('mensual')}
           >
             Mensual
           </button>
           <button
             className={`pt-opt${billing === 'anual' ? ' pt-opt--active' : ''}`}
-            onClick={() => setBilling('anual')}
+            onClick={() => switchBilling('anual')}
           >
             Anual
             <span className="pt-badge">−20%</span>
           </button>
         </div>
-        {billing === 'anual' && (
-          <p className="pricing-anual-note animate-on-scroll">
-            🎉 Pagas un año y ahorras dos meses — facturado anualmente
-          </p>
-        )}
+        {/* Siempre renderizado: visibility preserva el espacio y evita layout shift */}
+        <p className="pricing-anual-note" style={{ visibility: billing === 'anual' ? 'visible' : 'hidden' }}>
+          🎉 Pagas un año y ahorras dos meses — facturado anualmente
+        </p>
 
-        <div className="pricing-grid">
+        <div className={`pricing-grid${pricingBlur ? ' pricing--blurring' : ''}`}>
           <div className="pricing-card animate-on-scroll" style={{ '--delay': '0s' }}>
             <h3>Starter</h3>
-            {billing === 'anual' && <div className="price-old">€18,99<span>/mes</span></div>}
+            <div className="price-old" style={{ visibility: billing === 'anual' ? 'visible' : 'hidden' }}>€18,99<span>/mes</span></div>
             <div className="price">
               {billing === 'anual' ? '€15,19' : '€18,99'}
               <span>/mes</span>
             </div>
-            {billing === 'anual' && <p className="price-yearly">€182,28 facturado al año · ahorras €45,60</p>}
+            <p className="price-yearly" style={{ visibility: billing === 'anual' ? 'visible' : 'hidden' }}>€182,28 facturado al año · ahorras €45,60</p>
             <p className="description">Para agencias pequeñas</p>
             <ul>
               <li><Check size={13}/> Hasta 50 propiedades</li>
@@ -303,12 +310,12 @@ function Landing({ onLoginClick, onSignupClick, onPolicyCookiesClick, onPolicyPr
           <div className="pricing-card featured animate-on-scroll" style={{ '--delay': '0.1s' }}>
             <div className="badge">MÁS POPULAR</div>
             <h3>Professional</h3>
-            {billing === 'anual' && <div className="price-old">€39,99<span>/mes</span></div>}
+            <div className="price-old" style={{ visibility: billing === 'anual' ? 'visible' : 'hidden' }}>€39,99<span>/mes</span></div>
             <div className="price">
               {billing === 'anual' ? '€31,99' : '€39,99'}
               <span>/mes</span>
             </div>
-            {billing === 'anual' && <p className="price-yearly">€383,88 facturado al año · ahorras €96,00</p>}
+            <p className="price-yearly" style={{ visibility: billing === 'anual' ? 'visible' : 'hidden' }}>€383,88 facturado al año · ahorras €96,00</p>
             <p className="description">Para agencias medianas</p>
             <ul>
               <li><Check size={13}/> Hasta 500 propiedades</li>

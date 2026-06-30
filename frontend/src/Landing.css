@@ -382,6 +382,16 @@ body {
   color: #16a34a;
   font-weight: 600;
   margin: 0 0 2rem;
+  transition: opacity 0.2s;
+}
+
+/* Blur transition al cambiar periodo */
+.pricing-grid {
+  transition: filter 0.16s ease, opacity 0.16s ease;
+}
+.pricing-grid.pricing--blurring {
+  filter: blur(7px);
+  opacity: 0.45;
 }
 
 /* Precio tachado (mensual original cuando está en anual) */
