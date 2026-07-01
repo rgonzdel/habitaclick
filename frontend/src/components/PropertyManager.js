@@ -71,6 +71,7 @@ const VALUE_LABELS = {
 // ── Photo carousel ──────────────────────────────────────────────────
 function PhotoCarousel({ photos }) {
   const [idx, setIdx] = useState(0);
+  const [imgError, setImgError] = useState(false);
   const list = (photos || []).filter(p => p.media_type === 'photo');
 
   if (list.length === 0) return (
@@ -79,22 +80,30 @@ function PhotoCarousel({ photos }) {
     </div>
   );
 
-  const prev = e => { e.stopPropagation(); e.preventDefault(); setIdx(i => (i - 1 + list.length) % list.length); };
-  const next = e => { e.stopPropagation(); e.preventDefault(); setIdx(i => (i + 1) % list.length); };
+  const prev = e => { e.stopPropagation(); e.preventDefault(); setIdx(i => (i - 1 + list.length) % list.length); setImgError(false); };
+  const next = e => { e.stopPropagation(); e.preventDefault(); setIdx(i => (i + 1) % list.length); setImgError(false); };
 
   return (
     <div className="pm-photo-wrap">
+      {imgError && (
+        <div style={{ position:'absolute', inset:0, background:'#fef2f2', display:'flex', alignItems:'center', justifyContent:'center', padding:6, zIndex:2 }}>
+          <span style={{ fontSize:9, color:'#dc2626', wordBreak:'break-all', textAlign:'center' }}>
+            Error al cargar imagen. URL: {list[idx]?.url}
+          </span>
+        </div>
+      )}
       {list.map((photo, i) => {
-        // Solo carga la actual + adyacentes para no pedir todas a la vez
         const dist = Math.min(Math.abs(i - idx), list.length - Math.abs(i - idx));
         if (dist > 1) return null;
+        const src = photo.url?.startsWith('http') ? photo.url : `${API}${photo.url}`;
         return (
           <img
             key={photo.id || i}
-            src={photo.url?.startsWith('http') ? photo.url : `${API}${photo.url}`}
+            src={src}
             alt=""
             className="pm-photo-img"
             style={{ opacity: i === idx ? 1 : 0 }}
+            onError={() => setImgError(true)}
           />
         );
       })}
