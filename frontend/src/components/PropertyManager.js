@@ -91,7 +91,7 @@ function PhotoCarousel({ photos }) {
         return (
           <img
             key={photo.id || i}
-            src={`${API}${photo.url}`}
+            src={photo.url?.startsWith('http') ? photo.url : `${API}${photo.url}`}
             alt=""
             className="pm-photo-img"
             style={{ opacity: i === idx ? 1 : 0 }}

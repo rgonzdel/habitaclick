@@ -28,7 +28,14 @@ app.use('/', politicasRoutes);
 const supabaseUrl = 'https://jazmfctpkaxgwvezbcig.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imphem1mY3Rwa2F4Z3d2ZXpiY2lnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NzMyMDQsImV4cCI6MjA5NzU0OTIwNH0.-p1DWnC82k65PkCPwJL39RsbwCTslSmexU77ghKRFWo';
 
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const supabase = createClient(supabaseUrl, process.env.SUPABASE_SERVICE_KEY || supabaseAnonKey);
+
+const STORAGE_BUCKET = 'property-photos';
+// Crear el bucket si no existe (se ejecuta una vez al arrancar)
+(async () => {
+  const { error } = await supabase.storage.createBucket(STORAGE_BUCKET, { public: true });
+  if (error && !error.message.includes('already exists')) console.warn('Storage bucket:', error.message);
+})();
 
 app.use(cors());
 app.use(express.json());
@@ -38,21 +45,9 @@ app.get('/ping', (req, res) => res.json({ ok: true }));
 
 const JWT_SECRET = process.env.JWT_SECRET || 'tu_secret_key_aqui';
 
-// Configuración de multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const dir = path.join(uploadsDir, req.params.id);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
+// Multer en memoria — los archivos se suben a Supabase Storage, no al disco
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 100 * 1024 * 1024 }, // 100MB
   fileFilter: (req, file, cb) => {
     const allowedExts = /\.(jpe?g|png|gif|webp|mp4|mov|avi|mkv)$/i;
@@ -458,7 +453,7 @@ app.delete('/api/v1/properties/:id', verifyToken, async (req, res) => {
   try {
     const { data: photos } = await supabase
       .from('property_photos')
-      .select('url')
+      .select('url, storage_path')
       .eq('property_id', req.params.id);
 
     const { error } = await supabase
@@ -469,11 +464,11 @@ app.delete('/api/v1/properties/:id', verifyToken, async (req, res) => {
 
     if (error) return res.status(500).json({ error: error.message });
 
-    if (photos) {
-      photos.forEach(photo => {
-        const filePath = path.join(__dirname, '../../', photo.url);
-        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-      });
+    if (photos && photos.length > 0) {
+      const paths = photos
+        .map(p => p.storage_path || (p.url && p.url.includes('/property-photos/') ? p.url.split('/property-photos/')[1] : null))
+        .filter(Boolean);
+      if (paths.length > 0) await supabase.storage.from(STORAGE_BUCKET).remove(paths);
     }
     await supabase.from('property_photos').delete().eq('property_id', req.params.id);
 
@@ -500,17 +495,38 @@ app.post('/api/v1/properties/:id/photos', verifyToken, upload.array('files', 30)
     const hasExisting = existing && existing.length > 0;
     const nextOrder = hasExisting ? (existing[0].sort_order || 0) + 1 : 0;
 
-    const records = req.files.map((file, index) => {
+    const records = [];
+    for (let index = 0; index < req.files.length; index++) {
+      const file = req.files[index];
       const isVideo = /\.(mp4|mov|avi|mkv)$/i.test(file.originalname);
-      return {
+      const ext = path.extname(file.originalname);
+      const storagePath = `${req.params.id}/${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from(STORAGE_BUCKET)
+        .upload(storagePath, file.buffer, { contentType: file.mimetype, upsert: false });
+
+      if (uploadError) {
+        console.error('Storage upload error:', uploadError.message);
+        continue;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from(STORAGE_BUCKET)
+        .getPublicUrl(storagePath);
+
+      records.push({
         property_id: req.params.id,
-        url: `/uploads/${req.params.id}/${file.filename}`,
+        url: publicUrl,
         filename: file.originalname,
         is_primary: !hasExisting && index === 0 && !isVideo,
         media_type: isVideo ? 'video' : 'photo',
-        sort_order: nextOrder + index
-      };
-    });
+        sort_order: nextOrder + index,
+        storage_path: storagePath
+      });
+    }
+
+    if (records.length === 0) return res.status(500).json({ error: 'Error al subir archivos a Supabase Storage' });
 
     const { data, error } = await supabase
       .from('property_photos')
@@ -535,8 +551,12 @@ app.delete('/api/v1/properties/:id/photos/:photoId', verifyToken, async (req, re
       .single();
 
     if (photo) {
-      const filePath = path.join(__dirname, '../../', photo.url);
-      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      // Borrar de Supabase Storage (storage_path nuevo) o derivar la ruta de la URL (fotos antiguas)
+      const storagePath = photo.storage_path ||
+        (photo.url && photo.url.includes('/property-photos/') ? photo.url.split('/property-photos/')[1] : null);
+      if (storagePath) {
+        await supabase.storage.from(STORAGE_BUCKET).remove([storagePath]);
+      }
     }
 
     const { error } = await supabase
