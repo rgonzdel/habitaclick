@@ -801,7 +801,7 @@ function PropertyEditor({ property, onClose, onSaved, teamUsers = [], currentUse
                   ) : item._blobUrl ? (
                     <img src={item._blobUrl} alt={item.filename} draggable={false} />
                   ) : (
-                    <img src={`${API}${item.url}`} alt={item.filename} draggable={false} />
+                    <img src={item.url?.startsWith('http') ? item.url : `${API}${item.url}`} alt={item.filename} draggable={false} />
                   )}
                   {item._uploading && (
                     <div className="pe-item-status-overlay pe-item-status-uploading">
