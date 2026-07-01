@@ -844,7 +844,7 @@ app.post('/api/v1/portals/:portal/properties/:propertyId', verifyToken, async (r
   const { active } = req.body;
   try {
     const { error } = await supabase.from('property_portals').upsert({
-      property_id: parseInt(propertyId), portal,
+      property_id: propertyId, portal,
       status: active ? 'active' : 'inactive',
       last_synced: active ? new Date().toISOString() : null,
       error_msg: null
