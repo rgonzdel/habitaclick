@@ -16,15 +16,34 @@ import PortalSettings from './components/PortalSettings';
 import './App.css';
 
 
+const DASH_SECTIONS = ['properties', 'users', 'website', 'portales'];
+const VIEW_PATHS = {
+  landing: '/', login: '/login', signup: '/registro',
+  sobre: '/sobre-nosotros', contacto: '/contacto',
+  'politica-cookies': '/politica-cookies', 'politica-privacidad': '/politica-privacidad',
+};
+const PATH_VIEWS = Object.fromEntries(Object.entries(VIEW_PATHS).map(([k, v]) => [v, k]));
+
+function parsePath() {
+  const path = window.location.pathname;
+  const m = path.match(/^\/dashboard\/?(.*)$/);
+  if (m) {
+    const sec = m[1].replace(/\/$/, '') || 'properties';
+    return { view: 'dashboard', dashView: DASH_SECTIONS.includes(sec) ? sec : 'properties' };
+  }
+  return { view: PATH_VIEWS[path] || 'landing', dashView: 'properties' };
+}
+
 function App() {
-  const [view, setView] = useState('landing');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const parsed = parsePath();
+  const [view, setView] = useState(parsed.view);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem('token'));
   const [userRole, setUserRole] = useState('asesor');
   const [properties, setProperties] = useState([]);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [toast, setToast] = useState(null);
   const [loadingProperties, setLoadingProperties] = useState(false);
-  const [dashView, setDashView] = useState('properties');
+  const [dashView, setDashView] = useState(parsed.dashView);
   const [teamUsers, setTeamUsers] = useState([]);
   const [showAgencyConfig, setShowAgencyConfig] = useState(false);
   const [agencyConfig, setAgencyConfig] = useState(() => {
@@ -54,6 +73,19 @@ function App() {
       setUserRole(getRoleFromToken(token));
     }
     fetch((process.env.REACT_APP_API_URL || 'http://localhost:3001') + '/ping').catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const onPop = () => {
+      const p = parsePath();
+      if (p.view === 'dashboard') {
+        setDashView(p.dashView);
+      } else {
+        setView(p.view);
+      }
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
   }, []);
 
   // Route /sitio/:slug → public website
@@ -110,6 +142,13 @@ function App() {
     localStorage.removeItem('token');
     setIsLoggedIn(false);
     setView('landing');
+    window.history.pushState(null, '', '/');
+  };
+
+  const navigateDash = (section) => {
+    setDashView(section);
+    const url = section === 'properties' ? '/dashboard' : `/dashboard/${section}`;
+    window.history.pushState(null, '', url);
   };
 
   const navigateWithAnimation = (newView) => {
@@ -117,6 +156,7 @@ function App() {
     setTimeout(() => {
       setView(newView);
       setIsTransitioning(false);
+      window.history.pushState(null, '', VIEW_PATHS[newView] || '/');
     }, 250);
   };
 
@@ -155,7 +195,7 @@ function App() {
             <nav className="dash-sidebar-nav">
               <button
                 className={`dash-sitem${dashView === 'properties' ? ' active' : ''}`}
-                onClick={() => setDashView('properties')}
+                onClick={() => navigateDash('properties')}
               >
                 <Home size={21}/>
                 <span className="dash-tooltip">Inmuebles</span>
@@ -164,7 +204,7 @@ function App() {
               {can('director') && (
                 <button
                   className={`dash-sitem${dashView === 'users' ? ' active' : ''}`}
-                  onClick={() => setDashView('users')}
+                  onClick={() => navigateDash('users')}
                 >
                   <Users size={21}/>
                   <span className="dash-tooltip">Equipo</span>
@@ -174,7 +214,7 @@ function App() {
               {can('director') && (
                 <button
                   className={`dash-sitem${dashView === 'website' ? ' active' : ''}`}
-                  onClick={() => setDashView('website')}
+                  onClick={() => navigateDash('website')}
                 >
                   <Globe size={21}/>
                   <span className="dash-tooltip">Página Web</span>
@@ -184,7 +224,7 @@ function App() {
               {can('director') && (
                 <button
                   className={`dash-sitem${dashView === 'portales' ? ' active' : ''}`}
-                  onClick={() => setDashView('portales')}
+                  onClick={() => navigateDash('portales')}
                 >
                   <Share2 size={21}/>
                   <span className="dash-tooltip">Portales</span>
@@ -295,7 +335,7 @@ function App() {
     return (
       <div style={contentStyle}>
         <Signup
-          onSignupSuccess={() => setIsLoggedIn(true)}
+          onSignupSuccess={() => { setIsLoggedIn(true); window.history.pushState(null, '', '/dashboard'); }}
           onBackToLanding={() => navigateWithAnimation('landing')}
         />
       </div>
@@ -310,6 +350,7 @@ function App() {
             const token = localStorage.getItem('token');
             setUserRole(getRoleFromToken(token));
             setIsLoggedIn(true);
+            window.history.pushState(null, '', '/dashboard');
           }}
           onBackToLanding={() => navigateWithAnimation('landing')}
         />

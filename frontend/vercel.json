@@ -2,5 +2,8 @@
   "buildCommand": "npm run build",
   "outputDirectory": "build",
   "installCommand": "npm install",
-  "framework": "create-react-app"
+  "framework": "create-react-app",
+  "rewrites": [
+    { "source": "/((?!logos|static|favicon|manifest|robots|sitemap).*)", "destination": "/index.html" }
+  ]
 }
