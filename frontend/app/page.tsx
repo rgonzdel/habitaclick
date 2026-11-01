@@ -46,6 +46,27 @@ export default async function Home() {
         </section>
 
         <section className="section">
+          <h2>Cómo funciona</h2>
+          <div className="steps">
+            <div className="step">
+              <div className="step-n">1</div>
+              <h3>Busca o publica</h3>
+              <p>Filtra por zona, precio y características, o crea tu anuncio en unos minutos.</p>
+            </div>
+            <div className="step">
+              <div className="step-n">2</div>
+              <h3>Contacta directo</h3>
+              <p>Escribe al anunciante desde la ficha y recibe la respuesta por correo o teléfono.</p>
+            </div>
+            <div className="step">
+              <div className="step-n">3</div>
+              <h3>Cierra tu operación</h3>
+              <p>Guarda favoritos y crea alertas para no perderte ningún anuncio nuevo.</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="section">
           <h2>Busca por provincia</h2>
           <div className="chips">
             {TOP_PROVINCES.map((p) => (
@@ -70,6 +91,16 @@ export default async function Home() {
             <Link href="/profesionales" className="btn btn-accent">
               Ver planes
             </Link>
+          </div>
+        </section>
+
+        <section className="section">
+          <h2>Pensado para anunciar</h2>
+          <div className="perks">
+            <div className="perk"><b>Primer anuncio gratis</b><span>Para particulares, con fotos y 60 días de publicación.</span></div>
+            <div className="perk"><b>Más visibilidad</b><span>Destaca tu anuncio o aparece entre los primeros resultados.</span></div>
+            <div className="perk"><b>Alertas por email</b><span>Los compradores reciben tus anuncios nuevos al instante.</span></div>
+            <div className="perk"><b>Planes profesionales</b><span>Más anuncios activos y posicionamiento para tu inmobiliaria.</span></div>
           </div>
         </section>
 
