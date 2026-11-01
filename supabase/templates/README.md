@@ -1,6 +1,6 @@
 # Correos de autenticación de Habitaclick
 
-Plantillas en español con la marca. Se pegan en Supabase: Authentication > Emails (o Email Templates).
+Plantillas en español con la marca. Se generan con `python3 build.py` (editar ahí y volver a ejecutar). Los iconos y el logo se cargan desde `https://habitaclick.es/brand/` (carpeta `frontend/public/brand`). Se pegan en Supabase: Authentication > Emails (o Email Templates).
 
 | Plantilla | Archivo | Asunto sugerido |
 |---|---|---|
