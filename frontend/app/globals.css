@@ -277,3 +277,97 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, .btn:focus-vi
   .header-actions .btn-ghost { padding: 9px 8px; font-size: .9rem; }
   .btn-publish { padding: 9px 12px; font-size: .9rem; }
 }
+
+/* ====== Animaciones (solo movimiento, el diseño no cambia) ====== */
+:root { --ease: cubic-bezier(.22, .8, .24, 1); }
+
+/* Logo */
+.logo-key { transform-origin: 17px 32px; transform-box: view-box; animation: keyIn .7s var(--ease) both; }
+.logo-tooth { transform-box: fill-box; transform-origin: 50% 0%; animation: toothPop .45s var(--ease) both; }
+.logo-tooth-1 { animation-delay: .55s; }
+.logo-tooth-2 { animation-delay: .7s; }
+.logo:hover .logo-key, .logo:focus-visible .logo-key { animation: keyTurn .8s var(--ease); }
+.logo-word { transition: letter-spacing .3s var(--ease); }
+.logo:hover .logo-word { letter-spacing: -.01em; }
+@keyframes keyIn { from { opacity: 0; transform: translateX(-14px) rotate(-30deg); } to { opacity: 1; transform: none; } }
+@keyframes toothPop { from { opacity: 0; transform: scaleY(0); } to { opacity: 1; transform: scaleY(1); } }
+@keyframes keyTurn { 0% { transform: rotate(0); } 35% { transform: rotate(-22deg); } 70% { transform: rotate(10deg); } 100% { transform: rotate(0); } }
+
+/* Fondo del hero: circulos que flotan despacio */
+.hero::before { animation: floatA 14s ease-in-out infinite alternate; }
+.hero::after { animation: floatB 18s ease-in-out infinite alternate; }
+@keyframes floatA { from { transform: translate(0, 0) scale(1); } to { transform: translate(-60px, 50px) scale(1.12); } }
+@keyframes floatB { from { transform: translate(0, 0) scale(1); } to { transform: translate(70px, -40px) scale(1.08); } }
+
+/* Entrada del hero */
+.hero h1, .hero p, .hero-search { animation: fadeUp .7s var(--ease) both; }
+.hero p { animation-delay: .1s; }
+.hero-search { animation-delay: .2s; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+/* Aparicion al hacer scroll (la activa Reveal.tsx) */
+.rv { opacity: 0; transform: translateY(22px); transition: opacity .6s var(--ease), transform .6s var(--ease); transition-delay: var(--rv-delay, 0ms); }
+.rv.rv-in { opacity: 1; transform: none; }
+
+/* Botones */
+.btn { position: relative; overflow: clip; transition: background .2s, box-shadow .2s, transform .2s var(--ease); }
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(1px) scale(.97); transition-duration: .08s; }
+.btn-primary:hover { box-shadow: 0 8px 20px rgba(0, 51, 102, .3); }
+.btn-accent:hover { box-shadow: 0 8px 20px rgba(46, 204, 113, .4); }
+.btn-primary::after, .btn-accent::after { content: ''; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .35), transparent); transform: skewX(-20deg); pointer-events: none; }
+.btn-primary:hover::after, .btn-accent:hover::after { animation: shine .8s var(--ease); }
+@keyframes shine { from { left: -60%; } to { left: 130%; } }
+.btn-ghost, .btn-outline { transition: background .2s, transform .2s var(--ease); }
+
+/* Pestañas y chips */
+.tabs label span, .tabs button, .seg button { transition: background .2s, color .2s, transform .15s var(--ease); }
+.tabs label:hover span, .tabs button:hover { transform: translateY(-1px); }
+.chip { transition: transform .2s var(--ease), box-shadow .2s, border-color .2s; }
+.chip:hover { transform: translateY(-3px); box-shadow: 0 6px 14px rgba(0, 38, 77, .12); border-color: var(--green); text-decoration: none; }
+
+/* Tarjetas */
+.card { transition: box-shadow .25s, transform .25s var(--ease); }
+.card:hover { transform: translateY(-5px); }
+.step, .perk, .plan, .cta-box { transition: transform .25s var(--ease), box-shadow .25s; }
+.step:hover, .perk:hover, .plan:hover { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(0, 38, 77, .1); }
+.cta-box:hover { transform: translateY(-3px); }
+.step:hover .step-n { animation: bounceN .5s var(--ease); }
+@keyframes bounceN { 40% { transform: scale(1.18) rotate(-6deg); } 100% { transform: none; } }
+
+/* Corazon de favoritos */
+.fav { transition: transform .15s var(--ease), background .2s; }
+.fav:hover { transform: scale(1.12); }
+.fav-on { animation: heartPop .4s var(--ease); }
+@keyframes heartPop { 0% { transform: scale(.6); } 55% { transform: scale(1.35); } 100% { transform: scale(1); } }
+
+/* Formularios y avisos */
+input, select, textarea { transition: border-color .2s, box-shadow .2s; }
+input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 4px rgba(143, 180, 224, .35); }
+.notice { animation: fadeUp .35s var(--ease) both; }
+
+/* Menu del movil */
+.menu-btn span { transition: transform .3s var(--ease), opacity .2s; }
+.menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-btn.open span:nth-child(2) { opacity: 0; }
+.menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+@media (max-width: 900px) {
+  .nav.nav-open { animation: menuIn .28s var(--ease) both; }
+  .nav.nav-open a, .nav.nav-open .link-btn { animation: fadeUp .35s var(--ease) both; }
+  .nav.nav-open a:nth-child(2) { animation-delay: .04s; }
+  .nav.nav-open a:nth-child(3) { animation-delay: .08s; }
+  .nav.nav-open .nav-account { animation: fadeUp .35s .12s var(--ease) both; }
+}
+@keyframes menuIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
+
+/* Galeria */
+.gallery-main img { animation: fadeIn .35s ease both; }
+.gallery-thumbs img { transition: opacity .2s, transform .2s var(--ease); }
+.gallery-thumbs img:hover { opacity: 1; transform: translateY(-2px); }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Respeta a quien prefiere menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .rv { opacity: 1; transform: none; }
+}

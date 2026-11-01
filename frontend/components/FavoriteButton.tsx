@@ -36,7 +36,7 @@ export default function FavoriteButton({ listingId }: { listingId: string }) {
   }
 
   return (
-    <button className={`fav ${fav ? 'fav-on' : ''}`} onClick={toggle} aria-label={fav ? 'Quitar de favoritos' : 'Guardar en favoritos'}>
+    <button className={`fav ${fav ? 'fav-on' : ''}`} key={fav ? 'on' : 'off'} onClick={toggle} aria-label={fav ? 'Quitar de favoritos' : 'Guardar en favoritos'}>
       {fav ? '♥' : '♡'}
     </button>
   );

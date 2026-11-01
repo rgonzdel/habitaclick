@@ -49,7 +49,7 @@ export default function Header() {
             <span className="hide-sm">Publicar anuncio</span>
             <span className="show-sm">Publicar</span>
           </Link>
-          <button className="menu-btn" aria-label="Abrir menú" aria-expanded={open} onClick={() => setOpen(!open)}>
+          <button className={`menu-btn ${open ? 'open' : ''}`} aria-label="Abrir menú" aria-expanded={open} onClick={() => setOpen(!open)}>
             <span />
             <span />
             <span />
