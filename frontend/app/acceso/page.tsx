@@ -46,7 +46,7 @@ function AccesoForm() {
 
   async function reset() {
     if (!email) return setMsg({ type: 'err', text: 'Escribe tu correo primero' });
-    await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/cuenta' });
+    await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/restablecer' });
     setMsg({ type: 'ok', text: 'Si el correo existe, recibirás un enlace para restablecer la contraseña.' });
   }
 
