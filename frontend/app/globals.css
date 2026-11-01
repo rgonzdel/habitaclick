@@ -257,3 +257,23 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, .btn:focus-vi
   .search-head { align-items: flex-start; }
   .save-search { flex-wrap: wrap; }
 }
+
+.logo-lockup { display: inline-flex; align-items: center; gap: 8px; }
+.logo-word { font-weight: 800; font-size: 1.4rem; letter-spacing: -.02em; line-height: 1; color: var(--navy); }
+.logo-word span { color: var(--green); }
+.logo-light .logo-word { color: #fff; }
+.logo:hover { text-decoration: none; }
+.logo .logo-word { color: var(--navy); }
+.logo .logo-word span { color: var(--green); }
+.logo .logo-lockup.logo-light .logo-word { color: #fff; }
+.logo .logo-lockup.logo-light .logo-word span { color: var(--green); }
+.logo { white-space: nowrap; }
+@media (max-width: 480px) {
+  .logo-word { font-size: 1.15rem; }
+  .logo-lockup { gap: 6px; }
+  .logo-lockup svg { width: 28px; height: 28px; }
+  .header-inner { gap: 6px; }
+  .header-actions { gap: 2px; }
+  .header-actions .btn-ghost { padding: 9px 8px; font-size: .9rem; }
+  .btn-publish { padding: 9px 12px; font-size: .9rem; }
+}

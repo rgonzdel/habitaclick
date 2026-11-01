@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from './AuthProvider';
+import Logo from './Logo';
 
 export default function Header() {
   const { session, profile, loading, signOut } = useAuth();
@@ -12,8 +13,8 @@ export default function Header() {
   return (
     <header className="header">
       <div className="container header-inner">
-        <Link href="/" className="logo" onClick={close}>
-          Habita<span>click</span>
+        <Link href="/" className="logo" onClick={close} aria-label="Habitaclick, inicio">
+          <Logo />
         </Link>
 
         <nav className={`nav ${open ? 'nav-open' : ''}`} aria-label="Principal">

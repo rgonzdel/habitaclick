@@ -1,12 +1,13 @@
 import Link from 'next/link';
+import Logo from './Logo';
 
 export default function Footer() {
   return (
     <footer className="footer">
       <div className="container footer-inner">
         <div>
-          <div className="logo logo-light">
-            Habita<span>click</span>
+          <div className="logo">
+            <Logo variant="dark" />
           </div>
           <p className="muted-light">El portal de anuncios inmobiliarios. Tu primer anuncio como particular es gratis.</p>
         </div>
